@@ -1,0 +1,592 @@
+openapi: 3.0.0
+info:
+  title: Mi Carrito de Compras
+  description: Esta API se implementará en el desarrollo de un carrito de compras
+  termsOfService: https:localhost/terms
+  contact:
+    name: Gustavo Rosales
+    email: rosalesunlam19@gmail.com
+  license:
+    name: Apache 2.0
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+  
+  version: 1.0.0
+  
+servers:
+ # Added by API Auto Mocking Plugin
+ - description: SwaggerHub API Auto Mocking
+   url: https://virtserver.swaggerhub.com/Guscode23/CarritoComprasAPI/1.0.0
+ - url: http://www.google.com/api
+   description: Google Server
+   tags:
+  - name: backoffice
+    description: Everything about backoffice endpoints
+  - name: store
+    description: Access to the store
+  - name: user
+    description: Operations about user
+  - name: login
+    description: Operations about login
+
+
+paths:
+  / clientes:
+     get:
+      description: Permite acceder al perfil del cliente segun parametros o condiciones
+      parameters: 
+      - in: query
+        name: correoelectronico
+        required: true
+        description: correo del cliente para acceder
+        schema:
+         type: string
+       
+      - in: query
+        name: contraseña
+        required: true
+        description: contraseña de acceso
+        schema:
+          type: number
+          
+       
+      responses:
+        200:
+          description: Acceso al Catalogo
+          schema:
+              type: array
+                items:
+                  properties:
+                    name:
+                      type: string
+                      example: televisor
+                    stock:
+                      type: integer
+                      example: 400
+                    marca:
+                       type: string
+                       example: Samsung
+                    descripcion:
+                       type: string
+                       example: televisor de 42 pulgadas
+                       
+        404:
+          description: Request not found
+  /clientes/{id}
+   get:
+     description: Obtener información del cliente en cuanto a compras realizadas, productos guardados, saldo,etc.
+      parameters:
+        - in: path
+        name: id
+        required:true
+        description: productos comprados
+        schema:
+         type: string
+         example: 23223
+      responses:
+        200:
+         description: Succesful Request
+         content:
+           application/json:
+            schema:
+              type: string
+              example: Televisor Samsung de 42 pulgadas
+              
+    post:
+      description: Crear cliente en base de datos
+      parameters:
+       - name: Cliente
+         in: query
+         description: Crear un nuevo cliente en la base de datos
+         schema:
+           type: object
+           properties:
+             TipoCliente:
+              type: string
+              description: Tipo de cliente
+             Nombre:
+               type: string
+               description: nombre del cliente
+              Email:
+                 type: string
+                 description: correo electronico del cliente
+                 
+      
+      responses:
+        200:
+          description: succesful request
+           schema:
+             type: string
+             
+  /Transacciones/{id}
+  post:
+      description: Efectuar una compra y registrarla en la base de datos
+      parameters:
+       - name: Transaccion
+         in: query
+         description: Realizar una transaccion
+         schema:
+           type: object
+           properties:
+             Id_Producto:
+              type: number
+              description: Código del producto
+             Id_Cliente:
+               type: number
+               description: Codigo del Cliente
+             Monto:
+                 type: float
+                 description: Costo del producto
+              Cuotas:
+                 type: number
+                 description: cantidad de cuotas
+             Modo_pago:
+                type: string
+                description: Medio por el cual realizo el pago
+                 
+      responses:
+        200:
+          description: Operacion exitosa
+           schema:
+             type: string
+    post:
+      tags:
+        - login
+      summary: Create a user session
+      description: Create a user session
+      operationId: login
+      parameters: 
+        - name: username
+          in: query
+          description: the username to authenticate
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: the password to authenticate
+          required: true
+          schema:
+            type: string
+            format: password
+      responses:
+        200:
+          description: successful operation response a JWTResponseDTO as data
+          headers: 
+            Access-Token:
+              schema:
+                type: string
+            Refresh-Token:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseContainerResponseDTO'
+  /products/product:
+    post:
+      tags:
+        - backoffice
+      security:
+        - bearerAuth: []
+      summary: Create product
+      description: Create a product, authentication required.
+      operationId: createProduct
+      requestBody:
+        description: Created product object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRequestDTO'
+      responses:
+        '200':
+          description: successful operation response a ProductDTO as data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseContainerResponseDTO'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    get:
+      tags:
+        - backoffice
+      security:
+        - bearerAuth: []
+      summary: Retrieve a list of products
+      description: Retrieve a list of products, authentication required.
+      operationId: retrieveAllProducts
+      responses:
+        default:
+          description: successful operation response a ProductListDTO as data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseContainerResponseDTO'
+  /products/product/{productId}:
+    put:
+      tags:
+        - backoffice
+      security:
+        - bearerAuth: []
+      summary: Update product
+      description: Update a product, authentication required.
+      operationId: updateProduct
+      parameters: 
+        - name: productId
+          in: path
+          description: the product id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Updated product object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDTO'
+      responses:
+        '200':
+          description: successful operation response a ProductDTO as data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseContainerResponseDTO'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    delete:
+      tags:
+        - backoffice
+      security:
+        - bearerAuth: []
+      summary: Delete product
+      description: Delete a product, authentication required.
+      operationId: deleteProduct
+      parameters: 
+        - name: productId
+          in: path
+          description: the product id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation response a EmptyResponseDTO as data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseContainerResponseDTO'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  post:
+      tags:
+        - store
+      security:
+        - bearerAuth: []
+      summary: Create cart
+      description: Create a cart, authentication required.
+      operationId: createCart
+      requestBody:
+        description: Created cart object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartDTO'
+      responses:
+        '200':
+          description: successful operation response a CartDTO as data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseContainerResponseDTO'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /carts/cart/{cartId}:
+    delete:
+      tags:
+        - store
+      security:
+        - bearerAuth: []
+      summary: Delete cart
+      description: Delete a cart, authentication required.
+      operationId: deleteCart
+      parameters: 
+        - name: cartId
+          in: path
+          description: the cartId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation response a EmptyResponseDTO as data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseContainerResponseDTO'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    get:
+      tags:
+        - store
+      security:
+        - bearerAuth: []
+      summary: Retrieve cart
+      description: Retrieve a cart, authentication required.
+      operationId: retrieveCart
+      parameters: 
+        - name: cartId
+          in: path
+          description: the cartId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation response a CartDTO as data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseContainerResponseDTO'
+  /carts/cart/{cartId}/buy:
+    delete:
+      tags:
+        - store
+      security:
+        - bearerAuth: []
+      summary: Buy cart
+      description: Buy a cart, authentication required.
+      operationId: buyCart
+      parameters: 
+        - name: cartId
+          in: path
+          description: the cartId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation response a OrderDTO as data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseContainerResponseDTO'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /carts/cart/{cartId}/items:
+    put:
+      tags:
+        - store
+      security:
+        - bearerAuth: []
+      summary: Add a product to the cart
+      description: Add a product to the cart, authentication required.
+      operationId: addToCart
+      parameters: 
+        - name: cartId
+          in: path
+          description: the cartId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The product to be added.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCartDTO'
+      responses:
+        '200':
+          description: successful operation response a CartDTO as data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseContainerResponseDTO'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    delete:
+      tags:
+        - store
+      security:
+        - bearerAuth: []
+      summary: Delete products from cart
+      description: Delete products from cart, authentication required.
+      operationId: deleteFromCart
+      parameters: 
+        - name: cartId
+          in: path
+          description: the cartId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation response a EmptyResponseDTO as data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseContainerResponseDTO'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    get:
+      tags:
+        - store
+      security:
+        - bearerAuth: []
+      summary: Retrieve products in cart
+      description: Retrieve products in cart, authentication required.
+      operationId: retrieveProductsInCart
+      parameters: 
+        - name: cartId
+          in: path
+          description: the cartId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation response a ProductCartListDTO as data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseContainerResponseDTO'
+components:
+  schemas:
+    UserRequestDTO:
+      type: object
+      properties:
+        username:
+          type: string
+          example: theUser
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: James
+        email:
+          type: string
+          format: email
+          example: john@email.com
+          description: this field represent the user email
+        password:
+          type: string
+          maxLength: 16
+          minLength: 6
+          example: 'p4$sW0rD!'
+        role:
+          type: string
+          description: The user role.
+          example: ROLE_USER
+          default: ROLE_USER
+          enum: 
+          - ROLE_USER
+          - ROLE_ADMIN
+      required: 
+        - username
+        - firstName
+        - lastName
+        - email
+        - password
+        - role
+    UserDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: theUser
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: James
+        email:
+          type: string
+          format: email
+          example: john@email.com
+          description: this field represent the user email
+        password:
+          type: string
+          maxLength: 16
+          minLength: 6
+          example: 'p4$sW0rD!'
+        role:
+          type: string
+          description: The user role.
+          example: ROLE_USER
+          default: ROLE_USER
+          enum: 
+          - ROLE_USER
+          - ROLE_ADMIN
+        dateCreated:
+          type: string
+          format: date
+          example: '2023-02-01'
+        dateDeleted:
+          type: string
+          format: date
+          example: '2023-02-01'
+      required: 
+        - username
+        - firstName
+        - lastName
+        - email
+        - password
+        - role
+        - dateCreated
+    UserListDTO:
+      type: object
+      properties: 
+        items:
+          type: array
+          items: 
+            $ref: '#/components/schemas/UserDTO'
+    CategoryDTO:
+      type: object
+      properties: 
+        id:
+          type: integer
+          format: int64
+          example: 8
+        name:
+          type: string
+          example: James
+        parentCategoryId:
+          type: integer
+          format: int64
+          example: 1
+        dateCreated:
+          type: string
+          format: date
+          example: '2023-02-01'
+        dateDeleted:
+          type: string
+          format: date
+          example: '2023-02-01'
+      required: 
+        - name
+        - dateCreated
+    CategoryRequestDTO:
+      type: object
+      properties: 
+        name:
+          type: string
+          example: James
+        parentCategoryId:
+          type: integer
+          format: int64
+          example: 1
+      required: 
+        - name
+    CategoryListDTO:
+      type: object
+      properties: 
+        items:
+          type: array
+          items: 
+            $ref: '#/components/schemas/CategoryDTO'        
