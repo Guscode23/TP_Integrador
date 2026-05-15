@@ -11,11 +11,11 @@
 ///NormalizarNombre (Gus)
 ///ValidarCorreo (Gus)
 ///ValidarDNI (puede ser Macro o no.Es una función simple)
-///ValidarFecha_Nacimiento
+///ValidarFecha_Nacimiento (Avanzado)
 ///ValidarSexo (Macro/Funcion)
-///ValidarFecha_Afiliacion
+///ValidarFecha_Afiliacion (Avanzado)
 ///ValidarCategoría
-///ValidarFechaUltimaCuota
+///ValidarFechaUltimaCuota (Avanzado)
 ///ValidarEstado
 ///ValidarPlan
 

@@ -10,9 +10,9 @@
 #define TAM_EMAIL_TUT 30
 
 //TDA FECHA
-typedef struct{
+/*typedef struct{
     int dia, mes, anio;
-}t_fecha;
+}t_fecha;*/
 
 typedef struct{
     long dni;
