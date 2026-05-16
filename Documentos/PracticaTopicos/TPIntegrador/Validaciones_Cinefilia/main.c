@@ -10,13 +10,13 @@
 ///ValidarCUIL (Gus)
 ///NormalizarNombre (Gus)
 ///ValidarCorreo (Gus)
-///ValidarDNI (puede ser Macro o no.Es una función simple)
-///ValidarFecha_Nacimiento (Avanzado)
-///ValidarSexo (Macro/Funcion)
-///ValidarFecha_Afiliacion (Avanzado)
+///ValidarDNI (Macro)
+//ValidarFecha_Nacimiento (Avanzado)
+///ValidarSexo (Macro)
+//ValidarFecha_Afiliacion (Avanzado)
 ///ValidarCategoría
-///ValidarFechaUltimaCuota (Avanzado)
-///ValidarEstado
+//ValidarFechaUltimaCuota (Avanzado)
+///ValidarEstado(Macro)
 ///ValidarPlan
 
 /********************************************/
@@ -34,13 +34,13 @@ int validarCUIL(const char* cuil,long int dniMiembro){
  int tipo;
  int coeficientes[10]={5,4,3,2,7,6,5,4,3,2};
  int *p_coef=coeficientes;
+ int formato;
 
  ///Capturo los datos con sscanf
- sscanf(cuil, "%d-%ld-%d",&tipo,&dni,&digVerif);
-
+  formato=sscanf(cuil, "%d-%ld-%d",&tipo,&dni,&digVerif);
 
  ///Si el dni del Cuil es distinto al del registro, invalido
- if(dni!=dniMiembro)
+ if(dni!=dniMiembro || formato==-1)
       return CUIL_INVALIDO;
     else{
 
@@ -79,8 +79,6 @@ int validarCUIL(const char* cuil,long int dniMiembro){
               } else
                   return CUIL_INVALIDO;
             }
-
-
     return 0;
 }
 
@@ -158,6 +156,33 @@ int validarCorreo(const char* correo)
         }
 
     return CORREO_INVALIDO;
+}
+
+int validarPlan(const char* plan)
+{
+   char planes[]="BASIC,PREMIUM,VIP,FAMILY";
+
+   if(strstr(planes,plan)==NULL)
+        return PLAN_INVALIDO;
+
+  return PLAN_VALIDO;
+}
+
+///La edad es un campo calculable,a partir de
+
+int validarCAT(const char* cat,int edad)
+{
+    if(strcmp(cat,"MENOR")==0){
+        if(edad<18)
+            return CAT_VALIDO;
+      }
+       else if(strcmp(cat,"ADULTO")==0){
+           if(edad>=18)
+              return CAT_VALIDO;
+          }
+
+    return CAT_INVALIDO;
+
 }
 
 

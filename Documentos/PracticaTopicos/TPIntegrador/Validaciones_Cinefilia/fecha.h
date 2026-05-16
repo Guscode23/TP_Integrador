@@ -17,3 +17,5 @@ void ingresar_Fecha_Proceso(t_fecha *f);
 int es_Fecha_Valida(const t_fecha *f);
 int cant_Dia_Mes (int mes, int anio);
 bool es_Bisiesto(int anio);
+
+
