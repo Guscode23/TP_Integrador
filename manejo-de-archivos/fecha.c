@@ -1,17 +1,5 @@
 #include "fecha.h"
 
-void ingresar_Fecha_Proceso(t_fecha *f){
-    printf("Bienvenido/a.\nIngrese fecha de proceso (DD/MM/AAAA): ");
-    scanf("%d / %d / %d", &f->dia, &f->mes, &f->anio);
-
-    while(es_Fecha_Valida(f) != TODO_OK){
-
-        printf("Fecha invalida.\nIngrese nuevamente (DD/MM/AAAA): ");
-        scanf("%d / %d / %d", &f->dia, &f->mes, &f->anio);
-    }
-}
-/**************** Validación Fecha **************************/
-
 int es_Fecha_Valida(const t_fecha *f){
     if(f->anio >= 1600){
         if(f->mes >= 1 && f->mes <= 12){

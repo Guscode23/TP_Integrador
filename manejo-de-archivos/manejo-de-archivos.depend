@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1778968449 source:c:\users\facundo\desktop\tp_integrador\manejo-de-archivos\archivos.c
+
+1778969496 source:c:\users\facundo\desktop\tp_integrador\manejo-de-archivos\fecha.c
+	"fecha.h"
+
+1778969496 c:\users\facundo\desktop\tp_integrador\manejo-de-archivos\fecha.h
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+

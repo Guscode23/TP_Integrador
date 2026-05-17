@@ -10,8 +10,6 @@ typedef struct{
     int dia, mes, anio;
 }t_fecha;
 
-///MAIN
-void ingresar_Fecha_Proceso(t_fecha *f);
 
 ///VALIDACION DE FECHA
 int es_Fecha_Valida(const t_fecha *f);
