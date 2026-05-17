@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Structs.h"
+#include "archivos.h"
 
 int main()
 {
@@ -21,8 +22,51 @@ int main()
 
        Si un registro pasa todas las validaciones, entonces se procede a guardar en memoria,
        supongo que en un array de struct (Miembro o Titulo)
+
     */
 
+
+    FILE *archivo1 = fopen("Lotes prueba/miembros.csv", "r");
+    if (archivo1 == NULL)
+    {
+        printf("Error al abrir el archivo.\n");
+        return 1;
+    } // Se podria hacer todo en una funcion?
+
+    char buffer[MAX_LINEA_CSV];
+    char *columnas[11]; // Preparado para leer hasta 11 columnas por fila
+
+    fgets(buffer, sizeof(buffer), archivo1); // Descartar encabezado
+
+    while (csv_leer_fila(archivo1, ';', columnas, 11, buffer, MAX_LINEA_CSV) > 0)
+    {
+
+        printf("DNI: %s | Nombre: %s\n", columnas[0], columnas[2]); // Solo para prueba
+
+    }
+
+    fclose(archivo1);
+
+
+    FILE *archivo2 = fopen("Lotes prueba/titulos.csv", "r");
+    if (archivo2 == NULL)
+    {
+        printf("Error al abrir el archivo.\n");
+        return 1;
+    } // Se podria hacer todo en una funcion?
+
+    char *columnas2[4]; // Preparado para leer hasta 4 columnas por fila
+
+    fgets(buffer, sizeof(buffer), archivo2); // Descartar encabezado
+
+    while (csv_leer_fila(archivo2, ';', columnas2, 11, buffer, MAX_LINEA_CSV) > 0)
+    {
+
+        printf("ID: %s | Genero: %s | Titulo: %s\n", columnas2[0], columnas2[2],columnas2[1]); // Solo para prueba
+
+    }
+
+    fclose(archivo2);
 
 
     /*
@@ -35,3 +79,4 @@ int main()
 
     return 0;
 }
+
