@@ -41,7 +41,7 @@ typedef struct{
 typedef struct{
     char validacion_fallida [TAM_FAIL];
     int incidencias;
-    int ID;
+    long ID;
 }AUDIT_titulo;
 
 #endif // STRUCTS_H_INCLUDED
