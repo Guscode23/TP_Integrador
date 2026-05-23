@@ -39,6 +39,8 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Tp.h" />
+		<Unit filename="include/Validaciones.h" />
+		<Unit filename="include/fecha.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
