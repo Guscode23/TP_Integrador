@@ -34,13 +34,7 @@
 				</Linker>
 			</Target>
 		</Build>
-		<Unit filename="Propotipo de ultima cuota paga.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="Validaciones.h" />
-		<Unit filename="desarrollo de ultima cuota paga.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="fecha.c">
 			<Option compilerVar="CC" />
 		</Unit>

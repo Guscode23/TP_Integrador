@@ -3,16 +3,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "fecha.h"
+#include "Validaciones.h"
+
 
 #define TAM_APE_NOM 60
 #define TAM_CAT 10
 #define TAM_PLAN 10
 #define TAM_EMAIL_TUT 30
 
-//TDA FECHA
-/*typedef struct{
-    int dia, mes, anio;
-}t_fecha;*/
 
 typedef struct{
     long dni;
