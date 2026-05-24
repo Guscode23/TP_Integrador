@@ -1,17 +1,24 @@
 # depslib dependency file v1.0
-1779473802 source:c:\users\rosal\documentos\practicatopicos\tp_integrador\documentos\practicatopicos\tpintegrador\functionstp.c
+1779502366 source:c:\users\rosal\documentos\practicatopicos\tp_integrador\documentos\practicatopicos\tpintegrador\functionstp.c
 	"Tp.h"
 
-1779477979 c:\users\rosal\documentos\practicatopicos\tp_integrador\documentos\practicatopicos\tpintegrador\tp.h
+1779571967 c:\users\rosal\documentos\practicatopicos\tp_integrador\documentos\practicatopicos\tpintegrador\tp.h
 	<stdio.h>
 	<stdlib.h>
 	"fecha.h"
 	"Validaciones.h"
 
-1779478373 c:\users\rosal\documentos\practicatopicos\tp_integrador\documentos\practicatopicos\tpintegrador\include\fecha.h
+1779587625 c:\users\rosal\documentos\practicatopicos\tp_integrador\documentos\practicatopicos\tpintegrador\include\fecha.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 
-1779478020 c:\users\rosal\documentos\practicatopicos\tp_integrador\documentos\practicatopicos\tpintegrador\include\validaciones.h
+1779508649 c:\users\rosal\documentos\practicatopicos\tp_integrador\documentos\practicatopicos\tpintegrador\include\validaciones.h
+
+1779589312 source:c:\users\rosal\documentos\practicatopicos\tp_integrador\documentos\practicatopicos\tpintegrador\main.c
+	<stdio.h>
+	<stdlib.h>
+	"fecha.h"
+	"Validaciones.h"
+	"Tp.h"
 

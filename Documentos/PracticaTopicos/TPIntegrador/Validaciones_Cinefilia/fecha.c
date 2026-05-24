@@ -4,7 +4,7 @@ void ingresar_Fecha_Proceso(t_fecha *f){
     printf("Bienvenido/a.\nIngrese fecha de proceso (DD/MM/AAAA): ");
     scanf("%d / %d / %d", &f->dia, &f->mes, &f->anio);
 
-    while(es_Fecha_Valida(f) != TODO_OK){
+    while(es_Fecha_Valida(f) != FECHA_VALIDA){
 
         printf("Fecha invalida.\nIngrese nuevamente (DD/MM/AAAA): ");
         scanf("%d / %d / %d", &f->dia, &f->mes, &f->anio);
@@ -12,15 +12,15 @@ void ingresar_Fecha_Proceso(t_fecha *f){
 }
 /**************** Validación Fecha **************************/
 
-int es_Fecha_Valida(const t_fecha *f){
+int es_Fecha_Valida(t_fecha *f){
     if(f->anio >= 1600){
         if(f->mes >= 1 && f->mes <= 12){
             if(f->dia >= 1 && f->dia <= cant_Dia_Mes(f->mes, f->anio)){
-                return TODO_OK;
+                return FECHA_VALIDA;
             }
         }
     }
-    return ERROR;
+    return FECHA_INVALIDA;
 }
 
 int cant_Dia_Mes (int mes, int anio){
@@ -37,6 +37,41 @@ bool es_Bisiesto(int anio) {
     return ((anio%4 == 0 && anio%100 != 0) || anio%400 == 0);
 }
 
+int compara_Fechas_MenorIgual(t_fecha *fechNac, t_fecha *fechProceso)
+{
+    //Verifica que fechA <= fechB
+    ///detecta cuando A > B para devolver ERROR
+
+    ///Se agrega una validación extra respecto a la diferencia de años, aclarado en la consigna
+    if (fechNac->anio > fechProceso->anio || (fechProceso->anio-fechNac->anio)<10)
+        return FECHA_INVALIDA;
+      if (fechNac->anio == fechProceso->anio){  /////Si el año de A ya es mayor, no hace falta seguir comparando.
+             if (fechNac->mes > fechProceso->mes)
+                 return FECHA_INVALIDA;
+                  if (fechNac->mes == fechProceso->mes){
+                      if (fechNac->dia > fechProceso->dia)
+                           return FECHA_INVALIDA;
+                       }
+                  }
+    return FECHA_VALIDA; /// fechA <= fechB
+}
+
+int validarFechaAfiliacion(t_fecha* fechAfil,t_fecha* fechNac,t_fecha* fechProceso)
+{
+     int cmp1=compara_Fechas_MenorIgual(fechNac,fechAfil);
+     int cmp2=compara_Fechas_MenorIgual(fechAfil,fechProceso);
+
+       if(cmp1==9 &&cmp2 ==9)
+           return FECH_AFIL_VALIDA;
+
+    return FECH_AFIL_INVALIDA;
+
+
+}
+
+
+
+
 //FECHA ULTIMA CUOTA PAGA
 ///usa ese ERROR para saber si el orden lógico de las fechas se rompió.
 // fechAfi  <=  fechUltCuot  <=  fProceso
@@ -44,36 +79,18 @@ bool es_Bisiesto(int anio) {
 int validar_UltimaCuota_Paga(t_fecha* fechAfi,t_fecha* fechUltCuot, t_fecha* fProceso){
      ///Verifica que fechAfi <= fechUltCuot
 
-    if(compara_Fechas_MenorIgual(fechAfi, fechUltCuot) == ERROR)
+    if(compara_Fechas_MenorIgual(fechAfi, fechUltCuot) == FECHA_INVALIDA)
         return FALLA_DATO; //La afiliación es POSTERIOR a la última cuota , no tiene sentido
 
       //Verifica que fechUltCuot <= fProceso
-    if(comparaFechasMenorIgual(fechUltCuot, fProceso) == ERROR)
+    if(compara_Fechas_MenorIgual(fechUltCuot, fProceso) == FECHA_INVALIDA)
         return FALLA_DATO; ///La última cuota es POSTERIOR a hoy , no tiene sentido
 
     return DATO_OK;
 
 }
 
-int compara_Fechas_Meno_rIgual(t_fecha *fechA, t_fecha *fechB)
-{
-    //Verifica que fechA <= fechB
-    ///detecta cuando A > B para devolver ERROR
 
-    if (fechA->anio > fechB->anio)
-        return ERROR;
-    if (fechA->anio == fechB->anio)   /////Si el año de A ya es mayor, no hace falta seguir comparando.
-    {
-        if (fechA->mes > fechB->mes)
-            return ERROR;
-        if (fechA->mes == fechB->mes)
-        {
-            if (fechA->dia > fechB->dia)
-                return ERROR;
-        }
-    }
-    return TODO_OK; /// fechA <= fechB
-}
 
 
 

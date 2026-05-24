@@ -11,10 +11,12 @@
 #define TAM_CAT 10
 #define TAM_PLAN 10
 #define TAM_EMAIL_TUT 30
+#define TAM_CUIL 30
 
 
 typedef struct{
-    long dni;
+    long int dni;
+    char cuil[TAM_CUIL];
     char apeNom[TAM_APE_NOM];
     t_fecha fechNac;
     char sexo;

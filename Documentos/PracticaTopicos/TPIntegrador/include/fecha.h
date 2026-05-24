@@ -6,10 +6,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define TODO_OK 1
-#define ERROR 0
-#define FALLA_DATO 1
-#define DATO_OK 0
+///ValdacionFecha
+#define FECHA_VALIDA 9
+#define FECHA_INVALIDA -9
+
+///ÚLtima cuota paga
+#define FALLA_DATO -10
+#define DATO_OK 10
 
 ///TDA
 typedef struct{
@@ -20,12 +23,14 @@ typedef struct{
 void ingresar_Fecha_Proceso(t_fecha *f);
 
 ///VALIDACION DE FECHA
-int es_Fecha_Valida(const t_fecha *f);
+int es_Fecha_Valida(t_fecha *f);
 int cant_Dia_Mes (int mes, int anio);
 bool es_Bisiesto(int anio);
 ///ULTIMA CUOTA PAGA
 int validar_UltimaCuota_Paga(t_fecha* fechAfi, t_fecha* fechUltCuot, t_fecha* fProceso);
-int compara_Fechas_Meno_rIgual(t_fecha *fechA, t_fecha *fechB); /// Esta tmbien se podria usar en validar afilacion
+int compara_Fechas_MenorIgual(t_fecha *fechNac, t_fecha *fechProceso); /// Esta tmbien se podria usar en validar afilacion
+int validarFechaAfiliacion(t_fecha* fechAfiliacion,t_fecha* fechNac,t_fecha* fechProceso);
+
 
 #endif // FECHA_H_INCLUDED
 

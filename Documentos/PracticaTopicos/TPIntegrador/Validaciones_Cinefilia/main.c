@@ -27,59 +27,82 @@
 ///ValidarGenero
 ///ValidarStock
 
-int validarCUIL(const char* cuil,long int dniMiembro){
 
+///Funcion que valida que el sexo del Miembro sea coherente con el tipo de cuil
+int validarIgualdadSexo(char* sexoMiembro,int tipoCuil)
+{
+
+     switch (tipoCuil) {
+          case 20:
+            if(*sexoMiembro=='M')
+                return CUIL_VALIDO;
+            break;
+
+           case 27:
+              if(*sexoMiembro=='F')
+                return CUIL_VALIDO;
+              break;
+
+           case 30:
+              if(*sexoMiembro=='O')
+                 return CUIL_VALIDO;
+              break;
+           }
+    return CUIL_INVALIDO;
+}
+
+
+int validarCUIL(const char* cuil,long int dniMiembro,char* sexoMiembro)
+{
  long int dni;
  int digVerif;
  int tipo;
  int coeficientes[10]={5,4,3,2,7,6,5,4,3,2};
  int *p_coef=coeficientes;
  int formato;
+ char dniAux[11];
 
  ///Capturo los datos con sscanf
   formato=sscanf(cuil, "%d-%ld-%d",&tipo,&dni,&digVerif);
 
- ///Si el dni del Cuil es distinto al del registro, invalido
- if(dni!=dniMiembro || formato==-1)
+ ///Validación de casos borde
+ if(validarIgualdadDNI(dniMiembro,dni) || formato!=3 || validarIgualdadSexo(sexoMiembro,tipo)==-1)
+   //if(validarIgualdadDNI(dniMiembro,dni) || formato==-1)
       return CUIL_INVALIDO;
-    else{
+        else{
 
         int result=0;
         int prod=0;
         int resto=0;
 
-        ///Imprimo todos los valores
-        for(int i=0;i<=9;i++){
-            prod = (*(cuil + i) - '0') * (*(p_coef + i));
+         ///Almacena un entero dentro de una cadena y debería devolver un int
+         sprintf(dniAux, "%ld", dni);
+
+        ///Multiplico todos los valores
+        for(int i=0;i<=strlen(dniAux)-1;i++){
+            prod = (*(dniAux + i) - '0') * (*(p_coef + i));
             result+=prod;
           }
           resto=result-((result/11)*11);
 
-          if(tipo==20 || tipo==27 || tipo ==30){
              switch (resto) {
                case 0:
+                  if(digVerif==0)
+                    return CUIL_VALIDO;
+                  break;
 
-               if(digVerif==0)
-                   return CUIL_VALIDO;
-               break;
-
-               case 1:
-               ///Hombre o Mujer
-                if((tipo==20 && digVerif==9) ||(tipo==27 && digVerif==4))
-                   return CUIL_VALIDO;
-                  else
-                     return CUIL_INVALIDO;
-                break;
+                case 1:
+                   if((tipo==20 && digVerif==9) ||(tipo==27 && digVerif==4))
+                      return CUIL_VALIDO;
+                    break;
 
                 default:
                   if(digVerif==(11-resto))
                      return CUIL_VALIDO;
-                break;
+                  break;
+               }
             }
-              } else
-                  return CUIL_INVALIDO;
-            }
-    return 0;
+    return CUIL_INVALIDO;
 }
 
 char* normalizarNombre(char* nyapel)
@@ -142,13 +165,15 @@ char* normalizarNombre(char* nyapel)
 int validarCorreo(const char* correo)
 {
 
-   char dom[20]="";
+   char dom[20];
    int captura=0;
    char dominios[]="gmail,outlook,empresa,yahoo";
 
-   captura=sscanf(correo, "%*s@%s.com.%*s",dom);
 
-   if(captura==-1)
+   ///Ignora los caracteres hasta el arroba, y del arroba hasta el punto
+   captura = sscanf(correo, "%*[^@]@%[^.]", dom); ///Expresión regular
+
+   if(captura<=0)
        return CORREO_INVALIDO;
      else{
          if(strstr(dominios,dom)!=NULL)
@@ -170,10 +195,11 @@ int validarPlan(const char* plan)
 
 ///La edad es un campo calculable,a partir de
 
-int validarCAT(const char* cat,int edad)
+int validarCAT(const char* cat,int edad,char* correo)
 {
     if(strcmp(cat,"MENOR")==0){
-        if(edad<18)
+        ///Como es menor, validar que el correo no esté vacío
+        if(edad<18 && *(correo)!='\0')
             return CAT_VALIDO;
       }
        else if(strcmp(cat,"ADULTO")==0){
@@ -226,7 +252,7 @@ int obtenerVectorPeliculas(const char *nombreArchivo){
 
     fgets(linea, sizeof(linea), archivo); // Leo la primera línea del CSV (el encabezado) y la descarto
 
-    
+
     while (fgets(linea, sizeof(linea), archivo) != NULL) {
 
         // strtok corta la linea cada vez que encuentra una coma ",". La primera vez le paso la línea, y me devuelve el primer campo (el ID)
