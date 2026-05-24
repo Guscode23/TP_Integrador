@@ -3,23 +3,24 @@
 	"archivos.h"
 	<string.h>
 
-1778969496 source:c:\users\facundo\desktop\tp_integrador\manejo-de-archivos\fecha.c
+1779657169 source:c:\users\facundo\desktop\tp_integrador\manejo-de-archivos\fecha.c
 	"fecha.h"
 
-1778969496 c:\users\facundo\desktop\tp_integrador\manejo-de-archivos\fecha.h
+1779657118 c:\users\facundo\desktop\tp_integrador\manejo-de-archivos\fecha.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
+	<time.h>
 
 1778980871 c:\users\facundo\desktop\tp_integrador\manejo-de-archivos\archivos.h
 	<stdio.h>
 
-1778981135 source:c:\users\facundo\desktop\tp_integrador\manejo-de-archivos\main.c
+1779657127 source:c:\users\facundo\desktop\tp_integrador\manejo-de-archivos\main.c
 	<stdio.h>
 	<stdlib.h>
 	"Structs.h"
 	"archivos.h"
 
-1778980811 c:\users\facundo\desktop\tp_integrador\manejo-de-archivos\structs.h
+1779130155 c:\users\facundo\desktop\tp_integrador\manejo-de-archivos\structs.h
 	"fecha.h"
 
