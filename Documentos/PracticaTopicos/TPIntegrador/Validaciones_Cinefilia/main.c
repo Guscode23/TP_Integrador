@@ -252,8 +252,8 @@ int obtenerVectorPeliculas(const char *nombreArchivo){
 
     while (fgets(linea, sizeof(linea), archivo) != NULL) {
 
-        // strtok corta la linea cada vez que encuentra una coma ",". La primera vez le paso la línea, y me devuelve el primer campo (el ID)
-        char *token = strtok(linea, ",");
+        // strtok corta la linea cada vez que encuentra un punto y coma ";". La primera vez le paso la línea, y me devuelve el primer campo (el ID)
+        char *token = strtok(linea, ";");
         if (token == NULL) continue;
         // atoi convierte el texto del ID al número entero. Si no lo identifica como número, lo convierte en cero
         int id = atoi(token);
@@ -262,14 +262,14 @@ int obtenerVectorPeliculas(const char *nombreArchivo){
             // Llamo a la función que inserta el ID y guardo el resultado
             int resultado = insertarIdPelicula(&ids, &cantidad, id);
             if (resultado == 1)       // Si devolvió 1, el ID ya existía
-                printf("ID %d DUPLICADO\n", id);
+                printf("ID %d esta duplicado\n", id);
         }
         else
-            printf("ID %d ES IGUAL A CERO", id);
+            printf("Se encontro un ID invalido\n", id);
     }
 
     fclose(archivo);
-    printf("\nIDs únicos encontrados: %d\n", cantidad);
+    printf("\nIDs unicos encontrados: %d\n", cantidad);
     free(ids);
     return 0;
 }

@@ -22,3 +22,26 @@
 	"Validaciones.h"
 	"Tp.h"
 
+1779162327 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\documentos\practicatopicos\tpintegrador\functionstp.c
+	"Tp.h"
+
+1779689725 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\documentos\practicatopicos\tpintegrador\tp.h
+	<stdio.h>
+	<stdlib.h>
+	"fecha.h"
+	"Validaciones.h"
+
+1779680154 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\documentos\practicatopicos\tpintegrador\include\fecha.h
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+
+1779680154 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\documentos\practicatopicos\tpintegrador\include\validaciones.h
+
+1779693933 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\documentos\practicatopicos\tpintegrador\main.c
+	<stdio.h>
+	<stdlib.h>
+	"fecha.h"
+	"Validaciones.h"
+	"Tp.h"
+

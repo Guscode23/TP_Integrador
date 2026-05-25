@@ -16,3 +16,20 @@
 
 1779568393 c:\users\rosal\documentos\practicatopicos\tp_integrador\documentos\practicatopicos\tpintegrador\validaciones_cinefilia\validaciones.h
 
+1779680154 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\documentos\practicatopicos\tpintegrador\validaciones_cinefilia\fecha.c
+	"fecha.h"
+
+1779680154 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\documentos\practicatopicos\tpintegrador\validaciones_cinefilia\fecha.h
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+
+1779693923 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\documentos\practicatopicos\tpintegrador\validaciones_cinefilia\main.c
+	"Validaciones.h"
+	<string.h>
+	<stdlib.h>
+	<stdio.h>
+	<ctype.h>
+
+1779680154 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\documentos\practicatopicos\tpintegrador\validaciones_cinefilia\validaciones.h
+

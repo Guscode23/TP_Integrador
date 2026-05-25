@@ -114,7 +114,7 @@ int main()
 
 
    ///H-Validar PLAN: Pruebas exitosas
-   /*const char plan[]="ORO";
+   /*const char plan[]="BASIC";
 
    printf("%d",validarPlan(plan));*/
 
@@ -140,6 +140,7 @@ int main()
 
   printf("%d",calcularEdad(&fechaProceso,&fechaNac));*/
 
+
   ///K-Prueba de Genero-->Pruebas exitosas
   /*const char genero[]="Comedia";
 
@@ -150,6 +151,24 @@ int main()
 
   printf("%d",validarPlan(plan));
 
+  ///K-Prueba de Genero: Exitosa
+  /*
+  const char genero[]="Comedias";
+  printf("%d",validarGenero(genero));*/
+
+  ///L-Prueba de ID Pelicula: Exitosa
+  const char *archivo = "peliculas.csv";
+  obtenerVectorPeliculas(archivo);
+
+
+  ///M-Prueba de Titulo (pendiente)
+
+  ///N-Prueba de Stock: Exitosa
+
+  /*
+  int stock = 141245;
+  printf("%d",validarStock(stock));
+  */
 
 
 
