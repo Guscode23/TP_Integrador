@@ -1,0 +1,9 @@
+/Documentos/PracticaTopicos/TPIntegrador/bin/
+/Documentos/PracticaTopicos/TPIntegrador/obj/
+/Documentos/PracticaTopicos/TPIntegrador/Validaciones_Cinefilia/bin/
+/Documentos/PracticaTopicos/TPIntegrador/Validaciones_Cinefilia/obj/
+*.exe
+*.o
+*.a
+*.layout
+*.depend
