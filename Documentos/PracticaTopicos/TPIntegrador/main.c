@@ -119,13 +119,13 @@ int main()
    printf("%d",validarPlan(plan));*/
 
    ///I-Validar EMAIL Tutor-->Pruebas exitosas
-   /*const char correo[]="rosalesunlam19@gmail.com";
+   //const char correo[]="rosalesunlam19@gmail.com";
    //const char correo[]="rosalesunlam19@miempresa.com";
    //const char correo[]="rosalesunlam10@algo.com";
    //const char correo[]="";
 
 
-   printf("%d",validarCorreo(correo)); ///Prueba exitosa*/
+   //printf("%d",validarCorreo(correo)); ///Prueba exitosa*/
 
    ///J-Prueba de cálculo de edad:Pruebas exitosas
    /*t_fecha fechaProceso;
@@ -157,24 +157,19 @@ int main()
   printf("%d",validarGenero(genero));*/
 
   ///L-Prueba de ID Pelicula: Exitosa
-  const char *archivo = "peliculas.csv";
-  obtenerVectorPeliculas(archivo);
+  //const char *archivo = "peliculas.csv";
+  //obtenerVectorPeliculas(archivo);
 
+  ///M-Prueba de Titulo
+  //const char titulo[]="titulo de prueba";
+  //const char titulo[]="    titulo    con    espacios   ";
 
-  ///M-Prueba de Titulo (pendiente)
+  //printf("%s",normalizarTitulo(titulo));
 
   ///N-Prueba de Stock: Exitosa
 
-  /*
-  int stock = 141245;
-  printf("%d",validarStock(stock));
-  */
-
-
-
-
-
-
+  /*int stock = -1;
+  validarStock(stock);*/
 
 
 

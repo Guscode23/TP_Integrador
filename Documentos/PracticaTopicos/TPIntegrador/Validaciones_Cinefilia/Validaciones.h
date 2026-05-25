@@ -35,8 +35,9 @@ int validarGenero(const char* genero);
 int esDuplicado(int *ids, int cantidad, int idBuscado);
 int insertarIdPelicula(int **ids, int *cantidad, int nuevoId);
 int obtenerVectorPeliculas(const char *nombreArchivo);
-int validarStock(int stock);
+void validarStock(int stock);
 int validarIgualdadSexo(char* sexoMiembro,int tipoCuil);
 int validarCAT(const char* cat,int edad,char* correo);
+char* normalizarTitulo(char * titulo);
 
 #endif // VALIDACIONES_H_INCLUDED

@@ -2,6 +2,7 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
+<<<<<<< Updated upstream
 	<File name="fecha.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="982" topLine="9" />
@@ -13,6 +14,40 @@
 		</Cursor>
 	</File>
 	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
+=======
+	<File name="main.c" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4893" topLine="30" />
+		</Cursor>
+		<Folding>
+			<Collapse line="33" />
+			<Collapse line="56" />
+			<Collapse line="109" />
+			<Collapse line="150" />
+			<Collapse line="171" />
+			<Collapse line="183" />
+			<Collapse line="199" />
+			<Collapse line="208" />
+			<Collapse line="219" />
+			<Collapse line="234" />
+			<Collapse line="283" />
+		</Folding>
+	</File>
+	<File name="fecha.c" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="-3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2201" topLine="34" />
+		</Cursor>
+		<Folding>
+			<Collapse line="75" />
+		</Folding>
+	</File>
+	<File name="Validaciones.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1445" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="fecha.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+>>>>>>> Stashed changes
 		<Cursor>
 			<Cursor1 position="5457" topLine="167" />
 		</Cursor>

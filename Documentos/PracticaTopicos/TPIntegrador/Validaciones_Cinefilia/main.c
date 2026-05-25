@@ -274,9 +274,46 @@ int obtenerVectorPeliculas(const char *nombreArchivo){
     return 0;
 }
 
-int validarStock(int stock) {
-    if (stock >= 1)
-        return stock;
-    // Si no es mayor o igual a 1, devuelve cero
-    return 0;
+void validarStock(int stock) {
+    // Si es menor a 1, lo convierte en cero
+    if (stock < 1)
+    {
+        printf("Se convierte valor a cero");
+        stock = 0;
+    }
+}
+
+char*  normalizarTitulo(char * titulo){
+    char * lect = titulo, * esc = titulo;
+    int primeraLetraPalabra;
+    int posicionPalabra = 0;
+    while(*lect)
+    {
+        ///Eliminar espacios iniciales
+        while(*lect && (isspace(*lect) || *lect == ','))
+            lect++;
+        if(*lect)
+        {
+            posicionPalabra++;
+            ///En caso de corresponder a la segunda palabra
+            if(posicionPalabra > 1){
+                *esc = ' ';
+                esc++;
+            }
+
+            ///Bandera que indica primera letra de la palabra
+            primeraLetraPalabra = 1;
+
+            ///Normalizar palabra
+            while(*lect && !isspace(*lect) && *lect != ',')
+            {
+                *esc = primeraLetraPalabra ? toupper(*lect) : tolower(*lect);
+                primeraLetraPalabra = 0;
+                esc++;
+                lect++;
+            }
+        }
+    }
+    *esc = '\0';
+    return titulo;
 }
