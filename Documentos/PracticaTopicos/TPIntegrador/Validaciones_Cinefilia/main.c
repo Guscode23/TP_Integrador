@@ -170,12 +170,13 @@ int validarCorreo(const char* correo)
 
 int validarPlan(const char* plan)
 {
-   char planes[]="BASIC,PREMIUM,VIP,FAMILY";
+   char planes[4][15]={"BASIC","PREMIUM","VIP","FAMILY"};
 
-   if(strstr(planes,plan)==NULL)
-        return PLAN_INVALIDO;
-
-  return PLAN_VALIDO;
+   for(int i=0;i<=3;i++){
+      if(strcmp(plan,*(planes+i))==0)
+            return PLAN_VALIDO;
+      }
+   return PLAN_INVALIDO;
 }
 
 ///La edad es un campo calculable.Por tanto deberemos hacer una funcion que calcule la edad del miembro
@@ -198,12 +199,13 @@ int validarCAT(const char* cat,int edad,char* correo)
 
 int validarGenero(const char* genero)
 {
-   char generos[]="Acción,Drama,Comedia,Terror";
+   char generos[4][10]={"Accion","Drama","Comedia","Terror"};
 
-   if(strstr(generos,genero)==NULL)
-        return GENERO_INVALIDO;
-
-  return GENERO_VALIDO;
+   for(int i=0;i<=3;i++){
+      if(strcmp(genero,*(generos+i))==0)
+            return GENERO_VALIDO;
+      }
+   return GENERO_INVALIDO;
 }
 
 int esDuplicado(int *ids, int cantidad, int idBuscado) {

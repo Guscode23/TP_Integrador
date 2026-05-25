@@ -140,10 +140,15 @@ int main()
 
   printf("%d",calcularEdad(&fechaProceso,&fechaNac));*/
 
-  ///K-Prueba de Genero
-  const char genero[]="Comedias";
+  ///K-Prueba de Genero-->Pruebas exitosas
+  /*const char genero[]="Comedia";
 
-  printf("%d",validarGenero(genero));
+  printf("%d",validarGenero(genero));*/
+
+  ///L-Prueba de Plan-->Pruebas exitosas
+  const char plan[]="BASIC";
+
+  printf("%d",validarPlan(plan));
 
 
 
