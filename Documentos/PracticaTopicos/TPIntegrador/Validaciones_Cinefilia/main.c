@@ -18,6 +18,7 @@
 //ValidarFechaUltimaCuota (Avanzado)
 ///ValidarEstado(Macro)
 ///ValidarPlan
+///Tenemos que agregar una función más que detecte los DNIS duplicados, ya que DNI es clave
 
 /********************************************/
 ///Validaciones de Titulos Películas
@@ -105,61 +106,45 @@ int validarCUIL(const char* cuil,long int dniMiembro,char* sexoMiembro)
     return CUIL_INVALIDO;
 }
 
-char* normalizarNombre(char* nyapel)
+char*  normalizarApel_Nombre(char * nyapel)
 {
-  char* ini;
-  char* aux;
-  char* pcad=nyapel;
-  char* fin=nyapel+(strlen(nyapel)-1);
-  char* cont;
-  char* coma;
+    char * lect = nyapel, * esc =nyapel;
+    int primeraLetraPalabra;
+    int posicionPalabra = 0;
+    while(*lect)
+    {
+        ///Eliminar espacios iniciales
+        while(*lect && (isspace(*lect) || *lect == ','))
+            lect++;
+        if(*lect)
+        {
+            posicionPalabra++;
+            ///En caso de corresponder a la segunda palabra
+            if(posicionPalabra == 2){
+                *esc = ',';
+                esc++;
+            }
+            ///En caso de corresponder al resto
+            else if(posicionPalabra > 2){
+                *esc = ' ';
+                esc++;
+            }
 
+            ///Bandera que indica primera letra de la palabra
+            primeraLetraPalabra = 1;
 
-  ///Eliminar espacios iniciales
-  while(!isalpha(*pcad)){
-        pcad++;
-   }
-    ini=pcad;
-   *ini=toupper(*ini);
-
-  ///Eliminar espacios finales
-  while(!isalpha(*fin)){
-        *fin='\0';
-        fin--;
-  }
-
-  pcad+=1;
-  ///Normalizar la primera palabra
-  while(*pcad!=' '){
-        *pcad=tolower(*pcad);
-         pcad++;
-    }
-
-  ///Una vez que tomamos el apellido, buscamos existencia de la coma
-  coma=strchr(nyapel,',');
-
-    if(coma==NULL)
-      *pcad=',';
-
-
-
-  ///Variable auxiiar para el resto de las palabras
-  aux=ini;
-
-  ///Ubicarnos dentro de cada palabra para que la letra inicial sea mayuscula
-  while((aux=strchr(aux,' '))!=NULL){
-     *(aux+1)=toupper(*(aux+1));
-       cont=aux+2;
-
-       while(*cont != ' ' && *cont != '\0') {
-          *cont = tolower(*cont);
-           cont++;
-          }
-           aux=cont;
+            ///Normalizar palabra
+            while(*lect && !isspace(*lect) && *lect != ',')
+            {
+                *esc = primeraLetraPalabra ? toupper(*lect) : tolower(*lect);
+                primeraLetraPalabra = 0;
+                esc++;
+                lect++;
+            }
         }
-
-
-    return ini;
+    }
+    *esc = '\0';
+    return nyapel;
 }
 
 int validarCorreo(const char* correo)
@@ -193,7 +178,7 @@ int validarPlan(const char* plan)
   return PLAN_VALIDO;
 }
 
-///La edad es un campo calculable,a partir de
+///La edad es un campo calculable.Por tanto deberemos hacer una funcion que calcule la edad del miembro
 
 int validarCAT(const char* cat,int edad,char* correo)
 {
@@ -209,6 +194,16 @@ int validarCAT(const char* cat,int edad,char* correo)
 
     return CAT_INVALIDO;
 
+}
+
+int validarGenero(const char* genero)
+{
+   char generos[]="Acción,Drama,Comedia,Terror";
+
+   if(strstr(generos,genero)==NULL)
+        return GENERO_INVALIDO;
+
+  return GENERO_VALIDO;
 }
 
 int esDuplicado(int *ids, int cantidad, int idBuscado) {

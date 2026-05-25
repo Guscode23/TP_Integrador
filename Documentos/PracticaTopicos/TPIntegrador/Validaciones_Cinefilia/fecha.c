@@ -61,16 +61,13 @@ int validarFechaAfiliacion(t_fecha* fechAfil,t_fecha* fechNac,t_fecha* fechProce
      int cmp1=compara_Fechas_MenorIgual(fechNac,fechAfil);
      int cmp2=compara_Fechas_MenorIgual(fechAfil,fechProceso);
 
-       if(cmp1==9 &&cmp2 ==9)
+       if(cmp1==FECHA_VALIDA &&cmp2 ==FECHA_VALIDA)
            return FECH_AFIL_VALIDA;
 
     return FECH_AFIL_INVALIDA;
 
 
 }
-
-
-
 
 //FECHA ULTIMA CUOTA PAGA
 ///usa ese ERROR para saber si el orden lógico de las fechas se rompió.
@@ -88,6 +85,19 @@ int validar_UltimaCuota_Paga(t_fecha* fechAfi,t_fecha* fechUltCuot, t_fecha* fPr
 
     return DATO_OK;
 
+}
+
+int calcularEdad(t_fecha* fechProceso, t_fecha* fechNac)
+{
+   int edad=fechProceso->anio-fechNac->anio;
+
+    if(fechProceso->mes < fechNac->mes)
+        edad-=1;
+      else if(fechProceso->mes == fechNac->mes)
+              if(fechProceso->dia < fechNac->dia)
+                    edad-=1;
+
+    return edad;
 }
 
 

@@ -33,6 +33,10 @@ int validar_UltimaCuota_Paga(t_fecha* fechAfi, t_fecha* fechUltCuot, t_fecha* fP
 int compara_Fechas_MenorIgual(t_fecha *fechNac, t_fecha *fechProceso); /// Esta tmbien se podria usar en validar afilacion
 int validarFechaAfiliacion(t_fecha* fechAfiliacion,t_fecha* fechNac,t_fecha* fechProceso);
 
+///Funcion de calculo edad
+int calcularEdad(t_fecha* fechProceso, t_fecha* fechNac);
+
+
 #endif // FECHA_H_INCLUDED
 
 

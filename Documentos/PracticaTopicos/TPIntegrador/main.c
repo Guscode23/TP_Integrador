@@ -67,7 +67,14 @@ int main()
 
   printf("%d",validarCUIL(cuil,dni,&sexo)); ///Debe dar inválido, ya que el dígito de verificación debe ser 8 (Correcto)*/
 
-  ///C-Normalizar Apellido y Nombre (Pendiente)
+  ///C-Normalizar Apellido y Nombre (Pruebas exitosas)
+  //char nyApel[]="galletA pePE raul"; ///Caso1-Éxito
+  //char nyApel[]="galletA erPE   raul"; ///Caso2-Éxito
+  //char nyApel[]="  galletA   erPE   raul";//Caso3-Éxito
+  //char nyApel[]="GALLETA PEPE    RUAL"; ///Caso 4-Éxito
+
+  //printf("%s",normalizarApel_Nombre(nyApel));
+
 
 
   ///D-Validar Fecha de Nacimiento (Fecha válida y comparar fecha)
@@ -112,13 +119,32 @@ int main()
    printf("%d",validarPlan(plan));*/
 
    ///I-Validar EMAIL Tutor-->Pruebas exitosas
-   const char correo[]="rosalesunlam19@gmail.com";
+   /*const char correo[]="rosalesunlam19@gmail.com";
    //const char correo[]="rosalesunlam19@miempresa.com";
    //const char correo[]="rosalesunlam10@algo.com";
    //const char correo[]="";
 
 
-   printf("%d",validarCorreo(correo)); ///Prueba exitosa
+   printf("%d",validarCorreo(correo)); ///Prueba exitosa*/
+
+   ///J-Prueba de cálculo de edad:Pruebas exitosas
+   /*t_fecha fechaProceso;
+   t_fecha fechaNac;
+
+  fechaProceso.dia=22;
+  fechaProceso.mes=8;
+  fechaProceso.anio=2026;
+  fechaNac.dia=23;
+  fechaNac.mes=8;
+  fechaNac.anio=2001;
+
+  printf("%d",calcularEdad(&fechaProceso,&fechaNac));*/
+
+  ///K-Prueba de Genero
+  const char genero[]="Comedias";
+
+  printf("%d",validarGenero(genero));
+
 
 
 
