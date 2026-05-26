@@ -1,6 +1,5 @@
 #ifndef STRUCTS_H_INCLUDED
 #define STRUCTS_H_INCLUDED
-#include "fecha.h"
 
 #define TAM_APE_NOM 60
 #define TAM_CAT 10
@@ -10,6 +9,8 @@
 #define TAM_TITULO 61
 #define TAM_GENERO 21
 #define TAM_FAIL 21
+
+#include "fecha.h"
 
 typedef struct{
     long dni;
@@ -32,16 +33,11 @@ typedef struct{
     int stock;
 }titulo;
 
-typedef struct{
-    char validacion_fallida [TAM_FAIL];
-    int incidencias;
-    long DNI;
-}AUDIT_miembro;
-
-typedef struct{
-    char validacion_fallida [TAM_FAIL];
-    int incidencias;
-    long ID;
-}AUDIT_titulo;
+// Estructura de auditoría de doble entrada
+typedef struct {
+    char tipo_error[50];
+    int cantidad_incidencias;
+    long dnis_rechazados[100];
+} t_auditoria;
 
 #endif // STRUCTS_H_INCLUDED

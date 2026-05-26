@@ -1,0 +1,40 @@
+# depslib dependency file v1.0
+1779757480 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\fecha.c
+	"fecha.h"
+
+1779758857 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\fecha.h
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<time.h>
+
+1779759931 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	"structs.h"
+	"fecha.h"
+	"archivos.h"
+	"auditoria.h"
+
+1779758857 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\structs.h
+	"fecha.h"
+
+1779759463 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\archivos.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	"structs.h"
+
+1779759464 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.h
+	"archivos.h"
+	"structs.h"
+
+1779759671 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.c
+	"auditoria.h"
+
+1779759671 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\archivos.c
+	"archivos.h"
+

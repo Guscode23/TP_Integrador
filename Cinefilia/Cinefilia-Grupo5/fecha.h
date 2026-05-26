@@ -1,3 +1,6 @@
+#ifndef FECHA_H_INCLUDED
+#define FECHA_H_INCLUDED
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -19,4 +22,5 @@ bool es_Bisiesto(int anio);
 
 void solicitar_Fecha_Proceso(t_fecha *fecha_proceso);
 
+#endif // FECHA_H_INCLUDED
 

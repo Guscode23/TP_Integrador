@@ -1,0 +1,12 @@
+========================================
+      REPORTE DE AUDITORIA DE DATOS     
+========================================
+
+Motivo de rechazo: Falla en DNI
+Cantidad de incidencias: 4
+Registros afectados (DNI):
+  - -56
+  - 2
+  - 0
+  - 1
+----------------------------------------
