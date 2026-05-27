@@ -147,18 +147,28 @@ int main()
   printf("%d",validarGenero(genero));*/
 
   ///L-Prueba de Plan-->Pruebas exitosas
-  const char plan[]="BASIC";
-
-  printf("%d",validarPlan(plan));
+  //const char plan[]="BASIC";
+  //printf("%d",validarPlan(plan));
 
   ///K-Prueba de Genero: Exitosa
   /*
   const char genero[]="Comedias";
   printf("%d",validarGenero(genero));*/
 
-  ///L-Prueba de ID Pelicula: Exitosa
-  //const char *archivo = "peliculas.csv";
-  //obtenerVectorPeliculas(archivo);
+  ///L-Prueba de ID Pelicula: exitosas
+  /*int cantidad = 0;  // Declaro la cantidad de elementos del vector. Arranca con 0
+  int *ids = NULL;   // Declaro el vector de IDs, que arranca vacío, sin memoria asignada todavía
+  printf("%d", cantidad);
+  printf("%d",insertarEnVector(&ids, &cantidad, 5));
+  printf("%d", cantidad);
+  printf("%d",insertarEnVector(&ids, &cantidad, 10));
+  printf("%d", cantidad);
+  printf("%d",insertarEnVector(&ids, &cantidad, 111));
+  printf("%d", cantidad);
+  printf("%d",insertarEnVector(&ids, &cantidad, 10));
+  printf("%d", cantidad);
+  printf("%d",insertarEnVector(&ids, &cantidad, 2));
+  printf("%d", cantidad);*/
 
   ///M-Prueba de Titulo
   //const char titulo[]="titulo de prueba";
@@ -170,7 +180,6 @@ int main()
 
   /*int stock = -1;
   validarStock(stock);*/
-
 
 
   return 0;

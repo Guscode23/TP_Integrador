@@ -208,70 +208,24 @@ int validarGenero(const char* genero)
    return GENERO_INVALIDO;
 }
 
-int esDuplicado(int *ids, int cantidad, int idBuscado) {
+int insertarEnVector(int **ids, int *cantidad, int nuevoItem) {
 
+    if (nuevoItem < 1)
+        return -9;
     // Recorre el vector desde el primero hasta el último elemento. Si el elemento actual es igual al ID que busco, devuelvo 1
-    for (int i = 0; i < cantidad; i++) {
-        if (ids[i] == idBuscado)
-            return 1;
+    for (int i = 0; i < *cantidad; i++) {
+        if ((*ids)[i] == nuevoItem)
+            return -9;
     }
-
-    return 0;
-}
-
-int insertarIdPelicula(int **ids, int *cantidad, int nuevoId) {
-
-    if (esDuplicado(*ids, *cantidad, nuevoId) == 1) // Llamo a la función de arriba para saber si ya existe. Si es duplicado, aviso y salgo sin insertar
-        return 1;
 
     // Si no es duplicado, le pido al sistema operativo un lugar más en memoria para guardar el nuevo ID. (*cantidad + 1) es la nueva cantidad de elementos que necesito
     *ids = realloc(*ids, (*cantidad + 1) * sizeof(int));
 
     // Guardo el nuevo ID en la última posición del vector y luego aumento la cantidad de elementos en 1
-    (*ids)[*cantidad] = nuevoId;
+    (*ids)[*cantidad] = nuevoItem;
     (*cantidad)++;
 
-    return 0;
-}
-
-int obtenerVectorPeliculas(const char *nombreArchivo){
-    int cantidad = 0;  // Declaro la cantidad de elementos del vector. Arranca con 0
-    int *ids = NULL;   // Declaro el vector de IDs, que arranca vacío, sin memoria asignada todavía
-
-    FILE *archivo = fopen(nombreArchivo, "r"); // Abro el archivo CSV en modo lectura
-
-    if (archivo == NULL) {
-        printf("Error al abrir el archivo\n");
-        return 1;
-    }
-
-    char linea[256]; // Creo un buffer (espacio temporal con una cantidad de caracteres arbitraria) para guardar cada línea que leo del archivo
-
-    fgets(linea, sizeof(linea), archivo); // Leo la primera línea del CSV (el encabezado) y la descarto
-
-
-    while (fgets(linea, sizeof(linea), archivo) != NULL) {
-
-        // strtok corta la linea cada vez que encuentra un punto y coma ";". La primera vez le paso la línea, y me devuelve el primer campo (el ID)
-        char *token = strtok(linea, ";");
-        if (token == NULL) continue;
-        // atoi convierte el texto del ID al número entero. Si no lo identifica como número, lo convierte en cero
-        int id = atoi(token);
-        if (id > 0) {
-
-            // Llamo a la función que inserta el ID y guardo el resultado
-            int resultado = insertarIdPelicula(&ids, &cantidad, id);
-            if (resultado == 1)       // Si devolvió 1, el ID ya existía
-                printf("ID %d esta duplicado\n", id);
-        }
-        else
-            printf("Se encontro un ID invalido\n", id);
-    }
-
-    fclose(archivo);
-    printf("\nIDs unicos encontrados: %d\n", cantidad);
-    free(ids);
-    return 0;
+    return 9;
 }
 
 void validarStock(int stock) {

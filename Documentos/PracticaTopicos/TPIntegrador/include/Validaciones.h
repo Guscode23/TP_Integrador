@@ -17,6 +17,8 @@
 #define PLAN_INVALIDO -7
 #define GENERO_VALIDO 8
 #define GENERO_INVALIDO -8
+#define INSERCION_VALIDA 9
+#define INSERCION_INVALIDA -9
 
 
 ///Macros a incluir
@@ -34,7 +36,7 @@ int validarCorreo(const char* correo);
 int validarPlan(const char* plan);
 int validarGenero(const char* genero);
 int esDuplicado(int *ids, int cantidad, int idBuscado);
-int insertarIdPelicula(int **ids, int *cantidad, int nuevoId);
+int insertarEnVector(int **ids, int *cantidad, int nuevoId);
 int obtenerVectorPeliculas(const char *nombreArchivo);
 int validarStock(int stock);
 int validarIgualdadSexo(char* sexoMiembro,int tipoCuil);
