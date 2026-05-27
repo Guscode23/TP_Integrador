@@ -1,4 +1,5 @@
 #include "archivos.h"
+#include "Validaciones.h"
 
 void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_auditorias, int *cant_tipos_error) {
     FILE *archivo = fopen(ruta_archivo, "r");
@@ -8,6 +9,9 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
     }
 
     char linea[1024];
+    int cantidadDNI = 0;
+    int *idsDNI = NULL;
+
     fgets(linea, sizeof(linea), archivo); // Descartar cabecera
 
     // BUCLE PRINCIPAL (Por Fila)
@@ -31,7 +35,11 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
                 case 0: // ESTACIÓN DNI
                     miembro_temp.dni = atol(token);
                     if (validar_campo(&miembro_temp, val_dni) == ERROR) {
-                        strcpy(motivo_error, "Falla en DNI");
+                        strcpy(motivo_error, "DNI fuera de rango");
+                        registro_valido = false;
+                    }
+                    else if(insertarEnVector(&idsDNI, &cantidadDNI, miembro_temp.dni) < 0) {
+                        strcpy(motivo_error, "DNI duplicado");
                         registro_valido = false;
                     }
                     break;
@@ -76,7 +84,7 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
             }
         }
 
-
+    free(idsDNI);
     fclose(archivo);
 }
 
@@ -109,4 +117,3 @@ int val_dni(void *dato) {
 
     return ERROR;
 }
-

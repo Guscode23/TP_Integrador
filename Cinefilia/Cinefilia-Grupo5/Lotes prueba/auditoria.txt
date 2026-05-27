@@ -2,11 +2,17 @@
       REPORTE DE AUDITORIA DE DATOS     
 ========================================
 
-Motivo de rechazo: Falla en DNI
+Motivo de rechazo: DNI fuera de rango
 Cantidad de incidencias: 4
 Registros afectados (DNI):
   - -56
   - 2
   - 0
   - 1
+----------------------------------------
+Motivo de rechazo: DNI duplicado
+Cantidad de incidencias: 2
+Registros afectados (DNI):
+  - 45678901
+  - 22334455
 ----------------------------------------
