@@ -6,29 +6,25 @@
 
 void indice_crear(t_indice *indice, size_t nmemb, size_t tamanyo)
 {
+   indice->vindice=malloc(nmemb*tamanyo);
 
-   t_reg_indice* p_indice=(t_reg_indice*)indice->vindice;
-
-   p_indice=(t_reg_indice*)malloc(nmemb*tamanyo);
-
-   if(p_indice==NULL){
+   if(indice->vindice==NULL){
       printf("No se pudo crear el indice");
       exit(0);
       }
 
    indice->cantidad_elementos_actual=0;
-   indice->cantidad_elementos_maxima=CANTIDAD_ELEMENTOS;
+   indice->cantidad_elementos_maxima=nmemb;
 
 }
 
 ///Redimensiona lo reservado en memoria
 void indice_redimensionar(t_indice *indice, size_t nmemb, size_t tamanyo)
 {
-  t_reg_indice* p_indice=(t_reg_indice*)indice->vindice;
 
-  p_indice=realloc(p_indice,(INCREMENTO*nmemb)*tamanyo);
+  indice->vindice=realloc(indice->vindice,(INCREMENTO*nmemb)*tamanyo);
 
-  if(p_indice==NULL){
+  if(indice->vindice==NULL){
     printf("No se pudo redimensionar el indice");
     exit(0);
   }
