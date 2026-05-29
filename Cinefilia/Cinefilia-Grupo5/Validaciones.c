@@ -267,8 +267,6 @@ char*  normalizarTitulo(char * titulo){
                 lect++;
             }
         }
-        else
-            printf("Se encontro un ID %d invalido\n", id);
     }
     *esc = '\0';
     return titulo;

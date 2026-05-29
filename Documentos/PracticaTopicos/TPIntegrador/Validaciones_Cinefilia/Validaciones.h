@@ -23,7 +23,6 @@
 #define validarDNI(dni) (dni>=1000000 && dni<=100000000) ? DNI_VALIDO : DNI_INVALIDO
 #define validarSEXO(sexo) (sexo=='F' || sexo== 'M' || sexo=='O') ? SEXO_VALIDO: SEXO_INVALIDO
 #define validarEstado(estado) (estado=='A' || estado=='B') ? ESTADO_VALIDO : ESTADO_INVALIDO
-//#define validarGenero(genero) (genero=='Accion' || genero=='Drama' || genero=='Comedia' || genero=='Terror') ? GENERO_VALIDO : GENERO_INVALIDO
 #define validarIgualdadDNI(dniMiembro,dniCuil) (dniMiembro != dniCuil)
 
 ///Prototipos
@@ -32,11 +31,10 @@ char*  normalizarApel_Nombre(char * nyapel);
 int validarCorreo(const char* correo);
 int validarPlan(const char* plan);
 int validarGenero(const char* genero);
-int esDuplicado(int *ids, int cantidad, int idBuscado);
-int insertarIdPelicula(int **ids, int *cantidad, int nuevoId);
-int obtenerVectorPeliculas(const char *nombreArchivo);
-int validarStock(int stock);
+int insertarEnVector(int **ids, int *cantidad, int nuevoItem);
+void validarStock(int stock);
 int validarIgualdadSexo(char* sexoMiembro,int tipoCuil);
 int validarCAT(const char* cat,int edad,char* correo);
+char* normalizarTitulo(char * titulo);
 
 #endif // VALIDACIONES_H_INCLUDED

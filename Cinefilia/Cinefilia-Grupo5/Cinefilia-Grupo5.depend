@@ -1,0 +1,89 @@
+# depslib dependency file v1.0
+1779757480 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\fecha.c
+	"fecha.h"
+
+1779758857 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\fecha.h
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<time.h>
+
+1779759931 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	"structs.h"
+	"fecha.h"
+	"archivos.h"
+	"auditoria.h"
+
+1779758857 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\structs.h
+	"fecha.h"
+
+1779759463 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\archivos.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	"structs.h"
+
+1779759464 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.h
+	"archivos.h"
+	"structs.h"
+
+1779759671 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.c
+	"auditoria.h"
+
+1779759671 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\archivos.c
+	"archivos.h"
+
+1779845989 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.c
+	"auditoria.h"
+
+1779845989 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.h
+	"archivos.h"
+	"structs.h"
+
+1779845989 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\archivos.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	"structs.h"
+
+1779845989 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\structs.h
+	"fecha.h"
+
+1779845989 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\fecha.h
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<time.h>
+
+1779845989 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\fecha.c
+	"fecha.h"
+
+1779845989 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	"structs.h"
+	"fecha.h"
+	"archivos.h"
+	"auditoria.h"
+
+1779850960 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\validaciones.c
+	"Validaciones.h"
+	<string.h>
+	<stdlib.h>
+	<stdio.h>
+	<ctype.h>
+
+1779852417 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\validaciones.h
+
+1779851735 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\archivos.c
+	"archivos.h"
+	"Validaciones.h"
+

@@ -119,13 +119,13 @@ int main()
    printf("%d",validarPlan(plan));*/
 
    ///I-Validar EMAIL Tutor-->Pruebas exitosas
-   /*const char correo[]="rosalesunlam19@gmail.com";
+   //const char correo[]="rosalesunlam19@gmail.com";
    //const char correo[]="rosalesunlam19@miempresa.com";
    //const char correo[]="rosalesunlam10@algo.com";
    //const char correo[]="";
 
 
-   printf("%d",validarCorreo(correo)); ///Prueba exitosa*/
+   //printf("%d",validarCorreo(correo)); ///Prueba exitosa*/
 
    ///J-Prueba de cálculo de edad:Pruebas exitosas
    /*t_fecha fechaProceso;
@@ -147,35 +147,39 @@ int main()
   printf("%d",validarGenero(genero));*/
 
   ///L-Prueba de Plan-->Pruebas exitosas
-  const char plan[]="BASIC";
-
-  printf("%d",validarPlan(plan));
+  //const char plan[]="BASIC";
+  //printf("%d",validarPlan(plan));
 
   ///K-Prueba de Genero: Exitosa
   /*
   const char genero[]="Comedias";
   printf("%d",validarGenero(genero));*/
 
-  ///L-Prueba de ID Pelicula: Exitosa
-  const char *archivo = "peliculas.csv";
-  obtenerVectorPeliculas(archivo);
+  ///L-Prueba de ID Pelicula: exitosas
+  /*int cantidad = 0;  // Declaro la cantidad de elementos del vector. Arranca con 0
+  int *ids = NULL;   // Declaro el vector de IDs, que arranca vacío, sin memoria asignada todavía
+  printf("%d", cantidad);
+  printf("%d",insertarEnVector(&ids, &cantidad, 5));
+  printf("%d", cantidad);
+  printf("%d",insertarEnVector(&ids, &cantidad, 10));
+  printf("%d", cantidad);
+  printf("%d",insertarEnVector(&ids, &cantidad, 111));
+  printf("%d", cantidad);
+  printf("%d",insertarEnVector(&ids, &cantidad, 10));
+  printf("%d", cantidad);
+  printf("%d",insertarEnVector(&ids, &cantidad, 2));
+  printf("%d", cantidad);*/
 
+  ///M-Prueba de Titulo
+  //const char titulo[]="titulo de prueba";
+  //const char titulo[]="    titulo    con    espacios   ";
 
-  ///M-Prueba de Titulo (pendiente)
+  //printf("%s",normalizarTitulo(titulo));
 
   ///N-Prueba de Stock: Exitosa
 
-  /*
-  int stock = 141245;
-  printf("%d",validarStock(stock));
-  */
-
-
-
-
-
-
-
+  /*int stock = -1;
+  validarStock(stock);*/
 
 
   return 0;
