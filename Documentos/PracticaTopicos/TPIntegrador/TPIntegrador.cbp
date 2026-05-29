@@ -35,9 +35,6 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="FunctionsTP.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="Tp.h" />
 		<Unit filename="include/Validaciones.h" />
 		<Unit filename="include/fecha.h" />
