@@ -76,6 +76,64 @@ int indice_insertar(t_indice *indice, const void *registro, size_t tamanyo, int 
      return OK;
 }
 
+int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tamanyo, int (*cmp)(const void *, const void *))
+{
+    FILE* pf = fopen(path, "rb");
+    if(!pf)
+        return ERROR;
+
+    vreg_ind = malloc(sizeof(miembro));
+    if(!vreg_ind)
+    {
+        fclose(pf);
+        return ERROR;
+    }
+
+    t_reg_indice idx;
+    unsigned nro_reg = 0;
+
+    fread(vreg_ind, sizeof(miembro), 1, pf);
+    while(!feof(pf))
+    {
+
+        idx.dni = ((miembro*)vreg_ind)->dni;
+        idx.nro_reg = nro_reg;
+        nro_reg++;
+
+
+        if(indice_insertar(indice, &idx, tamanyo, cmp) == OK) {
+            fread(vreg_ind, sizeof(miembro), 1, pf);
+        }
+        else
+        {
+            free(vreg_ind);
+            fclose(pf);
+            return ERROR;
+        }
+    }
+
+    free(vreg_ind);
+    fclose(pf);
+    return nro_reg;
+}
+
+int indice_vacio(const t_indice *indice) {
+    return (!indice || indice->cantidad_elementos_actual == 0) ? OK : 0;
+}
+
+int indice_lleno(const t_indice *indice) {
+    if (!indice) return 0;
+    return (indice->cantidad_elementos_actual >= indice->cantidad_elementos_maxima) ? OK : 0;
+}
+
+/**************************************************************************
+ * Vaciar: deja el índice sin elementos (conserva la memoria)
+ **************************************************************************/
+void indice_vaciar(t_indice* indice) {
+    if (!indice) return;
+    indice->cantidad_elementos_actual = 0;
+}
+
 
 
 
