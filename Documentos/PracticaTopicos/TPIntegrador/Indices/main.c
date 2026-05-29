@@ -117,6 +117,46 @@ int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tam
     return nro_reg;
 }
 
+int indice_buscar (const t_indice *indice, const void *registro, size_t nmemb, size_t tamanyo, int (*cmp)(const void *, const void *))
+{
+    unsigned posicion;
+    void* i=indice->vindice;
+    void* ult=i+(indice->cantidad_elementos_actual-1)*tamanyo;
+
+    while(i<=ult && cmp(registro,i)>0)
+        i+=tamanyo;
+
+    if(i>ult || cmp(registro,i)<0)
+        return -1;
+
+    memcpy((void*)registro,i,tamanyo);
+
+    posicion = ((t_reg_indice*)i)->nro_reg;
+
+    return posicion;
+}
+
+
+int indice_eliminar(t_indice *indice, const void *registro, size_t tamanyo, int (*cmp)(const void *, const void *))
+{
+    void* i=indice->vindice;
+    void* ult=i+(indice->cantidad_elementos_actual-1)*tamanyo;
+    size_t bytes;
+
+    while(i<=ult && cmp(registro,i)>0)
+        i+=tamanyo;
+    if(i>ult || cmp(registro,i)<0)
+        return ERROR;
+
+    bytes=(size_t)(ult-i);
+    if (bytes>0)
+        memmove(i,i+tamanyo,bytes);
+
+    indice->cantidad_elementos_actual--;
+
+    return OK;
+}
+
 int indice_vacio(const t_indice *indice) {
     return (!indice || indice->cantidad_elementos_actual == 0) ? OK : 0;
 }
