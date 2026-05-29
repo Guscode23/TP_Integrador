@@ -265,7 +265,7 @@ int obtenerVectorPeliculas(const char *nombreArchivo){
                 printf("ID %d esta duplicado\n", id);
         }
         else
-            printf("Se encontro un ID invalido\n", id);
+            printf("Se encontro un ID %d invalido\n", id);
     }
 
     fclose(archivo);
