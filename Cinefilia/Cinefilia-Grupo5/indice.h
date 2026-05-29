@@ -29,8 +29,8 @@ typedef struct
 void indice_crear(t_indice *indice, size_t nmemb, size_t tamanyo); ///Desarrollado (a testear)
 void indice_redimensionar(t_indice *indice, size_t nmemb, size_t tamanyo); ///Desarrollado (a testear)
 int indice_insertar(t_indice *indice, const void *registro, size_t tamanyo, int (*cmp)(const void *, const void *)); ///Desarrollado (a testear)
-int indice_eliminar(t_indice *indice, const void *registro, size_t tamanyo, int (*cmp)(const void *, const void *));
-int indice_buscar (const t_indice *indice, const void *registro, size_t nmemb, size_t tamanyo, int (*cmp)(const void *, const void *));
+int indice_eliminar(t_indice *indice, const void *registro, size_t tamanyo, int (*cmp)(const void *, const void *)); ///Desarollado (a testear)
+int indice_buscar (const t_indice *indice, const void *registro, size_t nmemb, size_t tamanyo, int (*cmp)(const void *, const void *)); ///Desarollado (A testear)
 int indice_vacio(const t_indice *indice);
 int indice_lleno(const t_indice *indice);
 void indice_vaciar(t_indice* indice);
