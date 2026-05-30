@@ -22,7 +22,7 @@ void generar_reporte_auditoria(const char *ruta_txt, t_auditoria *arreglo_audito
             fprintf(archivo_salida, "Registros afectados (%s):\n", etiqueta_id);
 
             for (int j = 0; j < arreglo_auditorias[i].cantidad_incidencias; j++) {
-                fprintf(archivo_salida, "  - %ld\n", arreglo_auditorias[i].dnis_rechazados[j]);
+                fprintf(archivo_salida, "  - %ld\n", arreglo_auditorias[i].identificadores_rechazados[j]);
             }
             fprintf(archivo_salida, "----------------------------------------\n");
         }

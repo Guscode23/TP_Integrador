@@ -1,8 +1,8 @@
 #ifndef VALIDACIONES_H_INCLUDED
 #define VALIDACIONES_H_INCLUDED
 
-#define CUIL_INVALIDO -1
-#define CUIL_VALIDO 1
+#define TODO_OK 1
+#define ERROR 0
 #define CORREO_VALIDO 2
 #define CORREO_INVALIDO -2
 #define DNI_VALIDO 3
@@ -19,6 +19,7 @@
 #define GENERO_INVALIDO -8
 #define INSERCION_VALIDA 9
 #define INSERCION_INVALIDA -9
+#define INSERCION_DUPLICADA -10
 
 
 ///Macros a incluir
@@ -28,13 +29,14 @@
 #define validarIgualdadDNI(dniMiembro,dniCuil) (dniMiembro != dniCuil)
 
 ///Prototipos
+int validar_campo(void *dato, int (*funcion_validadora)(void *));
+int validarGenero(void *dato);
 int validarCUIL(const char* cuil,long int dniMiembro,char* sexoMiembro);
 char*  normalizarApel_Nombre(char * nyapel);
 int validarCorreo(const char* correo);
 int validarPlan(const char* plan);
-int validarGenero(const char* genero);
 int insertarEnVector(int **ids, int *cantidad, int nuevoItem);
-void validarStock(int stock);
+void validarStock(int *stock);
 int validarIgualdadSexo(char* sexoMiembro,int tipoCuil);
 int validarCAT(const char* cat,int edad,char* correo);
 char* normalizarTitulo(char * titulo);

@@ -94,7 +94,7 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
 
                 if (strcmp(arreglo_auditorias[i].tipo_error, motivo_error) == 0) {
                     int indice_dni = arreglo_auditorias[i].cantidad_incidencias;
-                    arreglo_auditorias[i].dnis_rechazados[indice_dni] = miembro_temp.dni;
+                    arreglo_auditorias[i].identificadores_rechazados[indice_dni] = miembro_temp.dni;
                     arreglo_auditorias[i].cantidad_incidencias++;
                     error_encontrado = true;
                     break;
@@ -104,7 +104,7 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
             if (!error_encontrado) {
                 // ERRORES LÍNEA 66 a 68: Agregamos el * para usar el valor como índice
                 strcpy(arreglo_auditorias[*cant_tipos_error].tipo_error, motivo_error);
-                arreglo_auditorias[*cant_tipos_error].dnis_rechazados[0] = miembro_temp.dni;
+                arreglo_auditorias[*cant_tipos_error].identificadores_rechazados[0] = miembro_temp.dni;
                 arreglo_auditorias[*cant_tipos_error].cantidad_incidencias = 1;
 
                 // Y para sumarle 1, los paréntesis son OBLIGATORIOS por el orden de precedencia en C
@@ -125,6 +125,9 @@ void procesar_archivo_titulos(const char *ruta_archivo, t_auditoria *arreglo_aud
     }
 
     char linea[1024];
+    int cantidadPeliculas = 0;
+    int *idsPeliculas = NULL;
+
     fgets(linea, sizeof(linea), archivo); // Descartar cabecera ("ID Pelicula;Titulo;...")
 
     // BUCLE PRINCIPAL (Por Fila)
@@ -136,8 +139,8 @@ void procesar_archivo_titulos(const char *ruta_archivo, t_auditoria *arreglo_aud
         char motivo_error[50] = "";
 
         // Estructura temporal específica para Títulos
-        titulo titulo_temp;
-        memset(&titulo_temp, 0, sizeof(titulo));
+        pelicula pelicula_temp;
+        memset(&pelicula_temp, 0, sizeof(pelicula));
 
         char *resto_linea = linea;
         char *token;
@@ -147,29 +150,35 @@ void procesar_archivo_titulos(const char *ruta_archivo, t_auditoria *arreglo_aud
 
             switch (columna) {
                 case 0: // ID
-                    titulo_temp.ID = atoi(token); // Usamos atoi para int
-                    if (validar_campo(&titulo_temp, val_id_titulo) == ERROR) {
-                        strcpy(motivo_error, "Falla en ID Titulo");
+                    pelicula_temp.ID = atol(token);
+                    if(insertarEnVector(&idsPeliculas, &cantidadPeliculas, pelicula_temp.ID) == INSERCION_DUPLICADA) {
+                        strcpy(motivo_error, "ID duplicado");
+                        registro_valido = false;
+                    }
+                    else if(insertarEnVector(&idsPeliculas, &cantidadPeliculas, pelicula_temp.ID) == INSERCION_INVALIDA) {
+                        strcpy(motivo_error, "ID invalido");
                         registro_valido = false;
                     }
                     break;
 
-                case 1: // Titulo
-                    strcpy(titulo_temp.titulo, token);
-                    // if (validar_campo(&titulo_temp, val_titulo_texto) == ERROR) ...
+                case 1: // TITULO
+                    strcpy(pelicula_temp.titulo, token);
+                    printf("Se recibe: %s\n", pelicula_temp.titulo);
+                    normalizarTitulo(pelicula_temp.titulo);
+                    printf("Se transforma a: %s\n", pelicula_temp.titulo);
                     break;
 
-                case 2: // Genero
-                    strcpy(titulo_temp.genero, token);
-                    // if (validar_campo(&titulo_temp, val_genero) == ERROR) ...
+                case 2: // GENERO
+                    strcpy(pelicula_temp.genero, token);
+                    if (validar_campo(&pelicula_temp, validarGenero) == ERROR) {
+                        strcpy(motivo_error, "Genero invalido");
+                        registro_valido = false;
+                    }
                     break;
 
                 case 3: // Stock
-                    titulo_temp.stock = atoi(token);
-                    if (validar_campo(&titulo_temp, val_stock) == ERROR) {
-                        strcpy(motivo_error, "Falla en Stock Titulo");
-                        registro_valido = false;
-                    }
+                    pelicula_temp.stock = atoi(token);
+                    validarStock(&pelicula_temp.stock);
                     break;
             }
             columna++;
@@ -186,7 +195,7 @@ void procesar_archivo_titulos(const char *ruta_archivo, t_auditoria *arreglo_aud
                 int nueva_capacidad = (lista_validos->capacidad == 0) ? 10 : lista_validos->capacidad * 2;
 
                 // Pedimos la nueva memoria (¡Usamos titulo aquí!)
-                titulo *temp = (titulo *)realloc(lista_validos->array, nueva_capacidad * sizeof(titulo));
+                pelicula *temp = (pelicula *)realloc(lista_validos->array, nueva_capacidad * sizeof(pelicula));
 
                 if (temp == NULL) {
                     printf("Error fatal: No hay memoria suficiente para titulos.\n");
@@ -201,13 +210,14 @@ void procesar_archivo_titulos(const char *ruta_archivo, t_auditoria *arreglo_aud
             // --- FIN MEMORIA DINÁMICA ---
 
             // 1. Guardamos el struct temporal en la posición actual del arreglo dinámico
-            lista_validos->array[lista_validos->cantidad] = titulo_temp;
+            lista_validos->array[lista_validos->cantidad] = pelicula_temp;
 
             // 2. Sumamos 1 al contador
             lista_validos->cantidad++;
 
             // Cambiamos el mensaje para reflejar que es un Título y usamos el ID (entero)
-            printf("Titulo ID %d procesado con exito.\n", titulo_temp.ID);
+            printf("ID %d, titulo: %s, genero: %s, stock: %d procesado con exito.\n", pelicula_temp.ID, pelicula_temp.titulo, pelicula_temp.genero, pelicula_temp.stock);
+            //printf("Titulo: %s procesado con exito.\n", pelicula_temp.titulo);
 
         }
 
@@ -220,7 +230,7 @@ void procesar_archivo_titulos(const char *ruta_archivo, t_auditoria *arreglo_aud
                     int indice_id = arreglo_auditorias[i].cantidad_incidencias;
 
                     // Guardamos el ID (se convierte a long automáticamente)
-                    arreglo_auditorias[i].dnis_rechazados[indice_id] = (long)titulo_temp.ID;
+                    arreglo_auditorias[i].identificadores_rechazados[indice_id] = (long)pelicula_temp.ID;
 
                     arreglo_auditorias[i].cantidad_incidencias++;
                     error_encontrado = true;
@@ -230,13 +240,14 @@ void procesar_archivo_titulos(const char *ruta_archivo, t_auditoria *arreglo_aud
 
             if (!error_encontrado) {
                 strcpy(arreglo_auditorias[*cant_tipos_error].tipo_error, motivo_error);
-                arreglo_auditorias[*cant_tipos_error].dnis_rechazados[0] = (long)titulo_temp.ID;
+                arreglo_auditorias[*cant_tipos_error].identificadores_rechazados[0] = (long)pelicula_temp.ID;
                 arreglo_auditorias[*cant_tipos_error].cantidad_incidencias = 1;
                 (*cant_tipos_error)++;
             }
         }
     }
 
+    free(idsPeliculas);
     fclose(archivo);
 }
 
@@ -255,10 +266,6 @@ char* extraer_campo(char **cadena, const char *delimitador) {
     return inicio;
 }
 
-int validar_campo(void *dato, int (*funcion_validadora)(void *)) {
-    return funcion_validadora(dato);
-}
-
 int val_dni(void *dato) {
     // 1. Desenmascaramos el dato
     miembro *m = (miembro *)dato;
@@ -270,22 +277,3 @@ int val_dni(void *dato) {
 
     return ERROR;
 }
-
-// Ejemplo: El ID debe ser mayor a 0
-int val_id_titulo(void *dato) {
-    titulo *t = (titulo *)dato;
-    if (t->ID > 0) {
-        return TODO_OK;
-    }
-    return ERROR;
-}
-
-// Ejemplo: El stock no puede ser negativo
-int val_stock(void *dato) {
-    titulo *t = (titulo *)dato;
-    if (t->stock >= 0) {
-        return TODO_OK;
-    }
-    return ERROR;
-}
-

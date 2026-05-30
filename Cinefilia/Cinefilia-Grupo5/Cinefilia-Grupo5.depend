@@ -39,21 +39,21 @@
 	"archivos.h"
 	"Validaciones.h"
 
-1779845989 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.c
+1780114883 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.c
 	"auditoria.h"
 
-1779845989 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.h
+1780114455 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.h
 	"archivos.h"
 	"structs.h"
 
-1779845989 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\archivos.h
+1780114455 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\archivos.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<stdbool.h>
 	"structs.h"
 
-1779845989 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\structs.h
+1780115291 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\structs.h
 	"fecha.h"
 
 1779845989 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\fecha.h
@@ -65,7 +65,7 @@
 1779845989 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\fecha.c
 	"fecha.h"
 
-1779845989 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\main.c
+1780117110 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -75,16 +75,17 @@
 	"archivos.h"
 	"auditoria.h"
 
-1779850960 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\validaciones.c
+1780121632 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\validaciones.c
 	"Validaciones.h"
+	"structs.h"
 	<string.h>
 	<stdlib.h>
 	<stdio.h>
 	<ctype.h>
 
-1779852417 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\validaciones.h
+1780121434 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\validaciones.h
 
-1779851735 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\archivos.c
+1780121803 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\archivos.c
 	"archivos.h"
 	"Validaciones.h"
 

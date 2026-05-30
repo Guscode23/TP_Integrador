@@ -1,4 +1,5 @@
 #include "Validaciones.h"
+#include "structs.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -29,6 +30,10 @@
 ///ValidarStock
 
 
+int validar_campo(void *dato, int (*funcion_validadora)(void *)) {
+    return funcion_validadora(dato);
+}
+
 ///Funcion que valida que el sexo del Miembro sea coherente con el tipo de cuil
 int validarIgualdadSexo(char* sexoMiembro,int tipoCuil)
 {
@@ -36,20 +41,20 @@ int validarIgualdadSexo(char* sexoMiembro,int tipoCuil)
      switch (tipoCuil) {
           case 20:
             if(*sexoMiembro=='M')
-                return CUIL_VALIDO;
+                return TODO_OK;
             break;
 
            case 27:
               if(*sexoMiembro=='F')
-                return CUIL_VALIDO;
+                return TODO_OK;
               break;
 
            case 30:
               if(*sexoMiembro=='O')
-                 return CUIL_VALIDO;
+                 return TODO_OK;
               break;
            }
-    return CUIL_INVALIDO;
+    return ERROR;
 }
 
 
@@ -69,7 +74,7 @@ int validarCUIL(const char* cuil,long int dniMiembro,char* sexoMiembro)
  ///Validación de casos borde
  if(validarIgualdadDNI(dniMiembro,dni) || formato!=3 || validarIgualdadSexo(sexoMiembro,tipo)==-1)
    //if(validarIgualdadDNI(dniMiembro,dni) || formato==-1)
-      return CUIL_INVALIDO;
+      return ERROR;
         else{
 
         int result=0;
@@ -89,21 +94,21 @@ int validarCUIL(const char* cuil,long int dniMiembro,char* sexoMiembro)
              switch (resto) {
                case 0:
                   if(digVerif==0)
-                    return CUIL_VALIDO;
+                    return TODO_OK;
                   break;
 
                 case 1:
                    if((tipo==20 && digVerif==9) ||(tipo==27 && digVerif==4))
-                      return CUIL_VALIDO;
+                      return TODO_OK;
                     break;
 
                 default:
                   if(digVerif==(11-resto))
-                     return CUIL_VALIDO;
+                     return TODO_OK;
                   break;
                }
             }
-    return CUIL_INVALIDO;
+    return ERROR;
 }
 
 char*  normalizarApel_Nombre(char * nyapel)
@@ -197,25 +202,26 @@ int validarCAT(const char* cat,int edad,char* correo)
 
 }
 
-int validarGenero(const char* genero)
-{
-   char generos[4][10]={"Accion","Drama","Comedia","Terror"};
+int validarGenero(void *dato) {
+    pelicula *p = (pelicula *)dato;
 
-   for(int i=0;i<=3;i++){
-      if(strcmp(genero,*(generos+i))==0)
-            return GENERO_VALIDO;
+    char generos[4][10]={"Accion","Drama","Comedia","Terror"};
+
+    for(int i=0;i<=3;i++){
+            if(strcmp(p->genero,*(generos+i))==0)
+            return TODO_OK;
       }
-   return GENERO_INVALIDO;
+   return ERROR;
 }
 
 int insertarEnVector(int **ids, int *cantidad, int nuevoItem) {
 
     if (nuevoItem < 1)
-        return -9;
+        return INSERCION_INVALIDA;
     // Recorre el vector desde el primero hasta el último elemento. Si el elemento actual es igual al ID que busco, devuelvo 1
     for (int i = 0; i < *cantidad; i++) {
         if ((*ids)[i] == nuevoItem)
-            return -9;
+            return INSERCION_DUPLICADA;
     }
 
     // Si no es duplicado, le pido al sistema operativo un lugar más en memoria para guardar el nuevo ID. (*cantidad + 1) es la nueva cantidad de elementos que necesito
@@ -225,15 +231,15 @@ int insertarEnVector(int **ids, int *cantidad, int nuevoItem) {
     (*ids)[*cantidad] = nuevoItem;
     (*cantidad)++;
 
-    return 9;
+    return TODO_OK;
 }
 
-void validarStock(int stock) {
+void validarStock(int *stock) {
     // Si es menor a 1, lo convierte en cero
-    if (stock < 1)
+    if (*stock < 0)
     {
-        printf("Se convierte valor a cero");
-        stock = 0;
+        printf("Se convierte valor a cero\n");
+        *stock = 0;
     }
 }
 

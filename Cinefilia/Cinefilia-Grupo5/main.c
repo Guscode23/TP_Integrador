@@ -92,10 +92,10 @@ int main() {
 
         // 1. Procesamos y auditamos (Lo que ya programamos)
         procesar_archivo_miembros("Lotes Prueba/miembros.csv", auditoria_miembros, &cant_errores_miembros, &lista_m);
-        generar_reporte_auditoria("auditoria_miembros.txt", auditoria_miembros, cant_errores_miembros, "DNI");
+        generar_reporte_auditoria("Resultados Auditoria/auditoria_miembros.txt", auditoria_miembros, cant_errores_miembros, "DNI");
 
         procesar_archivo_titulos("Lotes Prueba/titulos.csv", auditoria_titulos, &cant_errores_titulos, &lista_t);
-        generar_reporte_auditoria("auditoria_titulos.txt", auditoria_titulos, cant_errores_titulos, "ID");
+        generar_reporte_auditoria("Resultados Auditoria/auditoria_titulos.txt", auditoria_titulos, cant_errores_titulos, "ID");
 
         // 2. Guardamos las listas válidas en los nuevos archivos .dat para el futuro
         printf("\nGuardando registros validos en archivos binarios (.dat)...\n");

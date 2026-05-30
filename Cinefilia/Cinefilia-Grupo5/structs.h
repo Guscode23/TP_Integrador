@@ -31,13 +31,13 @@ typedef struct{
     char titulo [TAM_TITULO];
     char genero [TAM_GENERO];
     int stock;
-}titulo;
+}pelicula;
 
 // Estructura de auditoría de doble entrada
 typedef struct {
     char tipo_error[50];
     int cantidad_incidencias;
-    long dnis_rechazados[100];
+    long identificadores_rechazados[100];
 } t_auditoria;
 
 // Contenedor dinámico para Miembros
@@ -49,7 +49,7 @@ typedef struct {
 
 // Contenedor dinámico para Títulos
 typedef struct {
-    titulo *array;
+    pelicula *array;
     int cantidad;
     int capacidad;
 } t_lista_titulos;
