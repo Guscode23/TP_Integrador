@@ -40,4 +40,18 @@ typedef struct {
     long dnis_rechazados[100];
 } t_auditoria;
 
+// Contenedor dinámico para Miembros
+typedef struct {
+    miembro *array;      // Puntero dinámico a la memoria (malloc/realloc)
+    int cantidad;        // Cuántos miembros válidos tenemos guardados
+    int capacidad;       // Cuántos entran actualmente en la memoria reservada
+} t_lista_miembros;
+
+// Contenedor dinámico para Títulos
+typedef struct {
+    titulo *array;
+    int cantidad;
+    int capacidad;
+} t_lista_titulos;
+
 #endif // STRUCTS_H_INCLUDED

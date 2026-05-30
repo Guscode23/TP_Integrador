@@ -1,8 +1,11 @@
 #include "auditoria.h"
 
-void generar_reporte_auditoria(const char *ruta_txt, t_auditoria *arreglo_auditorias, int cant_tipos_error) {
+void generar_reporte_auditoria(const char *ruta_txt, t_auditoria *arreglo_auditorias, int cant_tipos_error, const char *etiqueta_id) {
     FILE *archivo_salida = fopen(ruta_txt, "w");
-    if (archivo_salida == NULL) return;
+    if (archivo_salida == NULL) {
+        printf("Error al crear %s\n", ruta_txt);
+        return;
+    }
 
     fprintf(archivo_salida, "========================================\n");
     fprintf(archivo_salida, "      REPORTE DE AUDITORIA DE DATOS     \n");
@@ -14,7 +17,9 @@ void generar_reporte_auditoria(const char *ruta_txt, t_auditoria *arreglo_audito
         for (int i = 0; i < cant_tipos_error; i++) {
             fprintf(archivo_salida, "Motivo de rechazo: %s\n", arreglo_auditorias[i].tipo_error);
             fprintf(archivo_salida, "Cantidad de incidencias: %d\n", arreglo_auditorias[i].cantidad_incidencias);
-            fprintf(archivo_salida, "Registros afectados (DNI):\n");
+
+            // Usamos la etiqueta dinámica aquí ("DNI" o "ID")
+            fprintf(archivo_salida, "Registros afectados (%s):\n", etiqueta_id);
 
             for (int j = 0; j < arreglo_auditorias[i].cantidad_incidencias; j++) {
                 fprintf(archivo_salida, "  - %ld\n", arreglo_auditorias[i].dnis_rechazados[j]);
@@ -24,7 +29,5 @@ void generar_reporte_auditoria(const char *ruta_txt, t_auditoria *arreglo_audito
     }
 
     fclose(archivo_salida);
-    printf("\nReporte de auditoria generado en: %s\n", ruta_txt);
+    printf("-> Reporte generado: %s\n", ruta_txt);
 }
-
-

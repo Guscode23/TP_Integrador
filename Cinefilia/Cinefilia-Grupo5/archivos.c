@@ -1,7 +1,7 @@
 #include "archivos.h"
 #include "Validaciones.h"
 
-void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_auditorias, int *cant_tipos_error) {
+void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_auditorias, int *cant_tipos_error, t_lista_miembros *lista_validos) {
     FILE *archivo = fopen(ruta_archivo, "r");
     if (archivo == NULL) {
         printf("Error: No se pudo abrir %s.\n", ruta_archivo);
@@ -50,13 +50,42 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
             }
             columna++;
         }
-
         // VEREDICTO FINAL
-        if (registro_valido && columna >= 1) { // Cambiar a >= 10 cuando tengas todas las columnas
-            // ÉXITO: Aquí lo guardas en tu lista/arreglo final
+        if (registro_valido && columna >= 1) {
+
+            // --- INICIO MEMORIA DINÁMICA ---
+            // Si la cantidad alcanzó la capacidad máxima, necesitamos agrandar el arreglo
+            if (lista_validos->cantidad == lista_validos->capacidad) {
+
+                // Si la capacidad era 0, arrancamos con 10. Si no, la duplicamos.
+                int nueva_capacidad = (lista_validos->capacidad == 0) ? 10 : lista_validos->capacidad * 2;
+
+                // Pedimos la nueva memoria
+                miembro *temp = (miembro *)realloc(lista_validos->array, nueva_capacidad * sizeof(miembro));
+
+                if (temp == NULL) {
+                    printf("Error fatal: No hay memoria suficiente.\n");
+                    // Aquí deberías manejar el error, por ahora salimos
+                    break;
+                }
+
+                // Actualizamos nuestro contenedor con la nueva memoria y capacidad
+                lista_validos->array = temp;
+                lista_validos->capacidad = nueva_capacidad;
+            }
+            // --- FIN MEMORIA DINÁMICA ---
+
+            // 1. Guardamos el struct temporal en la posición actual del arreglo dinámico
+            lista_validos->array[lista_validos->cantidad] = miembro_temp;
+
+            // 2. Sumamos 1 al contador
+            lista_validos->cantidad++;
+
             printf("Registro DNI %ld procesado con exito.\n", miembro_temp.dni);
 
-        } else if (!registro_valido) {
+        }
+
+        else if (!registro_valido) {
            // --- INICIO LÓGICA DE AUDITORÍA ---
             bool error_encontrado = false;
 
@@ -88,6 +117,130 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
     fclose(archivo);
 }
 
+void procesar_archivo_titulos(const char *ruta_archivo, t_auditoria *arreglo_auditorias, int *cant_tipos_error, t_lista_titulos *lista_validos) {
+    FILE *archivo = fopen(ruta_archivo, "r");
+    if (archivo == NULL) {
+        printf("Error: No se pudo abrir %s.\n", ruta_archivo);
+        return;
+    }
+
+    char linea[1024];
+    fgets(linea, sizeof(linea), archivo); // Descartar cabecera ("ID Pelicula;Titulo;...")
+
+    // BUCLE PRINCIPAL (Por Fila)
+    while (fgets(linea, sizeof(linea), archivo)) {
+        linea[strcspn(linea, "\n")] = 0; // Limpiar salto de línea
+
+        bool registro_valido = true;
+        int columna = 0;
+        char motivo_error[50] = "";
+
+        // Estructura temporal específica para Títulos
+        titulo titulo_temp;
+        memset(&titulo_temp, 0, sizeof(titulo));
+
+        char *resto_linea = linea;
+        char *token;
+
+        // BUCLE DE EXTRACCIÓN (Por Columna)
+        while ((token = extraer_campo(&resto_linea, ";")) != NULL && registro_valido) {
+
+            switch (columna) {
+                case 0: // ID
+                    titulo_temp.ID = atoi(token); // Usamos atoi para int
+                    if (validar_campo(&titulo_temp, val_id_titulo) == ERROR) {
+                        strcpy(motivo_error, "Falla en ID Titulo");
+                        registro_valido = false;
+                    }
+                    break;
+
+                case 1: // Titulo
+                    strcpy(titulo_temp.titulo, token);
+                    // if (validar_campo(&titulo_temp, val_titulo_texto) == ERROR) ...
+                    break;
+
+                case 2: // Genero
+                    strcpy(titulo_temp.genero, token);
+                    // if (validar_campo(&titulo_temp, val_genero) == ERROR) ...
+                    break;
+
+                case 3: // Stock
+                    titulo_temp.stock = atoi(token);
+                    if (validar_campo(&titulo_temp, val_stock) == ERROR) {
+                        strcpy(motivo_error, "Falla en Stock Titulo");
+                        registro_valido = false;
+                    }
+                    break;
+            }
+            columna++;
+        }
+
+        // VEREDICTO FINAL
+        if (registro_valido && columna >= 4) {
+
+            // --- INICIO MEMORIA DINÁMICA ---
+            // Si la cantidad alcanzó la capacidad máxima, necesitamos agrandar el arreglo
+            if (lista_validos->cantidad == lista_validos->capacidad) {
+
+                // Si la capacidad era 0, arrancamos con 10. Si no, la duplicamos.
+                int nueva_capacidad = (lista_validos->capacidad == 0) ? 10 : lista_validos->capacidad * 2;
+
+                // Pedimos la nueva memoria (¡Usamos titulo aquí!)
+                titulo *temp = (titulo *)realloc(lista_validos->array, nueva_capacidad * sizeof(titulo));
+
+                if (temp == NULL) {
+                    printf("Error fatal: No hay memoria suficiente para titulos.\n");
+                    // Salimos del bucle si explota la RAM
+                    break;
+                }
+
+                // Actualizamos nuestro contenedor con la nueva memoria y capacidad
+                lista_validos->array = temp;
+                lista_validos->capacidad = nueva_capacidad;
+            }
+            // --- FIN MEMORIA DINÁMICA ---
+
+            // 1. Guardamos el struct temporal en la posición actual del arreglo dinámico
+            lista_validos->array[lista_validos->cantidad] = titulo_temp;
+
+            // 2. Sumamos 1 al contador
+            lista_validos->cantidad++;
+
+            // Cambiamos el mensaje para reflejar que es un Título y usamos el ID (entero)
+            printf("Titulo ID %d procesado con exito.\n", titulo_temp.ID);
+
+        }
+
+         else if (!registro_valido) {
+            // ERROR: Lógica de Auditoría reutilizada
+            bool error_encontrado = false;
+
+            for (int i = 0; i < *cant_tipos_error; i++) {
+                if (strcmp(arreglo_auditorias[i].tipo_error, motivo_error) == 0) {
+                    int indice_id = arreglo_auditorias[i].cantidad_incidencias;
+
+                    // Guardamos el ID (se convierte a long automáticamente)
+                    arreglo_auditorias[i].dnis_rechazados[indice_id] = (long)titulo_temp.ID;
+
+                    arreglo_auditorias[i].cantidad_incidencias++;
+                    error_encontrado = true;
+                    break;
+                }
+            }
+
+            if (!error_encontrado) {
+                strcpy(arreglo_auditorias[*cant_tipos_error].tipo_error, motivo_error);
+                arreglo_auditorias[*cant_tipos_error].dnis_rechazados[0] = (long)titulo_temp.ID;
+                arreglo_auditorias[*cant_tipos_error].cantidad_incidencias = 1;
+                (*cant_tipos_error)++;
+            }
+        }
+    }
+
+    fclose(archivo);
+}
+
+
 // Extrae campos respetando los vacios (;;), reemplaza a strtok
 char* extraer_campo(char **cadena, const char *delimitador) {
     if (*cadena == NULL) return NULL;
@@ -117,3 +270,22 @@ int val_dni(void *dato) {
 
     return ERROR;
 }
+
+// Ejemplo: El ID debe ser mayor a 0
+int val_id_titulo(void *dato) {
+    titulo *t = (titulo *)dato;
+    if (t->ID > 0) {
+        return TODO_OK;
+    }
+    return ERROR;
+}
+
+// Ejemplo: El stock no puede ser negativo
+int val_stock(void *dato) {
+    titulo *t = (titulo *)dato;
+    if (t->stock >= 0) {
+        return TODO_OK;
+    }
+    return ERROR;
+}
+

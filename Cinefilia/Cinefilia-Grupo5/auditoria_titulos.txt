@@ -1,0 +1,9 @@
+========================================
+      REPORTE DE AUDITORIA DE DATOS     
+========================================
+
+Motivo de rechazo: Falla en ID Titulo
+Cantidad de incidencias: 1
+Registros afectados (ID):
+  - -6
+----------------------------------------

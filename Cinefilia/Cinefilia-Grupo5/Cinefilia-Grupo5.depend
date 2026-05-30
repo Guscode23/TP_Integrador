@@ -8,7 +8,7 @@
 	<stdbool.h>
 	<time.h>
 
-1779759931 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\main.c
+1780096617 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -18,25 +18,26 @@
 	"archivos.h"
 	"auditoria.h"
 
-1779758857 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\structs.h
+1780096617 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\structs.h
 	"fecha.h"
 
-1779759463 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\archivos.h
+1780096617 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\archivos.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<stdbool.h>
 	"structs.h"
 
-1779759464 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.h
+1780095616 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.h
 	"archivos.h"
 	"structs.h"
 
-1779759671 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.c
+1780095752 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.c
 	"auditoria.h"
 
-1779759671 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\archivos.c
+1780096649 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\archivos.c
 	"archivos.h"
+	"Validaciones.h"
 
 1779845989 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.c
 	"auditoria.h"
@@ -86,4 +87,15 @@
 1779851735 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\archivos.c
 	"archivos.h"
 	"Validaciones.h"
+
+1780008749 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\validaciones.h
+
+1780008749 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\validaciones.c
+	"Validaciones.h"
+	<string.h>
+	<stdlib.h>
+	<stdio.h>
+	<ctype.h>
+
+1780096435 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\vector_dinamico.c
 
