@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1780112950 source:c:\users\rosal\documentos\practicatopicos\tp_integrador\documentos\practicatopicos\tpintegrador\indices\main.c
+	"indice.h"
+	<stdlib.h>
+	<string.h>
+
+1780097904 c:\users\rosal\documentos\practicatopicos\tp_integrador\documentos\practicatopicos\tpintegrador\indices\indice.h
+	<stdio.h>
+
