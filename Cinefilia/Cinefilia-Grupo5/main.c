@@ -91,7 +91,7 @@ int main() {
         int cant_errores_titulos = 0;
 
         // 1. Procesamos y auditamos (Lo que ya programamos)
-        procesar_archivo_miembros("Lotes Prueba/miembros.csv", auditoria_miembros, &cant_errores_miembros, &lista_m);
+        procesar_archivo_miembros("Lotes Prueba/miembros.csv", auditoria_miembros, &cant_errores_miembros, &lista_m, &fecha_proceso);
         generar_reporte_auditoria("Resultados Auditoria/auditoria_miembros.txt", auditoria_miembros, cant_errores_miembros, "DNI");
 
         procesar_archivo_titulos("Lotes Prueba/titulos.csv", auditoria_titulos, &cant_errores_titulos, &lista_t);

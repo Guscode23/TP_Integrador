@@ -1,5 +1,6 @@
 #include "Validaciones.h"
 #include "structs.h"
+#include "fecha.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -11,7 +12,7 @@
 ///ValidarCUIL (Gus)
 ///NormalizarNombre (Gus)
 ///ValidarCorreo (Gus)
-///ValidarDNI (Macro)
+///ValidarDNI (Genérica)
 //ValidarFecha_Nacimiento (Avanzado)
 ///ValidarSexo (Macro)
 //ValidarFecha_Afiliacion (Avanzado)
@@ -34,9 +35,17 @@ int validar_campo(void *dato, int (*funcion_validadora)(void *)) {
     return funcion_validadora(dato);
 }
 
+int validarDNI(void *dato) {
+    miembro *m = (miembro *)dato;
+
+    if (m->dni > 1000000 && m->dni < 100000000) {
+        return TODO_OK;
+    }
+    return ERROR;
+}
+
 ///Funcion que valida que el sexo del Miembro sea coherente con el tipo de cuil
-int validarIgualdadSexo(char* sexoMiembro,int tipoCuil)
-{
+int validarIgualdadSexo(char* sexoMiembro,int tipoCuil){
 
      switch (tipoCuil) {
           case 20:
@@ -57,62 +66,62 @@ int validarIgualdadSexo(char* sexoMiembro,int tipoCuil)
     return ERROR;
 }
 
+int validarCUIL(void *dato){
 
-int validarCUIL(const char* cuil,long int dniMiembro,char* sexoMiembro)
-{
- long int dni;
- int digVerif;
- int tipo;
- int coeficientes[10]={5,4,3,2,7,6,5,4,3,2};
- int *p_coef=coeficientes;
- int formato;
- char dniAux[11];
+    miembro *m = (miembro *)dato;
 
- ///Capturo los datos con sscanf
-  formato=sscanf(cuil, "%d-%ld-%d",&tipo,&dni,&digVerif);
+    long int dni;
+    int digVerif;
+    int tipo;
+    int coeficientes[10]={5,4,3,2,7,6,5,4,3,2};
+    int *p_coef=coeficientes;
+    int formato;
+    char dniAux[11];
 
- ///Validación de casos borde
- if(validarIgualdadDNI(dniMiembro,dni) || formato!=3 || validarIgualdadSexo(sexoMiembro,tipo)==-1)
-   //if(validarIgualdadDNI(dniMiembro,dni) || formato==-1)
-      return ERROR;
-        else{
+    ///Capturo los datos con sscanf
+    formato=sscanf(m->CUIL, "%d-%ld-%d",&tipo,&dni,&digVerif);
 
-        int result=0;
-        int prod=0;
-        int resto=0;
+    ///Validación de casos borde
+    if(validarIgualdadDNI(m->dni,dni) || formato!=3 || validarIgualdadSexo(&m->sexo,tipo)==-1)
+          return ERROR;
+            else{
 
-         ///Almacena un entero dentro de una cadena y debería devolver un int
-         sprintf(dniAux, "%ld", dni);
+            int result=0;
+            int prod=0;
+            int resto=0;
 
-        ///Multiplico todos los valores
-        for(int i=0;i<=strlen(dniAux)-1;i++){
-            prod = (*(dniAux + i) - '0') * (*(p_coef + i));
-            result+=prod;
-          }
-          resto=result-((result/11)*11);
+             ///Almacena un entero dentro de una cadena y debería devolver un int
+             sprintf(dniAux, "%ld", dni);
 
-             switch (resto) {
-               case 0:
-                  if(digVerif==0)
-                    return TODO_OK;
-                  break;
+            ///Multiplico todos los valores
+            for(int i=0;i<=strlen(dniAux)-1;i++){
+                prod = (*(dniAux + i) - '0') * (*(p_coef + i));
+                result+=prod;
+              }
+              resto=result-((result/11)*11);
 
-                case 1:
-                   if((tipo==20 && digVerif==9) ||(tipo==27 && digVerif==4))
-                      return TODO_OK;
-                    break;
+                 switch (resto) {
+                   case 0:
+                      if(digVerif==0)
+                        return TODO_OK;
+                      break;
 
-                default:
-                  if(digVerif==(11-resto))
-                     return TODO_OK;
-                  break;
-               }
+                    case 1:
+                       if((tipo==20 && digVerif==9) ||(tipo==27 && digVerif==4))
+                          return TODO_OK;
+                        break;
+
+                    default:
+                      if(digVerif==(11-resto))
+                         return TODO_OK;
+                      break;
+                }
             }
     return ERROR;
 }
 
-char*  normalizarApel_Nombre(char * nyapel)
-{
+char* normalizarApel_Nombre(char * nyapel){
+
     char * lect = nyapel, * esc =nyapel;
     int primeraLetraPalabra;
     int posicionPalabra = 0;
@@ -152,8 +161,24 @@ char*  normalizarApel_Nombre(char * nyapel)
     return nyapel;
 }
 
-int validarCorreo(const char* correo)
-{
+int validarSexo(void *dato) {
+    miembro *m = (miembro *)dato;
+    if (m->sexo=='F' || m->sexo== 'M' || m->sexo=='O'){
+        return TODO_OK;
+    }
+    return ERROR;
+}
+
+int validarEstado(void *dato) {
+    miembro *m = (miembro *)dato;
+    if (m->estado=='A' || m->estado=='B') {
+        return TODO_OK;
+    }
+    return ERROR;
+}
+
+int validarCorreo(void *dato){
+    miembro *m = (miembro *)dato;
 
    char dom[20];
    int captura=0;
@@ -161,33 +186,31 @@ int validarCorreo(const char* correo)
 
 
    ///Ignora los caracteres hasta el arroba, y del arroba hasta el punto
-   captura = sscanf(correo, "%*[^@]@%[^.]", dom); ///Expresión regular
+   captura = sscanf(m->emailTutor, "%*[^@]@%[^.]", dom); ///Expresión regular
 
    if(captura<=0)
-       return CORREO_INVALIDO;
+       return ERROR;
      else{
          if(strstr(dominios,dom)!=NULL)
-             return CORREO_VALIDO;
+             return TODO_OK;
         }
 
-    return CORREO_INVALIDO;
+    return ERROR;
 }
 
-int validarPlan(const char* plan)
-{
-   char planes[4][15]={"BASIC","PREMIUM","VIP","FAMILY"};
+int validarPlan(void *dato){
+    miembro *m = (miembro *)dato;
+    char planes[4][15]={"BASIC","PREMIUM","VIP","FAMILY"};
 
-   for(int i=0;i<=3;i++){
-      if(strcmp(plan,*(planes+i))==0)
-            return PLAN_VALIDO;
-      }
-   return PLAN_INVALIDO;
+    for(int i=0;i<=3;i++){
+        if(strcmp(m->plan,*(planes+i))==0)
+        return TODO_OK;
+    }
+    return ERROR;
 }
 
-///La edad es un campo calculable.Por tanto deberemos hacer una funcion que calcule la edad del miembro
-
-int validarCAT(const char* cat,int edad,char* correo)
-{
+///VALIDACION ANTERIOR DE CAT
+/*int validarCAT(const char* cat,int edad,char* correo){
     if(strcmp(cat,"MENOR")==0){
         ///Como es menor, validar que el correo no esté vacío
         if(edad<18 && *(correo)!='\0')
@@ -200,6 +223,19 @@ int validarCAT(const char* cat,int edad,char* correo)
 
     return CAT_INVALIDO;
 
+}*/
+
+int validarCAT(const char* cat,int edad){
+    if(strcmp(cat,"MENOR")==0){
+        //Como es menor, validar que el correo no esté vacío
+        if(edad<18)
+            return TODO_OK;
+      }
+       else if(strcmp(cat,"ADULTO")==0){
+           if(edad>=18)
+              return TODO_OK;
+          }
+    return ERROR;
 }
 
 int validarGenero(void *dato) {

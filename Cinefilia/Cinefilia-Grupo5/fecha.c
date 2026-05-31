@@ -1,6 +1,35 @@
 #include "fecha.h"
+#include "string.h"
 
-int es_Fecha_Valida(const t_fecha *f){
+/**************** Validación Fecha **************************/
+
+t_fecha parsearFecha(const char *cadena) {
+    t_fecha fecha;
+    fecha.dia = 0;
+    fecha.mes = 0;
+    fecha.anio = 0;
+
+    // Copiamos la cadena porque strtok la modifica
+    char copia[11];
+    strncpy(copia, cadena, sizeof(copia));
+    copia[10] = '\0'; // Nos aseguramos que termine en null
+
+    char *token = strtok(copia, "/");
+    if (token == NULL) return fecha;
+    fecha.dia = atoi(token);
+
+    token = strtok(NULL, "/");
+    if (token == NULL) return fecha;
+    fecha.mes = atoi(token);
+
+    token = strtok(NULL, "/");
+    if (token == NULL) return fecha;
+    fecha.anio = atoi(token);
+
+    return fecha;
+}
+
+int es_Fecha_Valida(t_fecha *f){
     if(f->anio >= 1600){
         if(f->mes >= 1 && f->mes <= 12){
             if(f->dia >= 1 && f->dia <= cant_Dia_Mes(f->mes, f->anio)){
@@ -23,6 +52,69 @@ int cant_Dia_Mes (int mes, int anio){
 
 bool es_Bisiesto(int anio) {
     return ((anio%4 == 0 && anio%100 != 0) || anio%400 == 0);
+}
+
+int validarFechaNacimiento(t_fecha *fechNac, t_fecha *fechProceso){
+    if ((fechProceso->anio-fechNac->anio)<10)
+        return ERROR;
+    return TODO_OK;
+}
+
+int compara_Fechas_MenorIgual(t_fecha *fechNac, t_fecha *fechProceso){
+    //Verifica que fechA <= fechB
+    ///detecta cuando A > B para devolver ERROR
+
+    ///Se agrega una validación extra respecto a la diferencia de años, aclarado en la consigna
+    if (fechNac->anio > fechProceso->anio)
+        return ERROR;
+      if (fechNac->anio == fechProceso->anio){  /////Si el año de A ya es mayor, no hace falta seguir comparando.
+             if (fechNac->mes > fechProceso->mes)
+                 return ERROR;
+                  if (fechNac->mes == fechProceso->mes){
+                      if (fechNac->dia > fechProceso->dia)
+                           return ERROR;
+                       }
+                  }
+    return TODO_OK; /// fechA <= fechB
+}
+
+int validarFechaAfiliacion(t_fecha* fechAfil,t_fecha* fechNac,t_fecha* fechProceso){
+     int cmp1=compara_Fechas_MenorIgual(fechNac,fechAfil);
+     int cmp2=compara_Fechas_MenorIgual(fechAfil,fechProceso);
+
+       if(cmp1==TODO_OK && cmp2 ==TODO_OK)
+           return TODO_OK;
+
+    return ERROR;
+}
+
+//FECHA ULTIMA CUOTA PAGA
+///usa ese ERROR para saber si el orden lógico de las fechas se rompió.
+// fechAfi  <=  fechUltCuot  <=  fProceso
+
+int validar_UltimaCuota_Paga(t_fecha* fechAfi,t_fecha* fechUltCuot, t_fecha* fProceso){
+     ///Verifica que fechAfi <= fechUltCuot
+
+    if(compara_Fechas_MenorIgual(fechAfi, fechUltCuot) == FECHA_INVALIDA)
+        return ERROR; //La afiliación es POSTERIOR a la última cuota , no tiene sentido
+
+      //Verifica que fechUltCuot <= fProceso
+    if(compara_Fechas_MenorIgual(fechUltCuot, fProceso) == FECHA_INVALIDA)
+        return ERROR; ///La última cuota es POSTERIOR a hoy , no tiene sentido
+
+    return TODO_OK;
+}
+
+int calcularEdad(t_fecha* fechProceso, t_fecha* fechNac){
+   int edad=fechProceso->anio-fechNac->anio;
+
+    if(fechProceso->mes < fechNac->mes)
+        edad-=1;
+      else if(fechProceso->mes == fechNac->mes)
+              if(fechProceso->dia < fechNac->dia)
+                    edad-=1;
+
+    return edad;
 }
 
 void solicitar_Fecha_Proceso(t_fecha *fecha_proceso) {

@@ -10,9 +10,30 @@ Registros afectados (DNI):
   - 0
   - 1
 ----------------------------------------
+Motivo de rechazo: Categoria incorrecta
+Cantidad de incidencias: 1
+Registros afectados (DNI):
+  - 34567890
+----------------------------------------
 Motivo de rechazo: DNI duplicado
 Cantidad de incidencias: 2
 Registros afectados (DNI):
   - 45678901
   - 22334455
+----------------------------------------
+Motivo de rechazo: Fecha de nacimiento invalida
+Cantidad de incidencias: 1
+Registros afectados (DNI):
+  - 78901234
+----------------------------------------
+Motivo de rechazo: Sexo invalido
+Cantidad de incidencias: 1
+Registros afectados (DNI):
+  - 90123456
+----------------------------------------
+Motivo de rechazo: Correo invalido
+Cantidad de incidencias: 2
+Registros afectados (DNI):
+  - 22334455
+  - 55667788
 ----------------------------------------

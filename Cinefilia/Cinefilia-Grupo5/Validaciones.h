@@ -23,22 +23,24 @@
 
 
 ///Macros a incluir
-#define validarDNI(dni) (dni>=1000000 && dni<=100000000) ? DNI_VALIDO : DNI_INVALIDO
 #define validarSEXO(sexo) (sexo=='F' || sexo== 'M' || sexo=='O') ? SEXO_VALIDO: SEXO_INVALIDO
-#define validarEstado(estado) (estado=='A' || estado=='B') ? ESTADO_VALIDO : ESTADO_INVALIDO
+#define validarESTADO(estado) (estado=='A' || estado=='B') ? ESTADO_VALIDO : ESTADO_INVALIDO
 #define validarIgualdadDNI(dniMiembro,dniCuil) (dniMiembro != dniCuil)
 
 ///Prototipos
 int validar_campo(void *dato, int (*funcion_validadora)(void *));
+int validarDNI(void *dato);
 int validarGenero(void *dato);
-int validarCUIL(const char* cuil,long int dniMiembro,char* sexoMiembro);
+int validarCUIL(void *dato);
 char*  normalizarApel_Nombre(char * nyapel);
-int validarCorreo(const char* correo);
-int validarPlan(const char* plan);
+int validarSexo(void *dato);
+int validarEstado(void *dato);
+int validarCorreo(void *dato);
+int validarPlan(void *dato);
 int insertarEnVector(int **ids, int *cantidad, int nuevoItem);
 void validarStock(int *stock);
 int validarIgualdadSexo(char* sexoMiembro,int tipoCuil);
-int validarCAT(const char* cat,int edad,char* correo);
+int validarCAT(const char* cat,int edad);
 char* normalizarTitulo(char * titulo);
 
 #endif // VALIDACIONES_H_INCLUDED

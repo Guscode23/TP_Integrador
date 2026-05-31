@@ -1,7 +1,7 @@
 #include "archivos.h"
 #include "Validaciones.h"
 
-void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_auditorias, int *cant_tipos_error, t_lista_miembros *lista_validos) {
+void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_auditorias, int *cant_tipos_error, t_lista_miembros *lista_validos, t_fecha *fecha_proceso) {
     FILE *archivo = fopen(ruta_archivo, "r");
     if (archivo == NULL) {
         printf("Error: No se pudo abrir %s.\n", ruta_archivo);
@@ -11,6 +11,7 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
     char linea[1024];
     int cantidadDNI = 0;
     int *idsDNI = NULL;
+    int edad;
 
     fgets(linea, sizeof(linea), archivo); // Descartar cabecera
 
@@ -32,9 +33,9 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
         while ((token = extraer_campo(&resto_linea, ";")) != NULL && registro_valido) {
 
             switch (columna) {
-                case 0: // ESTACIÓN DNI
+                case 0: // DNI
                     miembro_temp.dni = atol(token);
-                    if (validar_campo(&miembro_temp, val_dni) == ERROR) {
+                    if (validar_campo(&miembro_temp, validarDNI) == ERROR) {
                         strcpy(motivo_error, "DNI fuera de rango");
                         registro_valido = false;
                     }
@@ -44,9 +45,112 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
                     }
                     break;
 
-                // case 1: // CUIL
-                // case 2: // Apellidos y Nombres...
-                // (Aquí agregarás el resto de tus case llamando a tus funciones)
+                case 1: // CUIL
+                    strcpy(miembro_temp.CUIL, token);
+                    /// EN REVISION
+                    /*if (validar_campo(&miembro_temp, validarCUIL) == ERROR) {
+                        strcpy(motivo_error, "CUIL invalido");
+                        registro_valido = false;
+                    }*/
+                    break;
+
+                case 2: // Apellidos y Nombres
+                    strcpy(miembro_temp.apeNom, token);
+                    //printf("Se recibe: %s\n", miembro_temp.apeNom);
+                    normalizarApel_Nombre(miembro_temp.apeNom);
+                    //printf("Se transforma a: %s\n", miembro_temp.apeNom);
+                    break;
+
+                case 3: // Fecha de Nacimiento
+                    miembro_temp.fechNac = parsearFecha(token);
+                    if(es_Fecha_Valida(&miembro_temp.fechNac) == ERROR){
+                        //printf("Error en fecha valida");
+                        strcpy(motivo_error, "Fecha de nacimiento invalida");
+                        registro_valido = false;
+                    }
+                    else if(validarFechaNacimiento(&miembro_temp.fechNac, fecha_proceso) == ERROR){
+                        //printf("Error en comparacion de fecha");
+                        strcpy(motivo_error, "Fecha de nacimiento invalida");
+                        registro_valido = false;
+                    }
+                    break;
+
+                case 4: // Sexo
+                    miembro_temp.sexo = token[0];
+                    if (validar_campo(&miembro_temp, validarSexo) == ERROR) {
+                        //printf("Error en sexo");
+                        strcpy(motivo_error, "Sexo invalido");
+                        registro_valido = false;
+                    }
+                    break;
+
+                case 5: // Fecha de Afiliación
+                    miembro_temp.fechAfil = parsearFecha(token);
+                    if(es_Fecha_Valida(&miembro_temp.fechAfil) == ERROR){
+                        //printf("Error en fecha valida");
+                        strcpy(motivo_error, "Fecha de afiliacion invalida");
+                        registro_valido = false;
+                    }
+                    else if(validarFechaAfiliacion(&miembro_temp.fechAfil,&miembro_temp.fechNac,fecha_proceso) == ERROR){
+                        strcpy(motivo_error, "Fecha de afiliacion invalida");
+                        registro_valido = false;
+                    }
+                    break;
+
+                case 6: // Categoria
+                    strcpy(miembro_temp.cat, token);
+                    edad = calcularEdad(fecha_proceso, &miembro_temp.fechNac);
+                    //printf("La edad es: %d\n", edad);
+                    if (validarCAT(miembro_temp.cat, edad) == ERROR) {
+                        printf("Error en categoria\n");
+                        strcpy(motivo_error, "Categoria incorrecta");
+                        registro_valido = false;
+                    }
+                    break;
+
+                case 7: // Fecha de última cuota paga
+                    miembro_temp.fechUltCuot = parsearFecha(token);
+                    if(es_Fecha_Valida(&miembro_temp.fechUltCuot) == ERROR){
+                        printf("Error en 1ra validacion de fecha de ult cuota\n");
+                        strcpy(motivo_error, "Fecha de ultima cuota paga invalida");
+                        registro_valido = false;
+                    }
+                    else if(validar_UltimaCuota_Paga(&miembro_temp.fechAfil,&miembro_temp.fechUltCuot,fecha_proceso) == ERROR){
+                        printf("Error en 2da validacion de fecha de ult cuota\n");
+                        strcpy(motivo_error, "Fecha de ultima cuota paga invalida");
+                        registro_valido = false;
+                    }
+                    break;
+
+                case 8: // Estado
+                    miembro_temp.estado = token[0];
+                    if (validar_campo(&miembro_temp, validarEstado) == ERROR) {
+                        printf("Error en validacion de fecha de estado\n");
+                        strcpy(motivo_error, "Estado invalido");
+                        registro_valido = false;
+                    }
+                    break;
+
+                case 9: // Plan
+                    strcpy(miembro_temp.plan, token);
+                    if (validar_campo(&miembro_temp, validarPlan) == ERROR) {
+                        printf("Error en validacion de fecha de plan\n");
+                        strcpy(motivo_error, "Plan invalido");
+                        registro_valido = false;
+                    }
+                    break;
+
+                case 10: // Email tutor
+                    strcpy(miembro_temp.emailTutor, token);
+                    if (strcmp(miembro_temp.cat, "MENOR") == 0){
+                        if (validar_campo(&miembro_temp, validarCorreo) == ERROR) {
+                            printf("Error en validacion de mail\n");
+                            strcpy(motivo_error, "Correo invalido");
+                            registro_valido = false;
+                        }
+                    }
+
+                    break;
             }
             columna++;
         }
@@ -163,9 +267,9 @@ void procesar_archivo_titulos(const char *ruta_archivo, t_auditoria *arreglo_aud
 
                 case 1: // TITULO
                     strcpy(pelicula_temp.titulo, token);
-                    printf("Se recibe: %s\n", pelicula_temp.titulo);
+                    //printf("Se recibe: %s\n", pelicula_temp.titulo);
                     normalizarTitulo(pelicula_temp.titulo);
-                    printf("Se transforma a: %s\n", pelicula_temp.titulo);
+                    //printf("Se transforma a: %s\n", pelicula_temp.titulo);
                     break;
 
                 case 2: // GENERO
@@ -264,16 +368,4 @@ char* extraer_campo(char **cadena, const char *delimitador) {
         *cadena = NULL;
     }
     return inicio;
-}
-
-int val_dni(void *dato) {
-    // 1. Desenmascaramos el dato
-    miembro *m = (miembro *)dato;
-
-    // 2. Aplicamos la regla de negocio (Ej: DNI entre 1 millón y 100 millones)
-    if (m->dni > 1000000 && m->dni < 100000000) {
-        return TODO_OK;
-    }
-
-    return ERROR;
 }
