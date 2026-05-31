@@ -1,0 +1,22 @@
+========================================
+      REPORTE DE AUDITORIA DE DATOS     
+========================================
+
+Motivo de rechazo: ID invalido
+Cantidad de incidencias: 1
+Registros afectados (ID):
+  - -6
+----------------------------------------
+Motivo de rechazo: ID duplicado
+Cantidad de incidencias: 2
+Registros afectados (ID):
+  - 4
+  - 7
+----------------------------------------
+Motivo de rechazo: Genero invalido
+Cantidad de incidencias: 3
+Registros afectados (ID):
+  - 7
+  - 10
+  - 12
+----------------------------------------
