@@ -18,7 +18,7 @@
 #define TODO_OK 1
 #define ERROR 0
 
-///TDA
+
 typedef struct{
     int dia, mes, anio;
 }t_fecha;

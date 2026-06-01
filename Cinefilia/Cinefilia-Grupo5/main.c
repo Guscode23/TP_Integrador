@@ -8,35 +8,7 @@
 #include "archivos.h"
 #include "auditoria.h"
 
-//// ============================================================================
-////                       1. FUNCIONES DE VALIDACION ESPECIFICAS
-//// ============================================================================
-//
-//*  EJEMPLO DE VALIDACION: DNI
-// * Todas tus futuras funciones deben verse exactamente así: recibir void*,
-// * castearlo a miembro*, y devolver TODO_OK o ERROR.
-// */
-//int val_dni(void *dato) {
-//    // 1. Desenmascaramos el dato
-//    miembro *m = (miembro *)dato;
-//
-//    // 2. Aplicamos la regla de negocio (Ej: DNI entre 1 millón y 100 millones)
-//    if (m->dni > 1000000 && m->dni < 100000000) {
-//        return TODO_OK;
-//    }
-//
-//    return ERROR;
-//}
-//
-//// Aquí agregarás val_cuil, val_nombres, val_fechas, etc... siguiendo el mismo patrón.
-//
-//
-//// El Motor Generico exigido por el TP
-//int validar_campo(void *dato, int (*funcion_validadora)(void *)) {
-//    return funcion_validadora(dato);
-//}
-
-#define MAX_REGISTROS 1000 // Un límite seguro para tus arreglos en RAM
+#define MAX_REGISTROS 1000
 
 int main() {
     printf("--- INICIANDO SISTEMA DE MIGRACION DE DATOS ---\n\n");
