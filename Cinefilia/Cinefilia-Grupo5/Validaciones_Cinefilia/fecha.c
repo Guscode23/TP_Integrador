@@ -57,6 +57,14 @@ bool es_Bisiesto(int anio) {
 int validarFechaNacimiento(t_fecha *fechNac, t_fecha *fechProceso){
     if ((fechProceso->anio-fechNac->anio)<10)
         return ERROR;
+    if ((fechProceso->anio-fechNac->anio)==10){
+        if (fechNac->mes > fechProceso->mes)
+            return ERROR;
+        if (fechNac->mes == fechProceso->mes){
+            if (fechNac->dia > fechProceso->dia)
+                return ERROR;
+        }
+    }
     return TODO_OK;
 }
 
@@ -67,7 +75,7 @@ int compara_Fechas_MenorIgual(t_fecha *fechNac, t_fecha *fechProceso){
     ///Se agrega una validación extra respecto a la diferencia de años, aclarado en la consigna
     if (fechNac->anio > fechProceso->anio)
         return ERROR;
-      if (fechNac->anio == fechProceso->anio){  /////Si el año de A ya es mayor, no hace falta seguir comparando.
+      if (fechNac->anio == fechProceso->anio){
              if (fechNac->mes > fechProceso->mes)
                  return ERROR;
                   if (fechNac->mes == fechProceso->mes){

@@ -36,10 +36,12 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
                 case 0: // DNI
                     miembro_temp.dni = atol(token);
                     if (validar_campo(&miembro_temp, validarDNI) == ERROR) {
+                        printf("DNI fuera de rango\n\n");
                         strcpy(motivo_error, "DNI fuera de rango");
                         registro_valido = false;
                     }
                     else if(insertarEnVector(&idsDNI, &cantidadDNI, miembro_temp.dni) < 0) {
+                        printf("DNI duplicado\n\n");
                         strcpy(motivo_error, "DNI duplicado");
                         registro_valido = false;
                     }
@@ -47,18 +49,18 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
 
                 case 1: // CUIL
                     strcpy(miembro_temp.CUIL, token);
-                    /// EN REVISION
-                    /*if (validar_campo(&miembro_temp, validarCUIL) == ERROR) {
-                        strcpy(motivo_error, "CUIL invalido");
-                        registro_valido = false;
-                    }*/
                     break;
 
                 case 2: // Apellidos y Nombres
                     strcpy(miembro_temp.apeNom, token);
-                    //printf("Se recibe: %s\n", miembro_temp.apeNom);
+                    printf("Se recibe: %s\n", miembro_temp.apeNom);
                     normalizarApel_Nombre(miembro_temp.apeNom);
-                    //printf("Se transforma a: %s\n", miembro_temp.apeNom);
+                    printf("Se transforma a: %s\n", miembro_temp.apeNom);
+                    if (strcmp(miembro_temp.apeNom, "") == 0){
+                        strcpy(motivo_error, "Nombre y apellido vacio");
+                        printf("Nombre vacio\n\n");
+                        registro_valido = false;
+                    }
                     break;
 
                 case 3: // Fecha de Nacimiento
@@ -78,8 +80,13 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
                 case 4: // Sexo
                     miembro_temp.sexo = token[0];
                     if (validar_campo(&miembro_temp, validarSexo) == ERROR) {
-                        //printf("Error en sexo");
+                        printf("Error en sexo\n\n");
                         strcpy(motivo_error, "Sexo invalido");
+                        registro_valido = false;
+                    }
+                    if (validar_campo(&miembro_temp, validarCUIL) == ERROR) {
+                        printf("Error en CUIL\n\n");
+                        strcpy(motivo_error, "CUIL invalido");
                         registro_valido = false;
                     }
                     break;
@@ -87,11 +94,12 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
                 case 5: // Fecha de Afiliación
                     miembro_temp.fechAfil = parsearFecha(token);
                     if(es_Fecha_Valida(&miembro_temp.fechAfil) == ERROR){
-                        //printf("Error en fecha valida");
+                        printf("Error en fecha valida de afiliacion 1\n\n");
                         strcpy(motivo_error, "Fecha de afiliacion invalida");
                         registro_valido = false;
                     }
                     else if(validarFechaAfiliacion(&miembro_temp.fechAfil,&miembro_temp.fechNac,fecha_proceso) == ERROR){
+                        printf("Error en fecha valida de afiliacion 2\n\n");
                         strcpy(motivo_error, "Fecha de afiliacion invalida");
                         registro_valido = false;
                     }
@@ -102,7 +110,7 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
                     edad = calcularEdad(fecha_proceso, &miembro_temp.fechNac);
                     //printf("La edad es: %d\n", edad);
                     if (validarCAT(miembro_temp.cat, edad) == ERROR) {
-                        printf("Error en categoria\n");
+                        printf("Error en categoria\n\n");
                         strcpy(motivo_error, "Categoria incorrecta");
                         registro_valido = false;
                     }
@@ -111,12 +119,12 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
                 case 7: // Fecha de última cuota paga
                     miembro_temp.fechUltCuot = parsearFecha(token);
                     if(es_Fecha_Valida(&miembro_temp.fechUltCuot) == ERROR){
-                        printf("Error en 1ra validacion de fecha de ult cuota\n");
+                        printf("Error en 1ra validacion de fecha de ult cuota\n\n");
                         strcpy(motivo_error, "Fecha de ultima cuota paga invalida");
                         registro_valido = false;
                     }
                     else if(validar_UltimaCuota_Paga(&miembro_temp.fechAfil,&miembro_temp.fechUltCuot,fecha_proceso) == ERROR){
-                        printf("Error en 2da validacion de fecha de ult cuota\n");
+                        printf("Error en 2da validacion de fecha de ult cuota\n\n");
                         strcpy(motivo_error, "Fecha de ultima cuota paga invalida");
                         registro_valido = false;
                     }
@@ -125,7 +133,7 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
                 case 8: // Estado
                     miembro_temp.estado = token[0];
                     if (validar_campo(&miembro_temp, validarEstado) == ERROR) {
-                        printf("Error en validacion de fecha de estado\n");
+                        printf("Error en validacion de fecha de estado\n\n");
                         strcpy(motivo_error, "Estado invalido");
                         registro_valido = false;
                     }
@@ -134,7 +142,7 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
                 case 9: // Plan
                     strcpy(miembro_temp.plan, token);
                     if (validar_campo(&miembro_temp, validarPlan) == ERROR) {
-                        printf("Error en validacion de fecha de plan\n");
+                        printf("Error en validacion de fecha de plan\n\n");
                         strcpy(motivo_error, "Plan invalido");
                         registro_valido = false;
                     }
@@ -144,7 +152,7 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
                     strcpy(miembro_temp.emailTutor, token);
                     if (strcmp(miembro_temp.cat, "MENOR") == 0){
                         if (validar_campo(&miembro_temp, validarCorreo) == ERROR) {
-                            printf("Error en validacion de mail\n");
+                            printf("Error en validacion de mail\n\n");
                             strcpy(motivo_error, "Correo invalido");
                             registro_valido = false;
                         }
@@ -155,7 +163,7 @@ void procesar_archivo_miembros(const char *ruta_archivo, t_auditoria *arreglo_au
             columna++;
         }
         // VEREDICTO FINAL
-        if (registro_valido && columna >= 1) {
+        if (registro_valido && columna >= 11) {
 
             // --- INICIO MEMORIA DINÁMICA ---
             // Si la cantidad alcanzó la capacidad máxima, necesitamos agrandar el arreglo
@@ -270,6 +278,11 @@ void procesar_archivo_titulos(const char *ruta_archivo, t_auditoria *arreglo_aud
                     //printf("Se recibe: %s\n", pelicula_temp.titulo);
                     normalizarTitulo(pelicula_temp.titulo);
                     //printf("Se transforma a: %s\n", pelicula_temp.titulo);
+                    if (strcmp(pelicula_temp.titulo, "") == 0){
+                        strcpy(motivo_error, "Titulo vacio");
+                        printf("Titulo vacio\n\n");
+                        registro_valido = false;
+                    }
                     break;
 
                 case 2: // GENERO
@@ -354,7 +367,6 @@ void procesar_archivo_titulos(const char *ruta_archivo, t_auditoria *arreglo_aud
     free(idsPeliculas);
     fclose(archivo);
 }
-
 
 // Extrae campos respetando los vacios (;;), reemplaza a strtok
 char* extraer_campo(char **cadena, const char *delimitador) {

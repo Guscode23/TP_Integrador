@@ -76,26 +76,27 @@ int validarCUIL(void *dato){
     int coeficientes[10]={5,4,3,2,7,6,5,4,3,2};
     int *p_coef=coeficientes;
     int formato;
-    char dniAux[11];
+    char tipoydniAux[11];
 
     ///Capturo los datos con sscanf
     formato=sscanf(m->CUIL, "%d-%ld-%d",&tipo,&dni,&digVerif);
 
     ///Validación de casos borde
-    if(validarIgualdadDNI(m->dni,dni) || formato!=3 || validarIgualdadSexo(&m->sexo,tipo)==-1)
+    if(validarIgualdadDNI(m->dni,dni) || formato!=3 || validarIgualdadSexo(&m->sexo,tipo)==-1){
           return ERROR;
-            else{
+    }
+    else{
 
             int result=0;
             int prod=0;
             int resto=0;
 
              ///Almacena un entero dentro de una cadena y debería devolver un int
-             sprintf(dniAux, "%ld", dni);
+             sprintf(tipoydniAux, "%d%ld", tipo, dni);
 
             ///Multiplico todos los valores
-            for(int i=0;i<=strlen(dniAux)-1;i++){
-                prod = (*(dniAux + i) - '0') * (*(p_coef + i));
+            for(int i=0;i<=strlen(tipoydniAux)-1;i++){
+                prod = (*(tipoydniAux + i) - '0') * (*(p_coef + i));
                 result+=prod;
               }
               resto=result-((result/11)*11);
