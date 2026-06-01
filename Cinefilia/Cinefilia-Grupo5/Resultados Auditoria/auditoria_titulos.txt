@@ -20,3 +20,8 @@ Registros afectados (ID):
   - 10
   - 12
 ----------------------------------------
+Motivo de rechazo: Titulo vacio
+Cantidad de incidencias: 1
+Registros afectados (ID):
+  - 9
+----------------------------------------

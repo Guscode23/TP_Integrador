@@ -40,6 +40,12 @@
 		<Unit filename="Include/fecha.h" />
 		<Unit filename="Include/indice.h" />
 		<Unit filename="Include/structs.h" />
+		<Unit filename="Validaciones_Cinefilia/Validaciones.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Validaciones_Cinefilia/fecha.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="archivos.c">
 			<Option compilerVar="CC" />
 		</Unit>
