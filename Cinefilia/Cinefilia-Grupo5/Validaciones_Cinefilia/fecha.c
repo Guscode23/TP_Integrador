@@ -68,18 +68,18 @@ int validarFechaNacimiento(t_fecha *fechNac, t_fecha *fechProceso){
     return TODO_OK;
 }
 
-int compara_Fechas_MenorIgual(t_fecha *fechNac, t_fecha *fechProceso){
+int compara_Fechas_MenorIgual(t_fecha *fechMenorIgual, t_fecha *fechMayor){
     //Verifica que fechA <= fechB
     ///detecta cuando A > B para devolver ERROR
 
     ///Se agrega una validación extra respecto a la diferencia de años, aclarado en la consigna
-    if (fechNac->anio > fechProceso->anio)
+    if (fechMenorIgual->anio > fechMayor->anio)
         return ERROR;
-      if (fechNac->anio == fechProceso->anio){
-             if (fechNac->mes > fechProceso->mes)
+      if (fechMenorIgual->anio == fechMayor->anio){
+             if (fechMenorIgual->mes > fechMayor->mes)
                  return ERROR;
-                  if (fechNac->mes == fechProceso->mes){
-                      if (fechNac->dia > fechProceso->dia)
+                  if (fechMenorIgual->mes == fechMayor->mes){
+                      if (fechMenorIgual->dia > fechMayor->dia)
                            return ERROR;
                        }
                   }
@@ -103,11 +103,11 @@ int validarFechaAfiliacion(t_fecha* fechAfil,t_fecha* fechNac,t_fecha* fechProce
 int validar_UltimaCuota_Paga(t_fecha* fechAfi,t_fecha* fechUltCuot, t_fecha* fProceso){
      ///Verifica que fechAfi <= fechUltCuot
 
-    if(compara_Fechas_MenorIgual(fechAfi, fechUltCuot) == FECHA_INVALIDA)
+    if(compara_Fechas_MenorIgual(fechAfi, fechUltCuot) == ERROR)
         return ERROR; //La afiliación es POSTERIOR a la última cuota , no tiene sentido
 
       //Verifica que fechUltCuot <= fProceso
-    if(compara_Fechas_MenorIgual(fechUltCuot, fProceso) == FECHA_INVALIDA)
+    if(compara_Fechas_MenorIgual(fechUltCuot, fProceso) == ERROR)
         return ERROR; ///La última cuota es POSTERIOR a hoy , no tiene sentido
 
     return TODO_OK;

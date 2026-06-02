@@ -210,22 +210,6 @@ int validarPlan(void *dato){
     return ERROR;
 }
 
-///VALIDACION ANTERIOR DE CAT
-/*int validarCAT(const char* cat,int edad,char* correo){
-    if(strcmp(cat,"MENOR")==0){
-        ///Como es menor, validar que el correo no esté vacío
-        if(edad<18 && *(correo)!='\0')
-            return CAT_VALIDO;
-      }
-       else if(strcmp(cat,"ADULTO")==0){
-           if(edad>=18)
-              return CAT_VALIDO;
-          }
-
-    return CAT_INVALIDO;
-
-}*/
-
 int validarCAT(const char* cat,int edad){
     if(strcmp(cat,"MENOR")==0){
         //Como es menor, validar que el correo no esté vacío
