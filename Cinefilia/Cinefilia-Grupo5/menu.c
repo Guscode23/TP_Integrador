@@ -288,4 +288,92 @@ void altaMiembro(miembro *miembroOficial,t_indice* indice,t_fecha* fechProceso) 
 
 
 
+///Funciones de mostrado de información
+void mostrarSocios_DNI(miembro* t_miembro, int cantidad)
+{
+    ///Llamar a funcion de ordenamiento, o ordenar antes
+
+    // Encabezado con todos los campos encolumnados
+    printf("\n%-10s %-13s %-25s %-11s %-4s %-11s %-5s %-11s %-4s %-6s %-25s\n",
+           "DNI", "CUIL", "APELLIDO Y NOMBRE", "F. NAC", "SEXO", "F. AFIL", "CAT", "F. ULT CUO", "EST", "PLAN", "EMAIL TUTOR");
+
+    printf("-----------------------------------------------------------------------------------------------------------------------------------------------------\n");
+
+    for (int i = 0; i < cantidad; i++) {
+        if ((t_miembro + i)->estado == 'A') {
+            printf("%-10ld %-13s %-25s %02d/%02d/%04d  %-4c %02d/%02d/%04d  %-5s %02d/%02d/%04d  %-4c %-6s %-25s\n",
+                   (t_miembro + i)->dni,
+                   (t_miembro + i)->CUIL,
+                   (t_miembro + i)->apeNom,
+
+                   // t_fecha fechNac
+                   (t_miembro + i)->fechNac.dia, (t_miembro + i)->fechNac.mes, (t_miembro + i)->fechNac.anio,
+
+                   (t_miembro + i)->sexo,
+
+                   // t_fecha fechAfil
+                   (t_miembro + i)->fechAfil.dia, (t_miembro + i)->fechAfil.mes, (t_miembro + i)->fechAfil.anio,
+
+                   (t_miembro + i)->cat,
+
+                   // t_fecha fechUltCuot
+                   (t_miembro + i)->fechUltCuot.dia, (t_miembro + i)->fechUltCuot.mes, (t_miembro + i)->fechUltCuot.anio,
+
+                   (t_miembro + i)->estado,
+                   (t_miembro + i)->plan,
+                   (t_miembro + i)->emailTutor);
+        }
+    }
+
+    printf("-----------------------------------------------------------------------------------------------------------------------------------------------------\n");
+}
+
+///Mostrar Miembros por plan
+void listarMiembrosPorPlan(miembro* t_miembro, int cantidad)
+{
+    ///Llamar a funcion de ordenamiento (Por Apellido y Nombre) o hacerlo antes
+
+    printf("\n%-20s %-12s %-12s %-12s %-12s\n", "Plan / Índice", "(BASIC)", "(PREMIUM)", "(VIP)", "(FAMILY)");
+    printf("-----------------------------------------------------------------------\n");
+
+    for (int i = 0; i < cantidad; i++) {
+        printf("%-20s ", (t_miembro + i)->apeNom);
+
+        if (strcmp((t_miembro + i)->plan, "BASIC") == 0) {
+            printf("%-12ld ", (t_miembro + i)->dni);
+        } else {
+            printf("%-12s ", "0");
+        }
+
+        if (strcmp((t_miembro + i)->plan, "PREMIUM") == 0) {
+            printf("%-12ld ", (t_miembro + i)->dni);
+        } else {
+            printf("%-12s ", "0");
+        }
+
+        if (strcmp((t_miembro + i)->plan, "VIP") == 0) {
+            printf("%-12ld ", (t_miembro + i)->dni);
+        } else {
+            printf("%-12s ", "0");
+        }
+
+        if (strcmp((t_miembro + i)->plan, "FAMILY") == 0) {
+            printf("%-12ld\n", (t_miembro + i)->dni);
+        } else {
+            printf("%-12s\n", "0");
+        }
+    }
+    printf("-----------------------------------------------------------------------\n");
+}
+
+
+
+
+
+
+
+
+
+
+
 
