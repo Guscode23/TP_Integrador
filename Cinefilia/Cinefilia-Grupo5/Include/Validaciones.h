@@ -30,17 +30,19 @@
 ///Prototipos
 int validar_campo(void *dato, int (*funcion_validadora)(void *));
 int validarDNI(void *dato);
-int validarGenero(void *dato);
 int validarCUIL(void *dato);
-char*  normalizarApel_Nombre(char * nyapel);
+char* normalizarApel_Nombre(char * nyapel);
 int validarSexo(void *dato);
 int validarEstado(void *dato);
 int validarCorreo(void *dato);
 int validarPlan(void *dato);
-int insertarEnVector(int **ids, int *cantidad, int nuevoItem);
-void validarStock(int *stock);
-int validarIgualdadSexo(char* sexoMiembro,int tipoCuil);
 int validarCAT(const char* cat,int edad);
+int validarIgualdadSexo(char* sexoMiembro,int tipoCuil);
+
+void validarStock(int *stock);
 char* normalizarTitulo(char * titulo);
+int validarGenero(void *dato);
+
+int insertarEnVector(int **ids, int *cantidad, int nuevoItem);
 
 #endif // VALIDACIONES_H_INCLUDED

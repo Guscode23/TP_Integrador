@@ -1,4 +1,4 @@
-ID Pelicula;Titulo;Genero;Stock
+ID;Pelicula;Titulo;Genero;Stock
 1;    El Padrino    ;Drama;5
 -6;Rapido y      FuRiOSo;Accion;3
 3;  la      mascara;Comedia;4
