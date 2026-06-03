@@ -137,14 +137,14 @@
 
 1780359098 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\include\validaciones.h
 
-1780358098 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\menu.c
+1780525321 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\menu.c
 	<stdio.h>
 	<string.h>
 	"menu.h"
 	"Validaciones.h"
 	<string.h>
 
-1780358098 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\menu.h
+1780525418 c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\menu.h
 	"structs.h"
 	"indice.h"
 

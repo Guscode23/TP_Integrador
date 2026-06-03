@@ -61,7 +61,6 @@ char menuConErr(const char *mensaje, const char *opciones){
     return esOpcion;
 }
 
-
 void menu_operaciones(char opcion){
 
     switch (toupper(opcion))
@@ -110,13 +109,16 @@ void limpiarBuffer() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-int cmpDNI(const void* d1, const void* d2)
-{
+int cmpDNI(const void* d1, const void* d2){
   long int dif= *(long int*)d1 - *(long int*)d2;
   return dif;
 
 }
 
+int cmpID(const void* d1, const void* d2){
+  int dif= *(int*)d1 - *(int*)d2;
+  return dif;
+}
 
 void altaMiembro(miembro *miembroOficial,t_indice* indice,t_fecha* fechProceso) {
 
@@ -286,9 +288,344 @@ void altaMiembro(miembro *miembroOficial,t_indice* indice,t_fecha* fechProceso) 
     }
 }
 
+///Funciones de modificación de registros
 
+void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fechProceso) {
+
+    miembro miemTemp;
+    long int dniBuscado;
+    int opcionPlan, pos, edad;
+    char fechaNacimiento[11], fechaAfiliacion[11], fechaUltimaCuota[11];
+
+    printf("\n--- FORMULARIO DE MODIFICACION: MIEMBRO ---\n");
+
+    // Busca el miembro por DNI
+    printf("Ingrese DNI del miembro a modificar: ");
+    if (scanf("%ld", &dniBuscado) != 1) {
+        limpiarBuffer();
+        printf("[ERROR] Entrada de DNI invalida.\n");
+        return;
+    }
+    limpiarBuffer();
+
+    pos = indice_buscar(indice, &dniBuscado, indice->cantidad_elementos_actual, sizeof(long int), cmpDNI);
+    if (pos == NO_EXISTE) {
+        printf("[ERROR] El DNI no existe en el indice. Operacion cancelada.\n");
+        return;
+    }
+
+    t_reg_indice *reg = (t_reg_indice *)indice->vindice + pos;
+    miemTemp = lista_m->array[reg->nro_reg];
+
+    // Menú de campos a modificar
+    int opcion = 0;
+
+    while (1) {
+        printf("\n¿Qué campo desea modificar?\n");
+        printf("1.  CUIL\n");
+        printf("2.  Apellidos y Nombres\n");
+        printf("3.  Fecha de Nacimiento\n");
+        printf("4.  Sexo\n");
+        printf("5.  Fecha de Afiliacion\n");
+        printf("6.  Fecha de Ultima Cuota Paga\n");
+        printf("7.  Plan\n");
+        printf("8.  Estado\n");
+        printf("9. Confirmar y guardar cambios\n");
+        printf("0.  Cancelar\n");
+        printf("Opcion: ");
+
+        if (scanf("%d", &opcion) != 1) {
+            limpiarBuffer();
+            printf("[ERROR] Opcion invalida.\n");
+            continue;
+        }
+        limpiarBuffer();
+
+        switch (opcion) {
+            case 1:
+                printf("Ingrese nuevo CUIL: ");
+                fgets(miemTemp.CUIL, sizeof(miemTemp.CUIL), stdin);
+                if (validarCUIL(miemTemp.CUIL) < 0) {
+                    printf("[ERROR] CUIL invalido. No se modifico.\n");
+                    strcpy(miemTemp.CUIL, lista_m->array[reg->nro_reg].CUIL);
+                }
+                break;
+
+            case 2:
+                printf("Ingrese nuevos Apellidos y Nombres: ");
+                fgets(miemTemp.apeNom, sizeof(miemTemp.apeNom), stdin);
+                normalizarApel_Nombre(miemTemp.apeNom);
+                if (strcmp(miemTemp.apeNom, "") == 0){
+                        strcpy(miemTemp.apeNom, lista_m->array[reg->nro_reg].apeNom);
+                        printf("[ERROR] Nombre y apellido vacios. No se modifico.\n");
+                    }
+                break;
+
+            case 3:
+                printf("Ingrese nueva Fecha de Nacimiento (DD/MM/AAAA): ");
+                scanf("%s", fechaNacimiento);
+                miemTemp.fechNac = parsearFecha(fechaNacimiento);
+                if(es_Fecha_Valida(&miemTemp.fechNac) == ERROR){
+                        miemTemp.fechNac = lista_m->array[reg->nro_reg].fechNac;
+                        printf("[ERROR] Fecha de nacimiento invalida. No se modifico.\n");
+                        break;
+                } else if(validarFechaNacimiento(&miemTemp.fechNac, fechProceso) == ERROR){
+                        miemTemp.fechNac = lista_m->array[reg->nro_reg].fechNac;
+                        printf("[ERROR] Fecha de nacimiento invalida. No se modifico.\n");
+                        break;
+                }
+                limpiarBuffer();
+
+                edad = calcularEdad(fechProceso, &miemTemp.fechNac);
+                if (edad >= 18){
+                    strcpy(miemTemp.cat, "ADULTO");
+                } else {
+                    strcpy(miemTemp.cat, "MENOR");
+                    if (strcmp(miemTemp.cat, lista_m->array[reg->nro_reg].cat) != 0){
+                        printf("La categoria cambio a MENOR. Por favor, ingrese Email del Tutor: ");
+                        fgets(miemTemp.emailTutor, sizeof(miemTemp.emailTutor), stdin);
+                    }
+                    if(validar_campo(&miemTemp, validarCorreo) == ERROR) {
+                        miemTemp.fechNac = lista_m->array[reg->nro_reg].fechNac;
+                        strcpy(miemTemp.emailTutor, lista_m->array[reg->nro_reg].emailTutor);
+                        printf("[ERROR] Mail invalido. No se modifico el mail ni la edad.\n");
+                    }
+                }
+                break;
+
+            case 4:
+                printf("Ingrese nuevo Sexo ('F', 'M', 'O'): ");
+                scanf("%c", &miemTemp.sexo);
+                limpiarBuffer();
+                if (validarSexo(&miemTemp.sexo) < 0) {
+                    printf("[ERROR] Sexo invalido. No se modifico.\n");
+                    miemTemp.sexo = lista_m->array[reg->nro_reg].sexo;
+                }
+                break;
+
+            case 5:
+                printf("Ingrese nueva Fecha de Afiliacion (DD/MM/AAAA): ");
+                scanf("%s", fechaAfiliacion);
+                miemTemp.fechAfil = parsearFecha(fechaAfiliacion);
+                if(es_Fecha_Valida(&miemTemp.fechAfil) == ERROR){
+                        miemTemp.fechAfil = lista_m->array[reg->nro_reg].fechAfil;
+                        printf("[ERROR] Fecha de afiliacion invalida. No se modifico.\n");
+                        break;
+                    }
+                    else if(validarFechaAfiliacion(&miemTemp.fechAfil,&miemTemp.fechNac,fechProceso) == ERROR){
+                        miemTemp.fechAfil = lista_m->array[reg->nro_reg].fechAfil;
+                        printf("[ERROR] Fecha de afiliacion invalida. No se modifico.\n");
+                        break;
+                    }
+                limpiarBuffer();
+                break;
+
+            case 6:
+                printf("Ingrese nueva Fecha de Ultima Cuota Paga (DD/MM/AAAA): ");
+                scanf("%s", fechaUltimaCuota);
+                miemTemp.fechUltCuot = parsearFecha(fechaUltimaCuota);
+                if(es_Fecha_Valida(&miemTemp.fechUltCuot) == ERROR){
+                        miemTemp.fechUltCuot = lista_m->array[reg->nro_reg].fechUltCuot;
+                        printf("[ERROR] Fecha de ultima cuota invalida. No se modifico.\n");
+                        break;
+                    }
+                    else if(validar_UltimaCuota_Paga(&miemTemp.fechAfil,&miemTemp.fechUltCuot,fechProceso) == ERROR){
+                        miemTemp.fechUltCuot = lista_m->array[reg->nro_reg].fechUltCuot;
+                        printf("[ERROR] Fecha de ultima cuota invalida. No se modifico.\n");
+                        break;
+                    }
+                limpiarBuffer();
+                break;
+
+            case 7:
+                printf("Seleccione el nuevo Plan:\n1. BASIC\n2. PREMIUM\n3. VIP\n4. FAMILY\nOpcion: ");
+                if (scanf("%d", &opcionPlan) != 1) {
+                    limpiarBuffer();
+                    printf("[ERROR] Opcion invalida. No se modifico.\n");
+                    break;
+                }
+                limpiarBuffer();
+                switch (opcionPlan) {
+                    case 1: strcpy(miemTemp.plan, "BASIC");   break;
+                    case 2: strcpy(miemTemp.plan, "PREMIUM"); break;
+                    case 3: strcpy(miemTemp.plan, "VIP");     break;
+                    case 4: strcpy(miemTemp.plan, "FAMILY");  break;
+                    default:
+                        printf("[ERROR] Opcion de plan invalida. No se modifico.\n");
+                        strcpy(miemTemp.plan, lista_m->array[reg->nro_reg].plan);
+                }
+                break;
+
+            case 8:
+                printf("Ingrese nuevo Estado ('A' = Activo, 'B' = Baja): ");
+                scanf("%c", &miemTemp.estado);
+                limpiarBuffer();
+                if (miemTemp.estado != 'A' && miemTemp.estado != 'B') {
+                    printf("[ERROR] Estado invalido. No se modifico.\n");
+                    miemTemp.estado = lista_m->array[reg->nro_reg].estado;
+                }
+                break;
+
+            case 9:
+                // Confirmar cambios
+                lista_m->array[reg->nro_reg] = miemTemp;
+                printf("\n>>> ¡MODIFICACION EXITOSA! <<<\n");
+                return;
+
+            case 0:
+                printf("\n>>> [SISTEMA] Modificacion cancelada. <<<\n");
+                return;
+
+            default:
+                printf("[ERROR] Opcion invalida.\n");
+                break;
+        }
+    }
+}
+
+void modificarPelicula(t_lista_titulos *lista_t, t_indice *indice, t_fecha *fechProceso) {
+
+    pelicula peliculaTemp;
+    int idBuscado;
+    int opcionGenero, pos;
+    //char fechaNacimiento[11], fechaAfiliacion[11], fechaUltimaCuota[11];
+
+    printf("\n--- FORMULARIO DE MODIFICACION: TITULO ---\n");
+
+    // Busca la pelicula por ID
+    printf("Ingrese ID de la pelicula a modificar: ");
+    if (scanf("%d", &idBuscado) != 1) {
+        limpiarBuffer();
+        printf("[ERROR] Entrada de ID invalida.\n");
+        return;
+    }
+    limpiarBuffer();
+
+    pos = indice_buscar(indice, &idBuscado, indice->cantidad_elementos_actual, sizeof(int), cmpID);
+    if (pos == NO_EXISTE) {
+        printf("[ERROR] El ID no existe en el indice. Operacion cancelada.\n");
+        return;
+    }
+
+    t_reg_indice *reg = (t_reg_indice *)indice->vindice + pos;
+    peliculaTemp = lista_t->array[reg->nro_reg];
+
+    // Menú de campos a modificar
+    int opcion = 0;
+
+    while (1) {
+        printf("\n¿Qué campo desea modificar?\n");
+        printf("1.  Titulo\n");
+        printf("2.  Genero\n");
+        printf("3.  Stock\n");
+        printf("4. Confirmar y guardar cambios\n");
+        printf("0.  Cancelar\n");
+        printf("Opcion: ");
+
+        if (scanf("%d", &opcion) != 1) {
+            limpiarBuffer();
+            printf("[ERROR] Opcion invalida.\n");
+            continue;
+        }
+        limpiarBuffer();
+
+        switch (opcion) {
+            case 1:
+                printf("Ingrese nuevo titulo: ");
+                fgets(peliculaTemp.titulo, sizeof(peliculaTemp.titulo), stdin);
+                normalizarTitulo(peliculaTemp.titulo);
+                if (strcmp(peliculaTemp.titulo, "") == 0){
+                        strcpy(peliculaTemp.titulo, lista_t->array[reg->nro_reg].titulo);
+                        printf("[ERROR] Titulo vacio. No se modifico.\n");
+                    }
+                break;
+
+            case 2:
+                printf("Seleccione el nuevo genero:\n1. Accion\n2. Drama\n3. Comedia\n4. Terror\nOpcion: ");
+                if (scanf("%d", &opcionGenero) != 1) {
+                    limpiarBuffer();
+                    printf("[ERROR] Opcion invalida. No se modifico.\n");
+                    break;
+                }
+                limpiarBuffer();
+                switch (opcionGenero) {
+                    case 1: strcpy(peliculaTemp.genero, "Accion");   break;
+                    case 2: strcpy(peliculaTemp.genero, "Drama"); break;
+                    case 3: strcpy(peliculaTemp.genero, "Comedia");     break;
+                    case 4: strcpy(peliculaTemp.genero, "Terror");  break;
+                    default:
+                        printf("[ERROR] Opcion de genero invalida. No se modifico.\n");
+                        strcpy(peliculaTemp.genero, lista_t->array[reg->nro_reg].genero);
+                }
+                break;
+
+            case 3:
+                printf("Ingrese nueva cantidad de stock: ");
+                scanf("%d", &peliculaTemp.stock);
+                limpiarBuffer();
+                validarStock(&peliculaTemp.stock);
+                break;
+
+            case 9:
+                lista_t->array[reg->nro_reg] = peliculaTemp;
+                printf("\n>>> ¡MODIFICACION EXITOSA! <<<\n");
+                return;
+
+            case 0:
+                printf("\n>>> [SISTEMA] Modificacion cancelada. <<<\n");
+                return;
+
+            default:
+                printf("[ERROR] Opcion invalida.\n");
+                break;
+        }
+    }
+}
 
 ///Funciones de mostrado de información
+
+void mostrarMiembro(t_lista_miembros *lista_m, t_indice *indice) {
+
+    long int dniBuscado;
+    int pos;
+
+    printf("\n--- CONSULTA DE MIEMBRO ---\n");
+
+    printf("Ingrese DNI del miembro a consultar: ");
+    if (scanf("%ld", &dniBuscado) != 1) {
+        limpiarBuffer();
+        printf("[ERROR] Entrada de DNI invalida.\n");
+        return;
+    }
+    limpiarBuffer();
+
+    // Buscamos en el índice
+    pos = indice_buscar(indice, &dniBuscado, indice->cantidad_elementos_actual, sizeof(long int), cmpDNI);
+    if (pos == NO_EXISTE) {
+        printf("[ERROR] El DNI no existe en el indice.\n");
+        return;
+    }
+
+    // Obtenemos el miembro real a través del nro_reg
+    t_reg_indice *reg = (t_reg_indice *)indice->vindice + pos;
+    miembro *m = &lista_m->array[reg->nro_reg];
+
+    // Mostramos los datos
+    printf("\n---------- DATOS DEL MIEMBRO ----------\n");
+    printf("DNI:                    %ld\n",   m->dni);
+    printf("CUIL:                   %s\n",    m->CUIL);
+    printf("Apellidos y Nombres:    %s\n",    m->apeNom);
+    printf("Fecha de Nacimiento:    %d/%d/%d\n", m->fechNac.dia, m->fechNac.mes, m->fechNac.anio);
+    printf("Sexo:                   %c\n",    m->sexo);
+    printf("Fecha de Afiliacion:    %d/%d/%d\n", m->fechAfil.dia, m->fechAfil.mes, m->fechAfil.anio);
+    printf("Categoria:              %s\n",    m->cat);
+    printf("Fecha Ultima Cuota:     %d/%d/%d\n", m->fechUltCuot.dia, m->fechUltCuot.mes, m->fechUltCuot.anio);
+    printf("Estado:                 %c\n",    m->estado);
+    printf("Plan:                   %s\n",    m->plan);
+    printf("Email Tutor:            %s\n",    m->emailTutor);
+    printf("----------------------------------------\n");
+}
+
 void mostrarSocios_DNI(miembro* t_miembro, int cantidad)
 {
     ///Llamar a funcion de ordenamiento, o ordenar antes
@@ -365,7 +702,6 @@ void listarMiembrosPorPlan(miembro* t_miembro, int cantidad)
     }
     printf("-----------------------------------------------------------------------\n");
 }
-
 
 
 
