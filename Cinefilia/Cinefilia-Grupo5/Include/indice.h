@@ -8,6 +8,7 @@
 #define ERROR 0
 #define NO_EXISTE -1
 
+#include "structs.h"
 
 ///Tipo de dato del elemento de cada vector
 typedef struct
@@ -36,6 +37,8 @@ int indice_lleno(const t_indice *indice);
 void indice_vaciar(t_indice* indice);
 int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tamanyo, int (*cmp)(const void *, const void *));
 
+void generar_indice_miembros(t_lista_miembros *lista_original, t_indice *admin_indice);
+void generar_indice_titulos(t_lista_titulos *lista_original, t_indice *admin_indice);
 
 
 

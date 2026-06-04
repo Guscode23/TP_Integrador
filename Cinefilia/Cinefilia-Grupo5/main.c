@@ -3,10 +3,12 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "indice.h"
 #include "structs.h"
 #include "fecha.h"
 #include "archivos.h"
 #include "auditoria.h"
+#include "menu.h"
 
 #define MAX_REGISTROS 1000
 
@@ -50,8 +52,8 @@ int main() {
         printf("Cargando datos directamente desde %s y %s...\n", archivo_bin_miembros, archivo_bin_titulos);
 
         // Aquí llamarás a las futuras funciones que cargan directo a tu lista dinámica
-        // cargar_miembros_desde_binario(archivo_bin_miembros, &lista_m);
-        // cargar_titulos_desde_binario(archivo_bin_titulos, &lista_t);
+        cargar_miembros_desde_binario(archivo_bin_miembros, &lista_m);
+        cargar_titulos_desde_binario(archivo_bin_titulos, &lista_t);
 
     } else {
 
@@ -70,10 +72,6 @@ int main() {
         procesar_archivo_titulos("Lotes Prueba/titulos.csv", auditoria_titulos, &cant_errores_titulos, &lista_t);
         generar_reporte_auditoria("Resultados Auditoria/auditoria_titulos.txt", auditoria_titulos, cant_errores_titulos, "ID");
 
-        // 2. Guardamos las listas válidas en los nuevos archivos .dat para el futuro
-        printf("\nGuardando registros validos en archivos binarios (.dat)...\n");
-        // guardar_miembros_en_binario(archivo_bin_miembros, &lista_m);
-        // guardar_titulos_en_binario(archivo_bin_titulos, &lista_t);
     }
 
     // =========================================================================
@@ -82,11 +80,60 @@ int main() {
     printf("Miembros listos para usar: %d\n", lista_m.cantidad);
     printf("Titulos listos para usar: %d\n", lista_t.cantidad);
 
-    // menu_operaciones(&lista_m, &lista_t);
 
-    // Limpieza
+    // =========================================================
+    // 1. INICIALIZAR Y CARGAR ÍNDICE DE MIEMBROS
+    // =========================================================
+    t_indice indice_miembros;
+    indice_miembros.vindice = NULL;
+    indice_miembros.cantidad_elementos_actual = 0;
+    indice_miembros.cantidad_elementos_maxima = 0;
+
+    // Llamamos a la función que extrae los DNIs de la lista y arma las fichas
+    generar_indice_miembros(&lista_m, &indice_miembros);
+
+    // ORDENAMIENTO VITAL: Ordenamos el índice para habilitar Búsqueda Binaria
+    if (indice_miembros.cantidad_elementos_actual > 0) {
+        qsort(indice_miembros.vindice, indice_miembros.cantidad_elementos_actual, sizeof(t_reg_indice), cmp_miembros_dni);
+    }
+
+    // =========================================================
+    // 2. INICIALIZAR Y CARGAR ÍNDICE DE TÍTULOS
+    // =========================================================
+    t_indice indice_titulos;
+    indice_titulos.vindice = NULL;
+    indice_titulos.cantidad_elementos_actual = 0;
+    indice_titulos.cantidad_elementos_maxima = 0;
+
+    // Llamamos a la función análoga para extraer los IDs de los títulos
+    // (Asegúrate de haber creado esta función basándote en la de miembros)
+    generar_indice_titulos(&lista_t, &indice_titulos);
+
+    // ORDENAMIENTO VITAL
+    if (indice_titulos.cantidad_elementos_actual > 0) {
+        qsort(indice_titulos.vindice, indice_titulos.cantidad_elementos_actual, sizeof(t_reg_indice), cmp_titulos_id);
+    }
+
+    printf("Indices generados y ordenados correctamente.\n");
+
+    // =========================================================
+    // 3. TRANSFERIR EL CONTROL AL USUARIO (EL MENÚ)
+    // =========================================================
+
+    // Ahora le pasamos las listas llenas y los índices ordenados
+
+
+    t_lista_alquileres lista_a; // REVISAR
+
+    menu_operaciones(&lista_m, &indice_miembros, &lista_t, &indice_titulos, &lista_a, fecha_proceso);
+
+    // =========================================================
+    // 4. LIMPIEZA FINAL (Al salir del menú)
+    // =========================================================
     if (lista_m.array != NULL) free(lista_m.array);
+    if (indice_miembros.vindice != NULL) free(indice_miembros.vindice);
     if (lista_t.array != NULL) free(lista_t.array);
+    if (indice_titulos.vindice != NULL) free(indice_titulos.vindice);
 
     return 0;
 }

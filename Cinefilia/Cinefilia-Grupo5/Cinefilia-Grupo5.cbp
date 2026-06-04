@@ -36,10 +36,17 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Linker>
+			<Add library="Indices/bin/Debug/libIndices.a" />
+			<Add library="Validaciones_Cinefilia/bin/Debug/libValidaciones_Cinefilia.a" />
+		</Linker>
 		<Unit filename="Include/Validaciones.h" />
 		<Unit filename="Include/fecha.h" />
 		<Unit filename="Include/indice.h" />
 		<Unit filename="Include/structs.h" />
+		<Unit filename="Indices/indice.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="Validaciones_Cinefilia/Validaciones.c">
 			<Option compilerVar="CC" />
 		</Unit>

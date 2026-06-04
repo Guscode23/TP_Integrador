@@ -5,7 +5,7 @@
 #define TAM_CAT 10
 #define TAM_PLAN 10
 #define TAM_EMAIL_TUT 30
-#define TAM_CUIL 13
+#define TAM_CUIL 15 // TUVE QUE SUBIRLE PORQUE SI NO FALLABA LA VALIDACION EN EL ALTA DE USER
 #define TAM_TITULO 61
 #define TAM_GENERO 21
 #define TAM_FAIL 21
@@ -31,7 +31,7 @@ typedef struct{
     char titulo [TAM_TITULO];
     char genero [TAM_GENERO];
     int stock;
-}pelicula;
+}titulo;
 
 // Estructura de auditoría de doble entrada
 typedef struct {
@@ -49,7 +49,7 @@ typedef struct {
 
 // Contenedor dinámico para Títulos
 typedef struct {
-    pelicula *array;
+    titulo *array;
     int cantidad;
     int capacidad;
 } t_lista_titulos;

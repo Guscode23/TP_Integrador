@@ -1,6 +1,7 @@
 #include "indice.h"
 #include <stdlib.h>
 #include <string.h>
+#include "structs.h"
 
 ///Toma memoria para 100 elementos e inicializa la estructura vacía
 
@@ -128,29 +129,35 @@ int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tam
 
 int indice_buscar (const t_indice *indice, const void *registro, size_t nmemb, size_t tamanyo, int (*cmp)(const void *, const void *))
 {
-    void* base=indice->vindice;
-    void* ini=indice->vindice;
-    void* fin= (char*)ini + ((indice->cantidad_elementos_actual)-1)*tamanyo;
-    int pos=0;
+    // Si no hay elementos, no calculamos nada y devolvemos NO_EXISTE inmediatamente
+    if (indice->cantidad_elementos_actual == 0 || indice->vindice == NULL) {
+        return NO_EXISTE; // Supongo que NO_EXISTE es -1
+    }
+    // ------------------------
 
-    while(ini<=fin){
+    void* base = indice->vindice;
+    void* ini = indice->vindice;
+    void* fin = (char*)ini + ((indice->cantidad_elementos_actual)-1)*tamanyo;
+    int pos = 0;
 
-        int medio=(((fin - ini) / tamanyo) + 1) / 2;
-        char* P_medio = (medio==0) ? fin : (char*)ini + ((medio)-1)*tamanyo;
+    while(ini <= fin) {
 
-         if(cmp(registro,(const void*)P_medio)==0){
-                pos=((char*)P_medio - (char*)base) / tamanyo;
-                return pos;
+        int medio = (((fin - ini) / tamanyo) + 1) / 2;
+        char* P_medio = (medio == 0) ? fin : (char*)ini + ((medio)-1)*tamanyo;
 
-          }else if(cmp(registro,(const void*)P_medio)<0)
-                fin=P_medio-tamanyo;
-            else
-                ini=P_medio+tamanyo;
+        if (cmp(registro, (const void*)P_medio) == 0) {
+            pos = ((char*)P_medio - (char*)base) / tamanyo;
+            return pos;
+
+        } else if (cmp(registro, (const void*)P_medio) < 0) {
+            fin = P_medio - tamanyo;
+        } else {
+            ini = P_medio + tamanyo;
         }
+    }
 
-        return NO_EXISTE;
+    return NO_EXISTE;
 }
-
 
 int indice_eliminar(t_indice *indice, const void *registro, size_t tamanyo, int (*cmp)(const void *, const void *))
 {
@@ -187,6 +194,72 @@ void indice_vaciar(t_indice* indice) {
     free(indice->vindice);
 }
 
+void generar_indice_miembros(t_lista_miembros *lista_original, t_indice *admin_indice) {
+    // 1. Calculamos la capacidad necesaria
+    admin_indice->cantidad_elementos_maxima = lista_original->cantidad;
 
+    // Si la lista original está vacía (ej. primer uso del sistema), salimos limpio
+    if (admin_indice->cantidad_elementos_maxima == 0) {
+        admin_indice->vindice = NULL;
+        admin_indice->cantidad_elementos_actual = 0;
+        return;
+    }
 
+    // 2. Pedimos la memoria RAM para las fichas
+    admin_indice->vindice = malloc(admin_indice->cantidad_elementos_maxima * sizeof(t_reg_indice));
+
+    if (admin_indice->vindice == NULL) {
+        printf("Error fatal: No hay memoria para crear el indice de miembros.\n");
+        return;
+    }
+
+    // 3. Casteamos el void* a nuestro tipo de ficha para trabajar cómodos
+    t_reg_indice *fichas = (t_reg_indice *)admin_indice->vindice;
+
+    // 4. Llenamos el índice extrayendo los datos de la lista principal
+    for (unsigned i = 0; i < lista_original->cantidad; i++) {
+        fichas[i].dni = lista_original->array[i].dni;
+        fichas[i].nro_reg = i;
+    }
+
+    // 5. Actualizamos el contador final
+    admin_indice->cantidad_elementos_actual = lista_original->cantidad;
+
+    // printf("Indice de miembros generado exitosamente.\n"); // Opcional
+}
+
+void generar_indice_titulos(t_lista_titulos *lista_original, t_indice *admin_indice) {
+    // 1. Calculamos la capacidad necesaria
+    admin_indice->cantidad_elementos_maxima = lista_original->cantidad;
+
+    // Si no hay títulos cargados, salimos limpio
+    if (admin_indice->cantidad_elementos_maxima == 0) {
+        admin_indice->vindice = NULL;
+        admin_indice->cantidad_elementos_actual = 0;
+        return;
+    }
+
+    // 2. Pedimos la memoria RAM
+    admin_indice->vindice = malloc(admin_indice->cantidad_elementos_maxima * sizeof(t_reg_indice));
+
+    if (admin_indice->vindice == NULL) {
+        printf("Error fatal: No hay memoria para crear el indice de titulos.\n");
+        return;
+    }
+
+    // 3. Casteamos a nuestras fichas
+    t_reg_indice *fichas = (t_reg_indice *)admin_indice->vindice;
+
+    // 4. Llenamos el índice
+    for (unsigned i = 0; i < lista_original->cantidad; i++) {
+        // Guardamos el ID en el campo dni y la posición en nro_reg
+        fichas[i].dni = (long)lista_original->array[i].ID;
+        fichas[i].nro_reg = i;
+    }
+
+    // 5. Actualizamos el contador final
+    admin_indice->cantidad_elementos_actual = lista_original->cantidad;
+
+    // printf("Indice de titulos generado exitosamente.\n"); // Opcional
+}
 
