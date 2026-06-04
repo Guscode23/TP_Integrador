@@ -195,37 +195,30 @@ void indice_vaciar(t_indice* indice) {
 }
 
 void generar_indice_miembros(t_lista_miembros *lista_original, t_indice *admin_indice) {
-    // 1. Calculamos la capacidad necesaria
     admin_indice->cantidad_elementos_maxima = lista_original->cantidad;
-
-    // Si la lista original está vacía (ej. primer uso del sistema), salimos limpio
     if (admin_indice->cantidad_elementos_maxima == 0) {
         admin_indice->vindice = NULL;
         admin_indice->cantidad_elementos_actual = 0;
         return;
     }
-
-    // 2. Pedimos la memoria RAM para las fichas
     admin_indice->vindice = malloc(admin_indice->cantidad_elementos_maxima * sizeof(t_reg_indice));
+    if (admin_indice->vindice == NULL) return;
 
-    if (admin_indice->vindice == NULL) {
-        printf("Error fatal: No hay memoria para crear el indice de miembros.\n");
-        return;
-    }
-
-    // 3. Casteamos el void* a nuestro tipo de ficha para trabajar cómodos
     t_reg_indice *fichas = (t_reg_indice *)admin_indice->vindice;
 
-    // 4. Llenamos el índice extrayendo los datos de la lista principal
+    int agregados = 0; // Un contador paralelo solo para los válidos
+
     for (unsigned i = 0; i < lista_original->cantidad; i++) {
-        fichas[i].dni = lista_original->array[i].dni;
-        fichas[i].nro_reg = i;
+        // --- EL FILTRO DE ESTADO ---
+        if (lista_original->array[i].estado == 'A') {
+            fichas[agregados].dni = lista_original->array[i].dni;
+            fichas[agregados].nro_reg = i;
+            agregados++;
+        }
     }
 
-    // 5. Actualizamos el contador final
-    admin_indice->cantidad_elementos_actual = lista_original->cantidad;
-
-    // printf("Indice de miembros generado exitosamente.\n"); // Opcional
+    // El índice final será solo del tamaño de los agregados
+    admin_indice->cantidad_elementos_actual = agregados;
 }
 
 void generar_indice_titulos(t_lista_titulos *lista_original, t_indice *admin_indice) {
