@@ -293,7 +293,7 @@ void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fech
 
     miembro miemTemp;
     long int dniBuscado;
-    int opcionPlan, pos, edad;
+    int opcionPlan, pos=0, edad;
     char fechaNacimiento[11], fechaAfiliacion[11], fechaUltimaCuota[11];
 
     printf("\n--- FORMULARIO DE MODIFICACION: MIEMBRO ---\n");
@@ -670,7 +670,7 @@ void mostrarMiembro(t_lista_miembros *lista_m, t_indice *indice)
 {
 
     long int dniBuscado;
-    int pos;
+    int pos=0;
 
     printf("\n--- CONSULTA DE MIEMBRO ---\n");
 
@@ -761,44 +761,28 @@ void listarMiembrosPorPlan(miembro* t_miembro, int cantidad)
     printf("-----------------------------------------------------------------------\n");
 
     for (int i = 0; i < cantidad; i++)
-    {
+{
         printf("%-20s ", (t_miembro + i)->apeNom);
 
         if (strcmp((t_miembro + i)->plan, "BASIC") == 0)
-        {
             printf("%-12ld ", (t_miembro + i)->dni);
-        }
-        else
-        {
+           else
             printf("%-12s ", "0");
-        }
 
         if (strcmp((t_miembro + i)->plan, "PREMIUM") == 0)
-        {
             printf("%-12ld ", (t_miembro + i)->dni);
-        }
-        else
-        {
+           else
             printf("%-12s ", "0");
-        }
 
         if (strcmp((t_miembro + i)->plan, "VIP") == 0)
-        {
             printf("%-12ld ", (t_miembro + i)->dni);
-        }
-        else
-        {
+          else
             printf("%-12s ", "0");
-        }
 
         if (strcmp((t_miembro + i)->plan, "FAMILY") == 0)
-        {
             printf("%-12ld\n", (t_miembro + i)->dni);
-        }
-        else
-        {
+           else
             printf("%-12s\n", "0");
-        }
     }
     printf("-----------------------------------------------------------------------\n");
 }
@@ -806,9 +790,8 @@ void listarMiembrosPorPlan(miembro* t_miembro, int cantidad)
 ///Funciones para alquiler
 int buscarAlquiler(t_lista_alquileres *lista, long dni, int idPelicula)
 {
-    for (int i = 0; i < lista->cantidad; i++)
-    {
-        if (lista->array[i].dni == dni && lista->array[i].idPelicula == idPelicula)
+    for (int i = 0; i < lista->cantidad; i++){
+        if ((lista->array + i)->dni == dni && (lista->array + i)->idPelicula == idPelicula)
             return i; // devuelve la posición si existe
     }
     return NO_EXISTE;
