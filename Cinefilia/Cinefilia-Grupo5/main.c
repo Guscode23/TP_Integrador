@@ -31,6 +31,7 @@ int main() {
     // 3. INICIALIZAR NUESTRAS LISTAS DINÁMICAS (En blanco)
     t_lista_miembros lista_m = {NULL, 0, 0};
     t_lista_titulos lista_t = {NULL, 0, 0};
+    //t_lista_alquileres lista_a = {NULL, 0, 100}; // Esto hay que pasarlo al menú para que pueda usar la lista de alquileres
 
 
     // =========================================================================

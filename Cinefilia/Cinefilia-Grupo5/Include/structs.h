@@ -54,4 +54,17 @@ typedef struct {
     int capacidad;
 } t_lista_titulos;
 
+typedef struct {
+    long dni;           // DNI del miembro
+    int idPelicula;     // ID de la película
+    char estado;        // 'A' = alquilado, 'I' = inactivo
+    int cantAlquileres; // cuántas veces se alquiló esa relación miembro-pelicula
+} t_alquiler;
+
+typedef struct {
+    t_alquiler *array;
+    int cantidad;
+    int capacidad;
+} t_lista_alquileres;
+
 #endif // STRUCTS_H_INCLUDED

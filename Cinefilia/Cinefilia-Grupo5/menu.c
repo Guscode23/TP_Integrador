@@ -703,8 +703,119 @@ void listarMiembrosPorPlan(miembro* t_miembro, int cantidad)
     printf("-----------------------------------------------------------------------\n");
 }
 
+///Funciones para alquiler
+int buscarAlquiler(t_lista_alquileres *lista, long dni, int idPelicula) {
+    for (int i = 0; i < lista->cantidad; i++) {
+        if (lista->array[i].dni == dni && lista->array[i].idPelicula == idPelicula)
+            return i; // devuelve la posición si existe
+    }
+    return NO_EXISTE;
+}
 
+int registrarAlquiler(t_lista_alquileres *lista_a, t_lista_miembros *lista_m,
+                      t_lista_titulos *lista_t, t_indice *indice_m, t_indice *indice_t) {
 
+    long int dniBuscado;
+    int idPelicula, pos, posAlq;
+
+    printf("\n--- REGISTRAR ALQUILER ---\n");
+
+    // Busca el miembro
+    printf("Ingrese DNI del miembro: ");
+    if (scanf("%ld", &dniBuscado) != 1) {
+        limpiarBuffer();
+        printf("[ERROR] DNI invalido.\n");
+        return ERROR;
+    }
+    limpiarBuffer();
+
+    pos = indice_buscar(indice_m, &dniBuscado, indice_m->cantidad_elementos_actual, sizeof(long int), cmpDNI);
+    if (pos == NO_EXISTE) {
+        printf("[ERROR] El miembro no existe.\n");
+        return ERROR;
+    }
+
+    t_reg_indice *regMiembro = (t_reg_indice *)indice_m->vindice + pos;
+    miembro *m = &lista_m->array[regMiembro->nro_reg];
+
+    // Verifica que el miembro esté activo
+    if (m->estado != 'A') {
+        printf("[ERROR] El miembro no esta activo.\n");
+        return ERROR;
+    }
+
+    // Verifica límite de alquileres activos para plan BASIC
+    if (strcmp(m->plan, "BASIC") == 0) {
+        int activos = 0;
+        for (int i = 0; i < lista_a->cantidad; i++) {
+            if (lista_a->array[i].dni == dniBuscado && lista_a->array[i].estado == 'A')
+                activos++;
+        }
+        if (activos >= 2) {
+            printf("[ERROR] El miembro tiene plan BASIC y ya tiene 2 alquileres activos.\n");
+            return ERROR;
+        }
+    }
+
+    // Buscar la película por ID
+    printf("Ingrese ID de la pelicula: ");
+    if (scanf("%d", &idPelicula) != 1) {
+        limpiarBuffer();
+        printf("[ERROR] ID invalido.\n");
+        return ERROR;
+    }
+    limpiarBuffer();
+
+    pos = indice_buscar(indice_t, &idPelicula, indice_t->cantidad_elementos_actual, sizeof(int), cmpID);
+    if (pos == NO_EXISTE) {
+        printf("[ERROR] La pelicula no existe.\n");
+        return ERROR;
+    }
+
+    t_reg_indice *regPelicula = (t_reg_indice *)indice_t->vindice + pos;
+    pelicula *p = &lista_t->array[regPelicula->nro_reg];
+
+    // Verifica si hay stock disponible
+    if (p->stock <= 0) {
+        printf("[ERROR] No hay stock disponible para esta pelicula.\n");
+        return ERROR;
+    }
+
+    // Registra el alquiler
+    posAlq = buscarAlquiler(lista_a, dniBuscado, idPelicula);
+
+    if (posAlq == NO_EXISTE) {
+        // Es una relación nueva, la agregamos
+        if (lista_a->cantidad == lista_a->capacidad) {
+            lista_a->capacidad *= 2;
+            lista_a->array = realloc(lista_a->array, lista_a->capacidad * sizeof(t_alquiler));
+            if (lista_a->array == NULL) {
+                printf("[ERROR] Error de memoria.\n");
+                return ERROR;
+            }
+        }
+        lista_a->array[lista_a->cantidad].dni          = dniBuscado;
+        lista_a->array[lista_a->cantidad].idPelicula   = idPelicula;
+        lista_a->array[lista_a->cantidad].estado       = 'A';
+        lista_a->array[lista_a->cantidad].cantAlquileres = 1;
+        lista_a->cantidad++;
+    } else {
+        // La relación ya existe, actualizamos
+        lista_a->array[posAlq].estado = 'A';
+        lista_a->array[posAlq].cantAlquileres++;
+    }
+
+    // Descuenta stock
+    p->stock--;
+    // Guarda la posicion final del alquiler, para luego mostrarlo en pantalla
+    int posFinal = (posAlq == NO_EXISTE) ? lista_a->cantidad - 1 : posAlq;
+
+    printf("\n>>> ¡ALQUILER REGISTRADO EXITOSAMENTE! <<<\n");
+    printf("Miembro: %s | Pelicula: %s | Alquileres totales: %d\n",
+           m->apeNom, p->titulo, lista_a->array[posFinal].cantAlquileres);
+
+    return OK;
+}
 
 
 
