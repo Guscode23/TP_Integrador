@@ -14,27 +14,26 @@ char iniciarMenu();
 
 //MENU
 void guardar_datos_sesion(t_lista_miembros *lista_m, t_lista_titulos *lista_t, t_lista_alquileres *lista_a, t_fecha fecha_proceso); // k. Salir
-void menu_operaciones(t_lista_miembros *lista_m, t_indice *indice_m, t_lista_titulos *lista_t, t_indice *indice_t, t_lista_alquileres *lista_a, t_fecha fecha_proceso);
+void menu_operaciones(t_lista_miembros *lista_m, t_indice *indice_m, t_lista_titulos *lista_t, t_indice *indice_t, t_lista_alquileres *lista_a, t_fecha *fecha_proceso);
 
 char menuConErr(const char *mensaje, const char *opciones);
 
-//FUNCIONES COMPARADORAS PARA LOS INDICES (qsort y buscar)
-int cmp_miembros_dni(const void *a, const void *b);
-int cmp_titulos_id(const void *a, const void *b);
-
 //ABM MIEMBROS Y TITULOS
-void altaMiembro(t_lista_miembros *lista_m, t_indice *indice_m);
+void altaMiembro(t_lista_miembros *lista_m, t_indice *indice_m, t_fecha fecha_proceso);
 void bajaMiembro(t_lista_miembros *lista_m, t_indice *indice_m);
 void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fechProceso);
 
 void altaTitulo(t_lista_titulos *lista_t, t_indice *indice_t);
 void bajaTitulo(t_lista_titulos *lista_t, t_indice *indice_t);
-void modificarPelicula(t_lista_titulos *lista_t, t_indice *indice, t_fecha *fechProceso);
+void modificarTitulo(t_lista_titulos *lista_t, t_indice *indice, t_fecha *fechProceso);
+
+///CARGAR ALQUILER
+void registrarAlquiler(t_lista_alquileres *lista_a, t_lista_miembros *lista_m, t_lista_titulos *lista_t, t_indice *indice_m, t_indice *indice_t);
 
 ///Agregado de funciones de muestra
 void mostrarMiembro(t_lista_miembros *lista_m, t_indice *indice);
-void mostrarSocios_DNI(miembro* t_miembro, int cantidad);
-void listarMiembrosPorPlan(miembro* t_miembro, int cantidad);
+void listar_miembros_por_dni(t_lista_miembros *lista_m, t_indice *indice_m);
+void listarMiembrosPorPlan(t_lista_miembros *lista_m, t_indice *indice_m);
 
 
 //HABRIA QUE MOVERLAS

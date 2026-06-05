@@ -5,7 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 
-void menu_operaciones(t_lista_miembros *lista_m, t_indice *indice_m, t_lista_titulos *lista_t, t_indice *indice_t, t_lista_alquileres *lista_a, t_fecha fecha_proceso)
+void menu_operaciones(t_lista_miembros *lista_m, t_indice *indice_m, t_lista_titulos *lista_t, t_indice *indice_t, t_lista_alquileres *lista_a, t_fecha *fecha_proceso)
 {
     char opcion;
 
@@ -28,15 +28,14 @@ void menu_operaciones(t_lista_miembros *lista_m, t_indice *indice_m, t_lista_tit
         printf("==================================================\n");
         printf("Seleccione una opcion (a-k): ");
 
-        // El espacio antes de %c es un truco vital en C para ignorar enter previos en el buffer
         scanf(" %c", &opcion);
-        while(getchar() != '\n'); // Limpiamos el buffer de entrada inmediatamente
+        while(getchar() != '\n');
 
         switch (opcion)
         {
         case 'a':
         case 'A':
-            altaMiembro(lista_m, indice_m);
+            altaMiembro(lista_m, indice_m, *fecha_proceso);
             break;
 
         case 'b':
@@ -56,40 +55,38 @@ void menu_operaciones(t_lista_miembros *lista_m, t_indice *indice_m, t_lista_tit
 
         case 'e':
         case 'E':
-            printf("\n[PROXIMAMENTE] Modificacion de miembro.\n");
-            // modificacion_miembro(lista_m, indice_m);
+            modificarMiembro(lista_m, indice_m, fecha_proceso);
             break;
 
         case 'f':
         case 'F':
-            printf("\n[PROXIMAMENTE] Modificacion de titulo.\n");
-            // modificacion_titulo(lista_t, indice_t);
+            modificarTitulo(lista_t, indice_t, fecha_proceso);
             break;
 
         case 'g':
         case 'G':
-            printf("\n[PROXIMAMENTE] Mostrar informacion de un miembro.\n");
+            mostrarMiembro(lista_m, indice_m);
             break;
 
         case 'h':
         case 'H':
-            printf("\n[PROXIMAMENTE] Alquiler de un titulo.\n");
+            registrarAlquiler(lista_a, lista_m, lista_t, indice_m, indice_t);
             break;
 
         case 'i':
         case 'I':
-            printf("\n[PROXIMAMENTE] Listado de miembros ordenados por DNI.\n");
+            listar_miembros_por_dni(lista_m, indice_m);
             break;
 
         case 'j':
         case 'J':
-            printf("\n[PROXIMAMENTE] Listado de miembros por Plan.\n");
+            listarMiembrosPorPlan(lista_m, indice_m);
             break;
 
         case 'k':
         case 'K':
             printf("\nSaliendo del sistema...\n");
-            guardar_datos_sesion(lista_m, lista_t, lista_a, fecha_proceso);
+            guardar_datos_sesion(lista_m, lista_t, lista_a, *fecha_proceso);
             break;
 
         default:
@@ -107,186 +104,9 @@ void limpiarBuffer()
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-//int cmpDNI(const void* d1, const void* d2){
-//  long int dif= *(long int*)d1 - *(long int*)d2;
-//  return dif;
-//
-//}
-
-//int cmpID(const void* d1, const void* d2){
-//  int dif= *(int*)d1 - *(int*)d2;
-//  return dif;
-//}
-
-//void altaMiembro(miembro *miembroOficial,t_indice* indice,t_fecha* fechProceso) {
-//
-//  miembro miemTemp; ///Variable temporal de miembros que ira guardando los datos ingresados por teclado
-//  int pasoAlta = 1;
-//  int opcionPlan;
-//
-//    printf("\n--- FORMULARIO DE ALTA: MIEMBRO ---\n");
-//
-//    while (pasoAlta > 0 && pasoAlta <= 10) {
-//        switch (pasoAlta) {
-//            case 1:
-//                printf("Ingrese DNI: ");
-//                if (scanf("%ld", &miemTemp.dni) != 1) {
-//                    limpiarBuffer();
-//                    printf("[ERROR] Entrada de DNI invalida.\n");
-//                    pasoAlta = -1;
-//                    break;
-//                }
-//                limpiarBuffer();
-//
-//                if (indice_buscar(indice,&miemTemp.dni,indice->cantidad_elementos_actual,sizeof(long int),cmpDNI)!=NO_EXISTE) {
-//                    printf("[ERROR] El DNI ya existe en el indice. Operacion cancelada.\n");
-//                    pasoAlta = -1;
-//                    break;
-//                }
-//
-//                pasoAlta++;
-//                break;
-//
-//            case 2:
-//                printf("Ingrese CUIL: ");
-//                fgets(miemTemp.CUIL, sizeof(miemTemp.CUIL), stdin);
-//
-//                if(validarCUIL(miemTemp.CUIL)<0){
-//                    printf("Error al ingresar CUIL");
-//                    pasoAlta-=1;
-//                    break;
-//                }
-//
-//                pasoAlta++;
-//                break;
-//
-//            case 3:
-//                printf("Ingrese Apellidos y Nombres: ");
-//                fgets(miemTemp.apeNom, sizeof(miemTemp.apeNom), stdin);
-//
-//                normalizarApel_Nombre(miemTemp.apeNom);
-//
-//                pasoAlta++;
-//                break;
-//
-//            case 4:
-//                printf("Ingrese Fecha de Nacimiento (DD MM AAAA): ");
-//                if (scanf("%d %d %d", &miemTemp.fechNac.dia, &miemTemp.fechNac.mes, &miemTemp.fechNac.anio) != 3) {
-//                    limpiarBuffer();
-//                    printf("[ERROR] Formato de fecha invalido.\n");
-//                    pasoAlta = -1;
-//                    break;
-//                }
-//                limpiarBuffer();
-//
-//                ///LLamar a función de validar Fecha de Nacimiento
-//
-//                pasoAlta++;
-//                break;
-//
-//            case 5:
-//                printf("Ingrese Sexo ('F', 'M', 'O'): ");
-//                scanf("%c", &miemTemp.sexo);
-//                limpiarBuffer();
-//
-//                if(validarSexo(&miemTemp.sexo)<0){
-//                    printf("Sexo inválido");
-//                    pasoAlta-=1;
-//                    break;
-//                }
-//
-//                pasoAlta++;
-//                break;
-//
-//            case 6:
-//                printf("Ingrese Fecha de Afiliacion (DD MM AAAA): ");
-//                if (scanf("%d %d %d", &miemTemp.fechAfil.dia, &miemTemp.fechAfil.mes, &miemTemp.fechAfil.anio) != 3) {
-//                    limpiarBuffer();
-//                    printf("[ERROR] Formato de fecha invalido.\n");
-//                    pasoAlta = -1;
-//                    break;
-//                }
-//                limpiarBuffer();
-//
-//                ///Llamar a función validar fecha de afiliacion
-//
-//                pasoAlta++;
-//                break;
-//
-//            case 7:
-//                if ((2026 - miemTemp.fechNac.anio) < 18) {
-//                    strcpy(miemTemp.cat, "MENOR");
-//                    printf("[MENOR DETECTADO] Ingrese Email del Tutor: ");
-//                    fgets(miemTemp.emailTutor,sizeof(miemTemp.emailTutor),stdin);
-//                } else {
-//                    strcpy(miemTemp.cat, "ADULTO");
-//                    strcpy(miemTemp.emailTutor, "N/A");
-//                }
-//
-//                ///Llamar a funcion de validar categoria y correo
-//
-//                pasoAlta++;
-//                break;
-//
-//            case 8:
-//                printf("Ingrese Fecha de Ultima Cuota Paga (DD MM AAAA): ");
-//                if (scanf("%d %d %d", &miemTemp.fechUltCuot.dia, &miemTemp.fechUltCuot.mes, &miemTemp.fechUltCuot.anio) != 3) {
-//                    limpiarBuffer();
-//                    printf("[ERROR] Formato de fecha invalido.\n");
-//                    pasoAlta = -1;
-//                    break;
-//                }
-//                limpiarBuffer();
-//
-//                ///LLamar a funcion para validar fecha de ultima cuota paga
-//
-//                pasoAlta++;
-//                break;
-//
-//            case 9:
-//                printf("\nSeleccione el Plan:\n1. BASIC\n2. PREMIUM\n3. VIP\n4. FAMILY\nOpcion: ");
-//                if (scanf("%d", &opcionPlan) != 1) {
-//                    limpiarBuffer();
-//                    pasoAlta = -1;
-//                    break;
-//                }
-//                limpiarBuffer();
-//
-//                switch (opcionPlan) {
-//                    case 1: strcpy(miemTemp.plan, "BASIC"); break;
-//                    case 2: strcpy(miemTemp.plan, "PREMIUM"); break;
-//                    case 3: strcpy(miemTemp.plan, "VIP"); break;
-//                    case 4: strcpy(miemTemp.plan, "FAMILY"); break;
-//                    default:
-//                        printf("[ERROR] Opcion de plan invalida.\n");
-//                        pasoAlta = -1;
-//                        break;
-//                }
-//
-//                if (pasoAlta != -1) {
-//                    miemTemp.estado = 'A';
-//                    pasoAlta++;
-//                }
-//                break;
-//        }
-//    }
-//
-//    ///Una vez que están todos los registros válidos
-//    if (pasoAlta ==9) {
-//        miemTemp.estado='A';
-//
-//        ///Acá podemos llamar a una funcion que vaya grabando el registro en memoria o lo podemos aplicar después
-//
-//        ///Llamamos a funcion de insertarOrdenado
-//        indice_insertar(indice,&miemTemp,sizeof(miemTemp),cmpDNI);
-//
-//        printf("\n>>> ¡ALTA EXITOSA! <<<\n");
-//    } else {
-//        printf("\n>>> [SISTEMA] Se detectaron errores. Se ha ignorado todo lo ingresado. <<<\n");
-//    }
-//}
-
-///Funciones de modificación de registros
+int cmpDNI(const void* d1, const void* d2){
+   return *(long int*)d1 - *(long int*)d2;
+}
 
 void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fechProceso)
 {
@@ -308,15 +128,18 @@ void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fech
     }
     limpiarBuffer();
 
-    //pos = indice_buscar(indice, &dniBuscado, indice->cantidad_elementos_actual, sizeof(long int), cmpDNI);
-    if (pos == NO_EXISTE)
-    {
+    // Después:
+    t_reg_indice ficha_busqueda;
+    ficha_busqueda.dni = dniBuscado;
+    pos = indice_buscar(indice, &ficha_busqueda, indice->cantidad_elementos_actual, sizeof(t_reg_indice), cmp_miembros_dni);
+    if (pos == NO_EXISTE){
         printf("[ERROR] El DNI no existe en el indice. Operacion cancelada.\n");
         return;
     }
 
     t_reg_indice *reg = (t_reg_indice *)indice->vindice + pos;
-    miemTemp = lista_m->array[reg->nro_reg];
+    //miemTemp = lista_m->array[reg->nro_reg];
+    miemTemp=*(lista_m->array+reg->nro_reg);
 
     // Menú de campos a modificar
     int opcion = 0;
@@ -352,7 +175,7 @@ void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fech
             if (validarCUIL(miemTemp.CUIL) < 0)
             {
                 printf("[ERROR] CUIL invalido. No se modifico.\n");
-                strcpy(miemTemp.CUIL, lista_m->array[reg->nro_reg].CUIL);
+                strcpy(miemTemp.CUIL, (lista_m->array+reg->nro_reg)->CUIL);
             }
             break;
 
@@ -360,9 +183,8 @@ void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fech
             printf("Ingrese nuevos Apellidos y Nombres: ");
             fgets(miemTemp.apeNom, sizeof(miemTemp.apeNom), stdin);
             normalizarApel_Nombre(miemTemp.apeNom);
-            if (strcmp(miemTemp.apeNom, "") == 0)
-            {
-                strcpy(miemTemp.apeNom, lista_m->array[reg->nro_reg].apeNom);
+            if (strcmp(miemTemp.apeNom, "") == 0){
+                strcpy(miemTemp.apeNom,(lista_m->array+reg->nro_reg)->apeNom);
                 printf("[ERROR] Nombre y apellido vacios. No se modifico.\n");
             }
             break;
@@ -373,13 +195,13 @@ void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fech
             miemTemp.fechNac = parsearFecha(fechaNacimiento);
             if(es_Fecha_Valida(&miemTemp.fechNac) == ERROR)
             {
-                miemTemp.fechNac = lista_m->array[reg->nro_reg].fechNac;
+                miemTemp.fechNac = (lista_m->array+reg->nro_reg)->fechNac;
                 printf("[ERROR] Fecha de nacimiento invalida. No se modifico.\n");
                 break;
             }
             else if(validarFechaNacimiento(&miemTemp.fechNac, fechProceso) == ERROR)
             {
-                miemTemp.fechNac = lista_m->array[reg->nro_reg].fechNac;
+                miemTemp.fechNac = (lista_m->array+reg->nro_reg)->fechNac;
                 printf("[ERROR] Fecha de nacimiento invalida. No se modifico.\n");
                 break;
             }
@@ -393,15 +215,15 @@ void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fech
             else
             {
                 strcpy(miemTemp.cat, "MENOR");
-                if (strcmp(miemTemp.cat, lista_m->array[reg->nro_reg].cat) != 0)
+                if (strcmp(miemTemp.cat,(lista_m->array+reg->nro_reg)->cat) != 0)
                 {
                     printf("La categoria cambio a MENOR. Por favor, ingrese Email del Tutor: ");
                     fgets(miemTemp.emailTutor, sizeof(miemTemp.emailTutor), stdin);
                 }
                 if(validar_campo(&miemTemp, validarCorreo) == ERROR)
                 {
-                    miemTemp.fechNac = lista_m->array[reg->nro_reg].fechNac;
-                    strcpy(miemTemp.emailTutor, lista_m->array[reg->nro_reg].emailTutor);
+                    miemTemp.fechNac =(lista_m->array+reg->nro_reg)->fechNac;
+                    strcpy(miemTemp.emailTutor,(lista_m->array+reg->nro_reg)->emailTutor);
                     printf("[ERROR] Mail invalido. No se modifico el mail ni la edad.\n");
                 }
             }
@@ -411,10 +233,9 @@ void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fech
             printf("Ingrese nuevo Sexo ('F', 'M', 'O'): ");
             scanf("%c", &miemTemp.sexo);
             limpiarBuffer();
-            if (validarSexo(&miemTemp.sexo) < 0)
-            {
+            if (validarSexo(&miemTemp.sexo) < 0){
                 printf("[ERROR] Sexo invalido. No se modifico.\n");
-                miemTemp.sexo = lista_m->array[reg->nro_reg].sexo;
+                miemTemp.sexo = (lista_m->array+reg->nro_reg)->sexo;
             }
             break;
 
@@ -424,13 +245,13 @@ void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fech
             miemTemp.fechAfil = parsearFecha(fechaAfiliacion);
             if(es_Fecha_Valida(&miemTemp.fechAfil) == ERROR)
             {
-                miemTemp.fechAfil = lista_m->array[reg->nro_reg].fechAfil;
+                miemTemp.fechAfil = (lista_m->array+reg->nro_reg)->fechAfil;
                 printf("[ERROR] Fecha de afiliacion invalida. No se modifico.\n");
                 break;
             }
             else if(validarFechaAfiliacion(&miemTemp.fechAfil,&miemTemp.fechNac,fechProceso) == ERROR)
             {
-                miemTemp.fechAfil = lista_m->array[reg->nro_reg].fechAfil;
+                miemTemp.fechAfil = (lista_m->array+reg->nro_reg)->fechAfil;
                 printf("[ERROR] Fecha de afiliacion invalida. No se modifico.\n");
                 break;
             }
@@ -443,13 +264,13 @@ void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fech
             miemTemp.fechUltCuot = parsearFecha(fechaUltimaCuota);
             if(es_Fecha_Valida(&miemTemp.fechUltCuot) == ERROR)
             {
-                miemTemp.fechUltCuot = lista_m->array[reg->nro_reg].fechUltCuot;
+                miemTemp.fechUltCuot = (lista_m->array+reg->nro_reg)->fechUltCuot;
                 printf("[ERROR] Fecha de ultima cuota invalida. No se modifico.\n");
                 break;
             }
             else if(validar_UltimaCuota_Paga(&miemTemp.fechAfil,&miemTemp.fechUltCuot,fechProceso) == ERROR)
             {
-                miemTemp.fechUltCuot = lista_m->array[reg->nro_reg].fechUltCuot;
+                miemTemp.fechUltCuot = (lista_m->array+reg->nro_reg)->fechUltCuot;
                 printf("[ERROR] Fecha de ultima cuota invalida. No se modifico.\n");
                 break;
             }
@@ -481,7 +302,7 @@ void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fech
                 break;
             default:
                 printf("[ERROR] Opcion de plan invalida. No se modifico.\n");
-                strcpy(miemTemp.plan, lista_m->array[reg->nro_reg].plan);
+                strcpy(miemTemp.plan, (lista_m->array+reg->nro_reg)->plan);
             }
             break;
 
@@ -489,16 +310,15 @@ void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fech
             printf("Ingrese nuevo Estado ('A' = Activo, 'B' = Baja): ");
             scanf("%c", &miemTemp.estado);
             limpiarBuffer();
-            if (miemTemp.estado != 'A' && miemTemp.estado != 'B')
-            {
+            if (miemTemp.estado != 'A' && miemTemp.estado != 'B'){
                 printf("[ERROR] Estado invalido. No se modifico.\n");
-                miemTemp.estado = lista_m->array[reg->nro_reg].estado;
+                miemTemp.estado = (lista_m->array+reg->nro_reg)->estado;
             }
             break;
 
         case 9:
             // Confirmar cambios
-            lista_m->array[reg->nro_reg] = miemTemp;
+            *(lista_m->array+reg->nro_reg) = miemTemp;
             printf("\n>>> ¡MODIFICACION EXITOSA! <<<\n");
             return;
 
@@ -513,7 +333,7 @@ void modificarMiembro(t_lista_miembros *lista_m, t_indice *indice, t_fecha *fech
     }
 }
 
-void modificacion_titulo(t_lista_titulos *lista_t, t_indice *indice_t)
+void modificarTitulo(t_lista_titulos *lista_t, t_indice *indice_t, t_fecha *fechProceso)
 {
     titulo tituloTemp;
     int idBuscado;
@@ -551,7 +371,7 @@ void modificacion_titulo(t_lista_titulos *lista_t, t_indice *indice_t)
 
     // 2. RECUPERAR EL REGISTRO
     t_reg_indice *fichas = (t_reg_indice *)indice_t->vindice;
-    int pos_lista = fichas[pos_en_indice].nro_reg;
+    int pos_lista = (fichas+pos_en_indice)->nro_reg;
 
     // Clonamos los datos reales a la variable temporal
     tituloTemp = lista_t->array[pos_lista];
@@ -591,7 +411,7 @@ void modificacion_titulo(t_lista_titulos *lista_t, t_indice *indice_t)
             if (strcmp(tituloTemp.titulo, "") == 0)
             {
                 // Si lo deja vacío, restauramos el original
-                strcpy(tituloTemp.titulo, lista_t->array[pos_lista].titulo);
+                strcpy(tituloTemp.titulo, (lista_t->array+pos_lista)->titulo);
                 printf("Error: Titulo vacio. No se realizo la modificacion.\n");
             }
             else
@@ -649,7 +469,7 @@ void modificacion_titulo(t_lista_titulos *lista_t, t_indice *indice_t)
 
         case 4: // GUARDADO DEFINITIVO
             // Pisamos el registro real con nuestra variable temporal
-            lista_t->array[pos_lista] = tituloTemp;
+            *(lista_t->array+pos_lista) = tituloTemp;
             printf("\n>>> MODIFICACION EXITOSA <<<\n");
             return; // Cortamos la función y volvemos al menú principal
 
@@ -683,8 +503,10 @@ void mostrarMiembro(t_lista_miembros *lista_m, t_indice *indice)
     }
     limpiarBuffer();
 
-    // Buscamos en el índice
-//    pos = indice_buscar(indice, &dniBuscado, indice->cantidad_elementos_actual, sizeof(long int), cmpDNI);
+    // Armamos la ficha falsa y buscamos en el índice
+    t_reg_indice ficha_busqueda;
+    ficha_busqueda.dni = dniBuscado;
+    pos = indice_buscar(indice, &ficha_busqueda, indice->cantidad_elementos_actual, sizeof(t_reg_indice), cmp_miembros_dni);
     if (pos == NO_EXISTE)
     {
         printf("[ERROR] El DNI no existe en el indice.\n");
@@ -693,7 +515,7 @@ void mostrarMiembro(t_lista_miembros *lista_m, t_indice *indice)
 
     // Obtenemos el miembro real a través del nro_reg
     t_reg_indice *reg = (t_reg_indice *)indice->vindice + pos;
-    miembro *m = &lista_m->array[reg->nro_reg];
+    miembro *m = lista_m->array+reg->nro_reg;
 
     // Mostramos los datos
     printf("\n---------- DATOS DEL MIEMBRO ----------\n");
@@ -711,82 +533,6 @@ void mostrarMiembro(t_lista_miembros *lista_m, t_indice *indice)
     printf("----------------------------------------\n");
 }
 
-void mostrarSocios_DNI(miembro* t_miembro, int cantidad)
-{
-    ///Llamar a funcion de ordenamiento, o ordenar antes
-
-    // Encabezado con todos los campos encolumnados
-    printf("\n%-10s %-13s %-25s %-11s %-4s %-11s %-5s %-11s %-4s %-6s %-25s\n",
-           "DNI", "CUIL", "APELLIDO Y NOMBRE", "F. NAC", "SEXO", "F. AFIL", "CAT", "F. ULT CUO", "EST", "PLAN", "EMAIL TUTOR");
-
-    printf("-----------------------------------------------------------------------------------------------------------------------------------------------------\n");
-
-    for (int i = 0; i < cantidad; i++)
-    {
-        if ((t_miembro + i)->estado == 'A')
-        {
-            printf("%-10ld %-13s %-25s %02d/%02d/%04d  %-4c %02d/%02d/%04d  %-5s %02d/%02d/%04d  %-4c %-6s %-25s\n",
-                   (t_miembro + i)->dni,
-                   (t_miembro + i)->CUIL,
-                   (t_miembro + i)->apeNom,
-
-                   // t_fecha fechNac
-                   (t_miembro + i)->fechNac.dia, (t_miembro + i)->fechNac.mes, (t_miembro + i)->fechNac.anio,
-
-                   (t_miembro + i)->sexo,
-
-                   // t_fecha fechAfil
-                   (t_miembro + i)->fechAfil.dia, (t_miembro + i)->fechAfil.mes, (t_miembro + i)->fechAfil.anio,
-
-                   (t_miembro + i)->cat,
-
-                   // t_fecha fechUltCuot
-                   (t_miembro + i)->fechUltCuot.dia, (t_miembro + i)->fechUltCuot.mes, (t_miembro + i)->fechUltCuot.anio,
-
-                   (t_miembro + i)->estado,
-                   (t_miembro + i)->plan,
-                   (t_miembro + i)->emailTutor);
-        }
-    }
-
-    printf("-----------------------------------------------------------------------------------------------------------------------------------------------------\n");
-}
-
-///Mostrar Miembros por plan
-void listarMiembrosPorPlan(miembro* t_miembro, int cantidad)
-{
-    ///Llamar a funcion de ordenamiento (Por Apellido y Nombre) o hacerlo antes
-
-    printf("\n%-20s %-12s %-12s %-12s %-12s\n", "Plan / Índice", "(BASIC)", "(PREMIUM)", "(VIP)", "(FAMILY)");
-    printf("-----------------------------------------------------------------------\n");
-
-    for (int i = 0; i < cantidad; i++)
-{
-        printf("%-20s ", (t_miembro + i)->apeNom);
-
-        if (strcmp((t_miembro + i)->plan, "BASIC") == 0)
-            printf("%-12ld ", (t_miembro + i)->dni);
-           else
-            printf("%-12s ", "0");
-
-        if (strcmp((t_miembro + i)->plan, "PREMIUM") == 0)
-            printf("%-12ld ", (t_miembro + i)->dni);
-           else
-            printf("%-12s ", "0");
-
-        if (strcmp((t_miembro + i)->plan, "VIP") == 0)
-            printf("%-12ld ", (t_miembro + i)->dni);
-          else
-            printf("%-12s ", "0");
-
-        if (strcmp((t_miembro + i)->plan, "FAMILY") == 0)
-            printf("%-12ld\n", (t_miembro + i)->dni);
-           else
-            printf("%-12s\n", "0");
-    }
-    printf("-----------------------------------------------------------------------\n");
-}
-
 ///Funciones para alquiler
 int buscarAlquiler(t_lista_alquileres *lista, long dni, int idPelicula)
 {
@@ -797,7 +543,8 @@ int buscarAlquiler(t_lista_alquileres *lista, long dni, int idPelicula)
     return NO_EXISTE;
 }
 
-int registrarAlquiler(t_lista_alquileres *lista_a, t_lista_miembros *lista_m, t_lista_titulos *lista_t, t_indice *indice_m, t_indice *indice_t)
+void registrarAlquiler(t_lista_alquileres *lista_a, t_lista_miembros *lista_m,
+                      t_lista_titulos *lista_t, t_indice *indice_m, t_indice *indice_t)
 {
     long int dniBuscado;
     int idPelicula, pos, posAlq;
@@ -810,46 +557,42 @@ int registrarAlquiler(t_lista_alquileres *lista_a, t_lista_miembros *lista_m, t_
     printf("Ingrese DNI del miembro: ");
     if (scanf("%ld", &dniBuscado) != 1)
     {
-        while(getchar() != '\n');
+        limpiarBuffer();
         printf("[ERROR] DNI invalido.\n");
-        return ERROR;
+        return;
     }
-    while(getchar() != '\n');
+    limpiarBuffer();
 
-    // Armamos la ficha falsa y buscamos en el índice
     t_reg_indice ficha_m;
     ficha_m.dni = dniBuscado;
     pos = indice_buscar(indice_m, &ficha_m, indice_m->cantidad_elementos_actual, sizeof(t_reg_indice), cmp_miembros_dni);
-
     if (pos == NO_EXISTE)
     {
         printf("[ERROR] El miembro con DNI %ld no existe.\n", dniBuscado);
-        return ERROR;
+        return;
     }
 
     t_reg_indice *regMiembro = (t_reg_indice *)indice_m->vindice + pos;
-    miembro *m = &lista_m->array[regMiembro->nro_reg];
+    miembro *m = lista_m->array + regMiembro->nro_reg;
 
-    // Verifica que el miembro esté activo
     if (m->estado != 'A')
     {
         printf("[ERROR] El miembro no esta activo en el sistema.\n");
-        return ERROR;
+        return;
     }
 
-    // Verifica límite de alquileres activos para plan BASIC
     if (strcmp(m->plan, "BASIC") == 0)
     {
         int activos = 0;
         for (int i = 0; i < lista_a->cantidad; i++)
         {
-            if (lista_a->array[i].dni == dniBuscado && lista_a->array[i].estado == 'A')
+            if ((lista_a->array + i)->dni == dniBuscado && (lista_a->array + i)->estado == 'A')
                 activos++;
         }
         if (activos >= 2)
         {
             printf("[ERROR] El miembro tiene plan BASIC y ya alcanzo el limite de 2 alquileres activos.\n");
-            return ERROR;
+            return;
         }
     }
 
@@ -859,295 +602,269 @@ int registrarAlquiler(t_lista_alquileres *lista_a, t_lista_miembros *lista_m, t_
     printf("Ingrese ID de la pelicula a alquilar: ");
     if (scanf("%d", &idPelicula) != 1)
     {
-        while(getchar() != '\n');
+        limpiarBuffer();
         printf("[ERROR] ID invalido.\n");
-        return ERROR;
+        return;
     }
-    while(getchar() != '\n');
+    limpiarBuffer();
+    printf("DEBUG 5: ID pelicula ingresado = %d\n", idPelicula);
 
-    // Armamos la ficha falsa (Guardamos el ID en el campo DNI)
     t_reg_indice ficha_t;
     ficha_t.dni = (long)idPelicula;
     pos = indice_buscar(indice_t, &ficha_t, indice_t->cantidad_elementos_actual, sizeof(t_reg_indice), cmp_titulos_id);
-
     if (pos == NO_EXISTE)
     {
         printf("[ERROR] La pelicula con ID %d no existe.\n", idPelicula);
-        return ERROR;
+        return;
     }
+    printf("DEBUG 6: pos en indice_t = %d\n", pos);
+
 
     t_reg_indice *regPelicula = (t_reg_indice *)indice_t->vindice + pos;
-    titulo *p = &lista_t->array[regPelicula->nro_reg]; // Usamos 'titulo' en lugar de 'pelicula'
+    titulo *p = lista_t->array + regPelicula->nro_reg;
 
-    // Verifica si hay stock disponible
     if (p->stock <= 0)
     {
-        printf("[ERROR] No hay stock disponible para esta pelicula en este momento.\n");
-        return ERROR;
+        printf("[ERROR] No hay stock disponible para esta pelicula.\n");
+        return;
     }
-
+    printf("DEBUG 7: titulo encontrado = %s\n", p->titulo);
     // =========================================================
-    // 3. REGISTRAR ALQUILER
+    // 3. REGISTRAR O ACTUALIZAR ALQUILER
     // =========================================================
     posAlq = buscarAlquiler(lista_a, dniBuscado, idPelicula);
 
     if (posAlq == NO_EXISTE)
     {
-        // Es una relación nueva, la agregamos
         if (lista_a->cantidad == lista_a->capacidad)
         {
-            // Validación para inicializar en 10 si la capacidad era 0
             int nueva_cap = (lista_a->capacidad == 0) ? 10 : lista_a->capacidad * 2;
-
             t_alquiler *temp = realloc(lista_a->array, nueva_cap * sizeof(t_alquiler));
             if (temp == NULL)
             {
-                printf("[ERROR] Error fatal de memoria al registrar el alquiler.\n");
-                return ERROR;
+                printf("[ERROR] Error de memoria.\n");
+                return;
             }
             lista_a->array = temp;
             lista_a->capacidad = nueva_cap;
         }
 
-        lista_a->array[lista_a->cantidad].dni = dniBuscado;
-        lista_a->array[lista_a->cantidad].idPelicula = idPelicula;
-        lista_a->array[lista_a->cantidad].estado = 'A';
-        lista_a->array[lista_a->cantidad].cantAlquileres = 1;
+        t_alquiler *nuevo = lista_a->array + lista_a->cantidad;
+        nuevo->dni            = dniBuscado;
+        nuevo->idPelicula     = idPelicula;
+        nuevo->estado         = 'A';
+        nuevo->cantAlquileres = 1;
 
-        posAlq = lista_a->cantidad; // Guardamos la posición para el printf final
+        posAlq = lista_a->cantidad;
         lista_a->cantidad++;
     }
     else
     {
-        // La relación ya existe, actualizamos
-        lista_a->array[posAlq].estado = 'A';
-        lista_a->array[posAlq].cantAlquileres++;
+        (lista_a->array + posAlq)->estado = 'A';
+        (lista_a->array + posAlq)->cantAlquileres++;
     }
 
-    // Descuenta stock
     p->stock--;
 
     // =========================================================
     // 4. CONFIRMACIÓN
     // =========================================================
     printf("\n>>> ¡ALQUILER REGISTRADO EXITOSAMENTE! <<<\n");
-    printf("Miembro: %s | Pelicula: %s | Alquileres historicos de este titulo: %d\n",
-           m->apeNom, p->titulo, lista_a->array[posAlq].cantAlquileres);
-
-    return TODO_OK;
+    printf("Miembro:   %s\n", m->apeNom);
+    printf("Pelicula:  %s\n", p->titulo);
+    printf("Alquileres historicos de este titulo: %d\n", (lista_a->array + posAlq)->cantAlquileres);
 }
-
-
 
 // FUNCIONES DE ABM
 
-void altaMiembro(t_lista_miembros *lista_m, t_indice *indice_m)
+void altaMiembro(t_lista_miembros *lista_m, t_indice *indice_m, t_fecha fecha_proceso)
 {
     printf("\n--- ALTA DE NUEVO MIEMBRO ---\n");
 
     miembro nuevo_miembro;
     memset(&nuevo_miembro, 0, sizeof(miembro));
 
+    // --- REGLAS AUTOMÁTICAS DE INICIO ---
+    nuevo_miembro.estado = 'A';
+    nuevo_miembro.fechAfil = fecha_proceso;
+    nuevo_miembro.fechUltCuot = fecha_proceso;
+
+    printf("-> Estado inicial: 'A' (Activo)\n");
+    printf("-> Fecha de Afiliacion: %02d/%02d/%04d (Automatica)\n", fecha_proceso.dia, fecha_proceso.mes, fecha_proceso.anio);
+    printf("-> Ultima Cuota Paga: %02d/%02d/%04d (Automatica)\n", fecha_proceso.dia, fecha_proceso.mes, fecha_proceso.anio);
+    printf("-----------------------------------\n");
+
     // ---------------------------------------------------------
-    // 1. BUCLE DE DNI (Valida reglas y existencia en el índice)
+    // 1. DNI
     // ---------------------------------------------------------
     bool dni_valido = false;
-    while (!dni_valido)
-    {
+    while (!dni_valido) {
         printf("Ingrese el DNI: ");
-        if (scanf("%ld", &nuevo_miembro.dni) != 1)
-        {
+        if (scanf("%ld", &nuevo_miembro.dni) != 1) {
             printf("Error: Debe ingresar solo numeros.\n");
-            while(getchar() != '\n'); // Limpiar buffer
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+
+        if (validar_campo(&nuevo_miembro, validarDNI) == ERROR) {
+            printf("Error: DNI invalido segun las reglas del sistema.\n");
             continue;
         }
 
-        // A. Validar regla matemática (Ej: que tenga 8 dígitos)
-        if (validar_campo(&nuevo_miembro, validarDNI) == ERROR)
-        {
-            printf("Error: DNI invalido segun las reglas del sistema. Intente de nuevo.\n");
-            continue;
-        }
-
-        // B. Validar existencia en el Índice
         t_reg_indice ficha_busqueda;
         ficha_busqueda.dni = nuevo_miembro.dni;
 
-        if (indice_buscar(indice_m, &ficha_busqueda, indice_m->cantidad_elementos_actual, sizeof(t_reg_indice), cmp_miembros_dni) != NO_EXISTE)
-        {
-            printf("Error: El DNI %ld ya esta registrado. Ingrese uno distinto.\n", nuevo_miembro.dni);
+        if (indice_buscar(indice_m, &ficha_busqueda, indice_m->cantidad_elementos_actual, sizeof(t_reg_indice), cmp_miembros_dni) != NO_EXISTE) {
+            printf("Error: El DNI %ld ya esta registrado.\n", nuevo_miembro.dni);
             continue;
         }
-
-        dni_valido = true; // Si pasa todo, rompemos el bucle
+        dni_valido = true;
     }
-    while(getchar() != '\n'); // Limpiar el Enter que quedó en el buffer
-
 
     // ---------------------------------------------------------
-    // 2. INGRESO DE NOMBRE Y NORMALIZACIÓN
+    // 2. APELLIDO Y NOMBRES
     // ---------------------------------------------------------
     printf("Ingrese Apellido y Nombres: ");
     fgets(nuevo_miembro.apeNom, sizeof(nuevo_miembro.apeNom), stdin);
     nuevo_miembro.apeNom[strcspn(nuevo_miembro.apeNom, "\n")] = 0;
     strcpy(nuevo_miembro.apeNom, normalizarApel_Nombre(nuevo_miembro.apeNom));
 
-
     // ---------------------------------------------------------
-    // 3. BUCLE DE SEXO
+    // 3. SEXO Y CUIL
     // ---------------------------------------------------------
-    // (Pedimos el sexo antes que el CUIL para que la función validarCUIL_Completo pueda cruzarlos)
     bool sexo_valido = false;
-    while (!sexo_valido)
-    {
+    while (!sexo_valido) {
         printf("Ingrese Sexo (M/F/O): ");
         scanf(" %c", &nuevo_miembro.sexo);
         while(getchar() != '\n');
 
-        if (validar_campo(&nuevo_miembro, validarSexo) == TODO_OK)
-        {
-            sexo_valido = true;
-        }
-        else
-        {
-            printf("Error: Sexo invalido. Solo se permite M, F u O.\n");
-        }
+        if (validar_campo(&nuevo_miembro, validarSexo) == TODO_OK) sexo_valido = true;
+        else printf("Error: Sexo invalido. Solo se permite M, F u O.\n");
     }
 
-
-    // ---------------------------------------------------------
-    // 4. BUCLE DE CUIL
-    // ---------------------------------------------------------
     bool cuil_valido = false;
-    while (!cuil_valido)
-    {
+    while (!cuil_valido) {
         printf("Ingrese CUIL (formato XX-XXXXXXXX-X): ");
         fgets(nuevo_miembro.CUIL, sizeof(nuevo_miembro.CUIL), stdin);
-        nuevo_miembro.CUIL[strcspn(nuevo_miembro.CUIL, "\n")] = 0;
 
-        if (validar_campo(&nuevo_miembro, validarCUIL) == TODO_OK)
-        {
-            cuil_valido = true;
-        }
-        else
-        {
-            printf("Error: El CUIL es invalido o no coincide con su DNI/Sexo.\n");
-        }
+        if (strchr(nuevo_miembro.CUIL, '\n') == NULL) while(getchar() != '\n');
+        else nuevo_miembro.CUIL[strcspn(nuevo_miembro.CUIL, "\n")] = 0;
+
+        if (validar_campo(&nuevo_miembro, validarCUIL) == TODO_OK) cuil_valido = true;
+        else printf("Error: El CUIL es invalido o no coincide con su DNI/Sexo.\n");
     }
 
-
     // ---------------------------------------------------------
-    // 5. BUCLE DE CORREO
+    // 4. FECHA DE NACIMIENTO Y CATEGORÍA
     // ---------------------------------------------------------
-    bool correo_valido = false;
-    while (!correo_valido)
-    {
-        printf("Ingrese Correo Electronico: ");
-        fgets(nuevo_miembro.emailTutor, sizeof(nuevo_miembro.emailTutor), stdin);
-        nuevo_miembro.emailTutor[strcspn(nuevo_miembro.emailTutor, "\n")] = 0;
+    bool fechNac_valida = false;
+    while (!fechNac_valida) {
+        printf("Ingrese Fecha de Nacimiento (DD/MM/YYYY): ");
+        if (scanf("%d/%d/%d", &nuevo_miembro.fechNac.dia, &nuevo_miembro.fechNac.mes, &nuevo_miembro.fechNac.anio) != 3) {
+            printf("Error: Formato invalido.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
 
-        if (validar_campo(&nuevo_miembro, validarCorreo) == TODO_OK)
-        {
-            correo_valido = true;
+        if (es_Fecha_Valida(&nuevo_miembro.fechNac) == ERROR) {
+            printf("Error: La fecha ingresada no existe en el calendario.\n");
+            continue;
         }
-        else
-        {
-            printf("Error: Formato de correo electronico invalido.\n");
+        if (validarFechaNacimiento(&nuevo_miembro.fechNac, &fecha_proceso) == ERROR) {
+            printf("Error: El miembro debe tener al menos 10 anios de edad.\n");
+            continue;
         }
+        fechNac_valida = true;
     }
 
+    int edad = fecha_proceso.anio - nuevo_miembro.fechNac.anio;
+    if (fecha_proceso.mes < nuevo_miembro.fechNac.mes ||
+       (fecha_proceso.mes == nuevo_miembro.fechNac.mes && fecha_proceso.dia < nuevo_miembro.fechNac.dia)) {
+        edad--;
+    }
 
-    // ---------------------------------------------------------
-    // 6. BUCLE DE PLAN
+    if (edad >= 18) strcpy(nuevo_miembro.cat, "ADULTO");
+    else strcpy(nuevo_miembro.cat, "MENOR");
+
+    printf("-> Categoria asignada: %s\n", nuevo_miembro.cat);
+
+   // ---------------------------------------------------------
+    // 5. PLAN Y CORREO TUTOR
     // ---------------------------------------------------------
     bool plan_valido = false;
-    while (!plan_valido)
-    {
-        printf("Ingrese Plan (Ej: Basico, Premium): ");
+    while (!plan_valido) {
+        printf("Ingrese Plan (BASIC, PREMIUM, VIP, FAMILY): ");
         fgets(nuevo_miembro.plan, sizeof(nuevo_miembro.plan), stdin);
         nuevo_miembro.plan[strcspn(nuevo_miembro.plan, "\n")] = 0;
 
-        if (validar_campo(&nuevo_miembro, validarPlan) == TODO_OK)
-        {
-            plan_valido = true;
+        if (validar_campo(&nuevo_miembro, validarPlan) == TODO_OK) plan_valido = true;
+        else printf("Error: El plan ingresado no existe en el sistema.\n");
+    }
+
+    // --- REGLA: CORREO OBLIGATORIO PARA MENORES / OPCIONAL PARA ADULTOS ---
+    bool correo_valido = false;
+    while (!correo_valido) {
+
+        // Cambiamos el mensaje para que el usuario entienda qué se espera
+        if (strcmp(nuevo_miembro.cat, "MENOR") == 0) {
+            printf("Ingrese Correo Electronico del Tutor (Obligatorio para MENORES): ");
+        } else {
+            printf("Ingrese Correo Electronico (Opcional, presione Enter para omitir): ");
         }
-        else
-        {
-            printf("Error: El plan ingresado no existe en el sistema.\n");
+
+        fgets(nuevo_miembro.emailTutor, sizeof(nuevo_miembro.emailTutor), stdin);
+        nuevo_miembro.emailTutor[strcspn(nuevo_miembro.emailTutor, "\n")] = 0; // Limpiar salto de línea
+
+        // Evaluamos si el usuario lo dejó vacío (solo presionó Enter)
+        if (strlen(nuevo_miembro.emailTutor) == 0) {
+
+            if (strcmp(nuevo_miembro.cat, "MENOR") == 0) {
+                // Es menor: Rechazamos el Enter vacío
+                printf("Error: El correo no puede estar vacio porque el miembro es MENOR de edad.\n");
+            } else {
+                // Es adulto: Aceptamos el vacío y terminamos el bucle
+                strcpy(nuevo_miembro.emailTutor, "NULL"); // Opcional: puedes dejarlo en "" si prefieres
+                correo_valido = true;
+            }
+
+        } else {
+            // Si el usuario escribió algo, sea adulto o menor, LO VALIDAMOS estrictamente
+            if (validar_campo(&nuevo_miembro, validarCorreo) == TODO_OK) {
+                correo_valido = true;
+            } else {
+                printf("Error: Formato invalido o el dominio no pertenece a la lista aceptada (gmail, outlook, etc).\n");
+            }
         }
     }
 
-
-    // ---------------------------------------------------------
-    // 7. BUCLE DE ESTADO
-    // ---------------------------------------------------------
-    bool estado_valido = false;
-    while (!estado_valido)
-    {
-        printf("Ingrese Estado (A para Alta, B para Baja): ");
-
-        // El espacio antes del %c es vital para ignorar saltos de línea previos
-        scanf(" %c", &nuevo_miembro.estado);
-        while(getchar() != '\n'); // Limpiar el buffer inmediatamente
-
-        if (validar_campo(&nuevo_miembro, validarEstado) == TODO_OK)
-        {
-            estado_valido = true;
-        }
-        else
-        {
-            printf("Error: Estado invalido. Ingrese 'A' o 'B'.\n");
-        }
-    }
-
-
     // =========================================================================
-    // 8. GUARDADO DEFINITIVO EN MEMORIA
+    // 6. GUARDADO DEFINITIVO EN MEMORIA
     // =========================================================================
-    // Llegar a esta línea significa que TODOS los bucles fueron superados con éxito.
-
-    // A. Lista Principal
-    if (lista_m->cantidad == lista_m->capacidad)
-    {
+    if (lista_m->cantidad == lista_m->capacidad) {
         int nueva_cap = (lista_m->capacidad == 0) ? 10 : lista_m->capacidad * 2;
         miembro *temp = (miembro *)realloc(lista_m->array, nueva_cap * sizeof(miembro));
-        if (temp == NULL)
-        {
-            printf("Error fatal: Memoria insuficiente al guardar.\n");
-            return;
+        if (temp == NULL) {
+            printf("Error fatal: Memoria insuficiente.\n"); return;
         }
         lista_m->array = temp;
         lista_m->capacidad = nueva_cap;
     }
 
-    // B. Índice
-    if (indice_m->cantidad_elementos_actual == indice_m->cantidad_elementos_maxima)
-    {
-        unsigned nueva_cap_idx = (indice_m->cantidad_elementos_maxima == 0) ? 10 : indice_m->cantidad_elementos_maxima * 2;
-        void *temp_idx = realloc(indice_m->vindice, nueva_cap_idx * sizeof(t_reg_indice));
-        if (temp_idx == NULL)
-        {
-            printf("Error fatal: Memoria insuficiente en indice.\n");
-            return;
-        }
-        indice_m->vindice = temp_idx;
-        indice_m->cantidad_elementos_maxima = nueva_cap_idx;
-    }
-
-    // C. Almacenar
     int pos_lista = lista_m->cantidad;
     lista_m->array[pos_lista] = nuevo_miembro;
     lista_m->cantidad++;
 
-    t_reg_indice *fichas = (t_reg_indice *)indice_m->vindice;
-    fichas[indice_m->cantidad_elementos_actual].dni = nuevo_miembro.dni;
-    fichas[indice_m->cantidad_elementos_actual].nro_reg = pos_lista;
-    indice_m->cantidad_elementos_actual++;
+    t_reg_indice ficha_nueva;
+    ficha_nueva.dni = nuevo_miembro.dni;
+    ficha_nueva.nro_reg = pos_lista;
 
-    printf("\n-> ALTA EXITOSA: El miembro %s ha sido registrado correctamente.\n", nuevo_miembro.apeNom);
-
-    // D. Reordenar índice para mantener búsquedas rápidas operativas
-    qsort(indice_m->vindice, indice_m->cantidad_elementos_actual, sizeof(t_reg_indice), cmp_miembros_dni);
+    if (indice_insertar(indice_m, &ficha_nueva, sizeof(t_reg_indice), cmp_miembros_dni) == TODO_OK) {
+        printf("\n-> ALTA EXITOSA: El miembro %s ha sido registrado.\n", nuevo_miembro.apeNom);
+    } else {
+        printf("\n-> ADVERTENCIA: El miembro se guardo, pero fallo la insercion en el indice.\n");
+    }
 }
 
 void altaTitulo(t_lista_titulos *lista_t, t_indice *indice_t)
@@ -1165,7 +882,7 @@ void altaTitulo(t_lista_titulos *lista_t, t_indice *indice_t)
     if (lista_t->cantidad > 0)
     {
         // Buscamos el ID de la última película guardada físicamente y le sumamos 1
-        id_generado = lista_t->array[lista_t->cantidad - 1].ID + 1;
+        id_generado = (lista_t->array+lista_t->cantidad - 1)->ID + 1;
     }
 
     nuevo_titulo.ID = id_generado;
@@ -1177,7 +894,7 @@ void altaTitulo(t_lista_titulos *lista_t, t_indice *indice_t)
     // ---------------------------------------------------------
     printf("Ingrese el Titulo (Max 60 caracteres): ");
     fgets(nuevo_titulo.titulo, sizeof(nuevo_titulo.titulo), stdin);
-    nuevo_titulo.titulo[strcspn(nuevo_titulo.titulo, "\n")] = 0;
+    *(nuevo_titulo.titulo+strcspn(nuevo_titulo.titulo, "\n")) = 0;
 
     strcpy(nuevo_titulo.titulo, normalizarTitulo(nuevo_titulo.titulo));
 
@@ -1190,7 +907,7 @@ void altaTitulo(t_lista_titulos *lista_t, t_indice *indice_t)
     {
         printf("Ingrese el Genero (Accion, Drama, Comedia, Terror): ");
         fgets(nuevo_titulo.genero, sizeof(nuevo_titulo.genero), stdin);
-        nuevo_titulo.genero[strcspn(nuevo_titulo.genero, "\n")] = 0;
+        *(nuevo_titulo.genero+strcspn(nuevo_titulo.genero, "\n")) = 0;
 
         if (validar_campo(&nuevo_titulo, validarGenero) == TODO_OK)
         {
@@ -1251,13 +968,13 @@ void altaTitulo(t_lista_titulos *lista_t, t_indice *indice_t)
 
     // C. Guardar en Lista
     int pos_lista = lista_t->cantidad;
-    lista_t->array[pos_lista] = nuevo_titulo;
+    *(lista_t->array+pos_lista) = nuevo_titulo;
     lista_t->cantidad++;
 
     // D. Guardar en Índice
     t_reg_indice *fichas = (t_reg_indice *)indice_t->vindice;
-    fichas[indice_t->cantidad_elementos_actual].dni = (long)nuevo_titulo.ID;
-    fichas[indice_t->cantidad_elementos_actual].nro_reg = pos_lista;
+    (fichas+indice_t->cantidad_elementos_actual)->dni = (long)nuevo_titulo.ID;
+    (fichas+indice_t->cantidad_elementos_actual)->nro_reg = pos_lista;
     indice_t->cantidad_elementos_actual++;
 
     printf("\n-> ALTA EXITOSA: La pelicula '%s' ha sido registrada con ID %d.\n", nuevo_titulo.titulo, nuevo_titulo.ID);
@@ -1300,13 +1017,13 @@ void bajaMiembro(t_lista_miembros *lista_m, t_indice *indice_m)
 
     // 2. RECUPERAMOS LOS DATOS
     t_reg_indice *fichas = (t_reg_indice *)indice_m->vindice;
-    int pos_lista = fichas[pos_en_indice].nro_reg;
+    int pos_lista = (fichas+pos_en_indice)->nro_reg;
 
     // 3. CONFIRMACIÓN AL USUARIO
     char confirmacion;
     printf("\nSe encontro al miembro: %s (CUIL: %s)\n",
-           lista_m->array[pos_lista].apeNom,
-           lista_m->array[pos_lista].CUIL);
+           (lista_m->array+pos_lista)->apeNom,
+           (lista_m->array+pos_lista)->CUIL);
 
     printf("Esta seguro que desea cambiar su estado a 'B' (Baja)? (S/N): ");
     scanf(" %c", &confirmacion);
@@ -1323,12 +1040,12 @@ void bajaMiembro(t_lista_miembros *lista_m, t_indice *indice_m)
 
     // ACCIÓN 1: Baja lógica en la lista principal (Cambiamos el estado a 'B')
 
-    lista_m->array[pos_lista].estado = 'B';
+    (lista_m->array+pos_lista)->estado = 'B';
 
     // ACCIÓN 2: Eliminamos del Índice (Desplazamiento a la izquierda)
     for (unsigned i = pos_en_indice; i < indice_m->cantidad_elementos_actual - 1; i++)
     {
-        fichas[i] = fichas[i + 1];
+        *(fichas)= *(fichas+1);
     }
 
     indice_m->cantidad_elementos_actual--;
@@ -1355,16 +1072,16 @@ void bajaTitulo(t_lista_titulos *lista_t, t_indice *indice_t)
     ficha_busqueda.dni = (long)id_baja;
 
     int pos_en_indice = indice_buscar(
-        indice_t, // <--- SOLO EL STRUCT, COMO PIDE TU FUNCIÓN
-        &ficha_busqueda,
-        indice_t->cantidad_elementos_actual,
-        sizeof(t_reg_indice),
-        cmp_miembros_dni
-    );
+                            indice_t,
+                            &ficha_busqueda,
+                            indice_t->cantidad_elementos_actual,
+                            sizeof(t_reg_indice),
+                            cmp_titulos_id // <--- CORREGIDO: Antes decía cmp_miembros_dni
+                        );
 
     if (pos_en_indice == NO_EXISTE)
     {
-        printf("Error: El ID %d no existe en el sistema.\n", id_baja);
+        printf("Error: El ID %d no existe en el sistema o ya fue dado de baja.\n", id_baja);
         return;
     }
 
@@ -1387,8 +1104,13 @@ void bajaTitulo(t_lista_titulos *lista_t, t_indice *indice_t)
     }
 
     // =========================================================================
-    // 3. PROCEDEMOS CON LA BAJA (SOLO EN EL ÍNDICE)
+    // 3. PROCEDEMOS CON LA BAJA LÓGICA Y ACTUALIZACIÓN DEL ÍNDICE
     // =========================================================================
+
+    // --- NUEVO: MARCA LÓGICA POR CLAVE ---
+    // Invertimos el signo del ID en la lista principal para que el
+    // generador de índices lo ignore en el próximo inicio de sesión.
+    lista_t->array[pos_lista].ID = -(lista_t->array[pos_lista].ID);
 
     // Eliminamos del Índice pisando la ficha (Desplazamiento a la izquierda)
     for (unsigned i = pos_en_indice; i < indice_t->cantidad_elementos_actual - 1; i++)
@@ -1399,10 +1121,7 @@ void bajaTitulo(t_lista_titulos *lista_t, t_indice *indice_t)
     // Achicamos el contador del índice
     indice_t->cantidad_elementos_actual--;
 
-    // Nota: lista_t->array[pos_lista] queda intacto en memoria RAM,
-    // pero ya no es accesible a través del buscador.
-
-    printf("\n-> BAJA EXITOSA: El titulo ha sido eliminado del acceso publico.\n");
+    printf("\n-> BAJA EXITOSA: El titulo ha sido marcado como inactivo y eliminado del acceso publico.\n");
 }
 
 int cmp_miembros_dni(const void *a, const void *b)
@@ -1425,6 +1144,115 @@ int cmp_titulos_id(const void *a, const void *b)
     if (regA->dni > regB->dni) return 1;
     return 0;
 }
+
+void listar_miembros_por_dni(t_lista_miembros *lista_m, t_indice *indice_m)
+{
+    printf("\n===============================================================================\n");
+    printf("                  LISTADO DE MIEMBROS ACTIVOS (ORDEN POR DNI)                  \n");
+    printf("===============================================================================\n");
+
+    // Validamos si hay algo para mostrar
+    if (indice_m->cantidad_elementos_actual == 0)
+    {
+        printf("No hay miembros activos registrados en el sistema en este momento.\n");
+        printf("===============================================================================\n");
+        return;
+    }
+
+    // Encabezado de la tabla (usamos %-Xs para alinear a la izquierda)
+    printf("%-10s | %-30s | %-14s | %-4s | %-10s\n", "DNI", "APELLIDO Y NOMBRE", "CUIL", "SEXO", "PLAN");
+    printf("-------------------------------------------------------------------------------\n");
+
+    // Casteamos el arreglo genérico a nuestro tipo de ficha
+    t_reg_indice *fichas = (t_reg_indice *)indice_m->vindice;
+
+    // Recorremos el índice (que ya está ordenado y sin las bajas)
+    for (unsigned i = 0; i < indice_m->cantidad_elementos_actual; i++)
+    {
+
+        // El índice nos dice en qué "cajón" de la lista grande está el miembro
+        int pos_real = fichas[i].nro_reg;
+
+        // Apuntamos directo al miembro para que el printf quede más limpio
+        miembro *m = &lista_m->array[pos_real];
+
+        // Imprimimos la fila de la tabla
+        // Nota: %-30.30s asegura que si un nombre es muy largo, se corte a los 30 caracteres para no romper la tabla
+        printf("%-10ld | %-30.30s | %-14s | %-4c | %-10s\n",
+               m->dni,
+               m->apeNom,
+               m->CUIL,
+               m->sexo,
+               m->plan);
+    }
+
+    printf("===============================================================================\n");
+    printf("Total de miembros listados: %d\n", indice_m->cantidad_elementos_actual);
+}
+
+void listarMiembrosPorPlan(t_lista_miembros *lista_m, t_indice *indice_m) {
+
+    if (indice_m->cantidad_elementos_actual == 0) {
+        printf("No hay miembros registrados.\n");
+        return;
+    }
+
+    // 1. Creamos un array auxiliar de punteros recorriendo el índice
+    int cantidad = indice_m->cantidad_elementos_actual;
+    miembro **aux = malloc(cantidad * sizeof(miembro *));
+    if (aux == NULL) {
+        printf("[ERROR] Error de memoria.\n");
+        return;
+    }
+
+    // Recorremos el índice y por cada t_reg_indice accedemos al miembro real
+    t_reg_indice *fichas = (t_reg_indice *)indice_m->vindice;
+    for (int i = 0; i < cantidad; i++)
+        aux[i] = &lista_m->array[fichas[i].nro_reg];
+
+    // 2. Ordenamos por apellido y nombre con bubble sort
+    for (int i = 0; i < cantidad - 1; i++) {
+        for (int j = 0; j < cantidad - 1 - i; j++) {
+            if (strcmp(aux[j]->apeNom, aux[j+1]->apeNom) > 0) {
+                miembro *temp = aux[j];
+                aux[j]        = aux[j+1];
+                aux[j+1]      = temp;
+            }
+        }
+    }
+
+    // 3. Encabezado
+    printf("\n%-25s %-12s %-12s %-12s %-12s\n",
+           "Plan / Indice", "(BASIC)", "(PREMIUM)", "(VIP)", "(FAMILY)");
+    printf("%-25s %-12s %-12s %-12s %-12s\n",
+           "-------------------------",
+           "------------", "------------", "------------", "------------");
+
+    // 4. Imprimimos cada miembro
+    for (int i = 0; i < cantidad; i++) {
+        miembro *m = aux[i];
+
+        char basic[15]   = "0";
+        char premium[15] = "0";
+        char vip[15]     = "0";
+        char family[15]  = "0";
+
+        if (strcmp(m->plan, "BASIC") == 0)
+            sprintf(basic, "%ld", m->dni);
+        else if (strcmp(m->plan, "PREMIUM") == 0)
+            sprintf(premium, "%ld", m->dni);
+        else if (strcmp(m->plan, "VIP") == 0)
+            sprintf(vip, "%ld", m->dni);
+        else if (strcmp(m->plan, "FAMILY") == 0)
+            sprintf(family, "%ld", m->dni);
+
+        printf("%-25s %-12s %-12s %-12s %-12s\n",
+               m->apeNom, basic, premium, vip, family);
+    }
+
+    free(aux);
+}
+
 
 void guardar_datos_sesion(t_lista_miembros *lista_m, t_lista_titulos *lista_t, t_lista_alquileres *lista_a, t_fecha fecha_proceso)
 {

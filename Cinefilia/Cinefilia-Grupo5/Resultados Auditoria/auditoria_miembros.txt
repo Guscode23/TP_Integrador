@@ -10,11 +10,6 @@ Registros afectados (DNI):
   - 0
   - 1000000000
 ----------------------------------------
-Motivo de rechazo: CUIL invalido
-Cantidad de incidencias: 1
-Registros afectados (DNI):
-  - 43098435
-----------------------------------------
 Motivo de rechazo: Nombre y apellido vacio
 Cantidad de incidencias: 1
 Registros afectados (DNI):

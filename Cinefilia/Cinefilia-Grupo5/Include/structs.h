@@ -67,4 +67,8 @@ typedef struct {
     int capacidad;
 } t_lista_alquileres;
 
+//FUNCIONES COMPARADORAS PARA LOS INDICES (qsort y buscar)
+int cmp_miembros_dni(const void *a, const void *b);
+int cmp_titulos_id(const void *a, const void *b);
+
 #endif // STRUCTS_H_INCLUDED

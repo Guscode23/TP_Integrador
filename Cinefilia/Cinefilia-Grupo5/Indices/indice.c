@@ -5,18 +5,19 @@
 
 ///Toma memoria para 100 elementos e inicializa la estructura vacía
 
-void indice_crear(t_indice *indice, size_t nmemb, size_t tamanyo)
-{
-   indice->vindice=malloc(nmemb*tamanyo);
+void indice_crear(t_indice *indice, size_t nmemb, size_t tamanyo) {
+    // Si nmemb es 0, asumimos la regla de la descripción (100 elementos por defecto)
+    size_t capacidad_inicial = (nmemb == 0) ? 100 : nmemb;
 
-   if(indice->vindice==NULL){
-      printf("No se pudo crear el indice");
-      exit(0);
-      }
+    indice->vindice = malloc(capacidad_inicial * tamanyo);
 
-   indice->cantidad_elementos_actual=0;
-   indice->cantidad_elementos_maxima=nmemb;
-
+    if (indice->vindice != NULL) {
+        indice->cantidad_elementos_maxima = capacidad_inicial;
+        indice->cantidad_elementos_actual = 0;
+    } else {
+        indice->cantidad_elementos_maxima = 0;
+        indice->cantidad_elementos_actual = 0;
+    }
 }
 
 ///Redimensiona lo reservado en memoria
@@ -33,58 +34,35 @@ void indice_redimensionar(t_indice *indice, size_t nmemb, size_t tamanyo)
 }
 
 ///Es un insertar Ordenado, pero genérico
-int indice_insertar(t_indice *indice, const void *registro, size_t tamanyo, int (*cmp)(const void *, const void *))
-{
+int indice_insertar(t_indice *indice, const void *registro, size_t tamanyo, int (*cmp)(const void *, const void *)) {
+    // 1. Verificamos si hay que redimensionar (Toma un 30% más, según la imagen)
+    if (indice->cantidad_elementos_actual == indice->cantidad_elementos_maxima) {
+        size_t nueva_capacidad = indice->cantidad_elementos_maxima + (indice->cantidad_elementos_maxima * 30 / 100);
+        if (nueva_capacidad == indice->cantidad_elementos_maxima) nueva_capacidad += 10; // Seguro por si era muy chico
 
-   void* pIndice=indice->vindice;
-   void* aux = ((char*)pIndice + (indice->cantidad_elementos_actual) * tamanyo);
-   void* insercion;
-   int despl=0;
+        void *temp = realloc(indice->vindice, nueva_capacidad * tamanyo);
+        if (temp == NULL) return ERROR;
 
+        indice->vindice = temp;
+        indice->cantidad_elementos_maxima = nueva_capacidad;
+    }
 
-   if(indice->cantidad_elementos_actual==0){
-         memcpy(aux,registro,tamanyo); ///Reemplazo directo cuando el indice inicialmente está vacío
-         indice->cantidad_elementos_actual+=1;
-         return OK;
-      }else if(indice->cantidad_elementos_actual>=1)
-              aux-=tamanyo;
+    // 2. Buscamos la posición correcta de inserción (de atrás hacia adelante)
+    char *base = (char *)indice->vindice;
+    int i = indice->cantidad_elementos_actual - 1;
 
+    // Mientras no lleguemos al principio y el elemento a insertar sea MENOR que el actual...
+    while (i >= 0 && cmp(registro, base + (i * tamanyo)) < 0) {
+        // ...desplazamos el elemento actual una posición a la derecha
+        memcpy(base + ((i + 1) * tamanyo), base + (i * tamanyo), tamanyo);
+        i--;
+    }
 
-    if(indice->cantidad_elementos_actual<indice->cantidad_elementos_maxima){
+    // 3. Insertamos el nuevo registro en el "hueco" que quedó
+    memcpy(base + ((i + 1) * tamanyo), registro, tamanyo);
+    indice->cantidad_elementos_actual++;
 
-
-       ///Si inserto un número más grande que el último número, hago un reemplazo directo
-       if(cmp(aux,registro)<0)
-             memcpy(aux + tamanyo,registro,tamanyo);
-
-      while(pIndice<=aux){
-
-           if(cmp(registro,pIndice)<0){
-               insercion=pIndice;
-
-
-           ///Desplazo elementos hacia la derecha
-              despl=((char*)aux - (char*)insercion) / tamanyo;
-
-              for(int i=0;i<=despl;i++){
-                memcpy(aux+tamanyo,aux,tamanyo);
-                aux = (indice->cantidad_elementos_actual == 1) ? pIndice : (aux - tamanyo);
-
-              }
-
-               ///Reemplazo
-               memcpy(insercion,registro,tamanyo);
-               break;
-             }
-             pIndice = (char*)pIndice + tamanyo;
-           }
-           indice->cantidad_elementos_actual+=1;
-        }
-         else{
-        return ERROR; ///No se puede insertar elemento
-     }
-
-     return OK;
+    return TODO_OK;
 }
 
 int indice_cargar(const char* path, t_indice* indice, void *vreg_ind, size_t tamanyo, int (*cmp)(const void *, const void *))
@@ -195,64 +173,59 @@ void indice_vaciar(t_indice* indice) {
 }
 
 void generar_indice_miembros(t_lista_miembros *lista_original, t_indice *admin_indice) {
-    admin_indice->cantidad_elementos_maxima = lista_original->cantidad;
-    if (admin_indice->cantidad_elementos_maxima == 0) {
-        admin_indice->vindice = NULL;
-        admin_indice->cantidad_elementos_actual = 0;
-        return;
-    }
-    admin_indice->vindice = malloc(admin_indice->cantidad_elementos_maxima * sizeof(t_reg_indice));
+
+    // 1. Inicializamos usando la función de la cátedra
+    // Le pasamos la cantidad de la lista original como capacidad inicial ideal
+    indice_crear(admin_indice, lista_original->cantidad, sizeof(t_reg_indice));
+
+    // Si falló la creación, salimos
     if (admin_indice->vindice == NULL) return;
 
-    t_reg_indice *fichas = (t_reg_indice *)admin_indice->vindice;
-
-    int agregados = 0; // Un contador paralelo solo para los válidos
-
+    // 2. Recorremos la lista pesada
     for (unsigned i = 0; i < lista_original->cantidad; i++) {
+
         // --- EL FILTRO DE ESTADO ---
         if (lista_original->array[i].estado == 'A') {
-            fichas[agregados].dni = lista_original->array[i].dni;
-            fichas[agregados].nro_reg = i;
-            agregados++;
+
+            // Armamos la ficha temporal
+            t_reg_indice ficha_nueva;
+            ficha_nueva.dni = lista_original->array[i].dni;
+            ficha_nueva.nro_reg = i;
+
+            // La insertamos usando la función de la cátedra (se auto-ordena)
+            indice_insertar(admin_indice,
+                            &ficha_nueva,
+                            sizeof(t_reg_indice),
+                            cmp_miembros_dni);
         }
     }
-
-    // El índice final será solo del tamaño de los agregados
-    admin_indice->cantidad_elementos_actual = agregados;
 }
 
 void generar_indice_titulos(t_lista_titulos *lista_original, t_indice *admin_indice) {
-    // 1. Calculamos la capacidad necesaria
-    admin_indice->cantidad_elementos_maxima = lista_original->cantidad;
 
-    // Si no hay títulos cargados, salimos limpio
-    if (admin_indice->cantidad_elementos_maxima == 0) {
-        admin_indice->vindice = NULL;
-        admin_indice->cantidad_elementos_actual = 0;
-        return;
-    }
+    // 1. Inicializamos usando la función de la cátedra
+    // Le pasamos la cantidad de la lista original como capacidad inicial
+    indice_crear(admin_indice, lista_original->cantidad, sizeof(t_reg_indice));
 
-    // 2. Pedimos la memoria RAM
-    admin_indice->vindice = malloc(admin_indice->cantidad_elementos_maxima * sizeof(t_reg_indice));
+    // Si falló la creación por falta de memoria, salimos
+    if (admin_indice->vindice == NULL) return;
 
-    if (admin_indice->vindice == NULL) {
-        printf("Error fatal: No hay memoria para crear el indice de titulos.\n");
-        return;
-    }
-
-    // 3. Casteamos a nuestras fichas
-    t_reg_indice *fichas = (t_reg_indice *)admin_indice->vindice;
-
-    // 4. Llenamos el índice
+    // 2. Recorremos la lista pesada de títulos
     for (unsigned i = 0; i < lista_original->cantidad; i++) {
-        // Guardamos el ID en el campo dni y la posición en nro_reg
-        fichas[i].dni = (long)lista_original->array[i].ID;
-        fichas[i].nro_reg = i;
+
+        // --- EL FILTRO DE ID (Ignoramos los negativos que son bajas lógicas) ---
+        if (lista_original->array[i].ID > 0) {
+
+            // Armamos la ficha temporal
+            t_reg_indice ficha_nueva;
+            ficha_nueva.dni = (long)lista_original->array[i].ID; // Guardamos el ID en el campo DNI
+            ficha_nueva.nro_reg = i;
+
+            // La insertamos usando la función de la cátedra (se auto-ordena)
+            indice_insertar(admin_indice,
+                            &ficha_nueva,
+                            sizeof(t_reg_indice),
+                            cmp_titulos_id);
+        }
     }
-
-    // 5. Actualizamos el contador final
-    admin_indice->cantidad_elementos_actual = lista_original->cantidad;
-
-    // printf("Indice de titulos generado exitosamente.\n"); // Opcional
 }
-
