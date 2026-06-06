@@ -10,15 +10,12 @@
 
 #include "structs.h"
 
-///Tipo de dato del elemento de cada vector
 typedef struct
 {
     unsigned nro_reg;
     long dni;
 }t_reg_indice;
 
-
-///Indice propiamente dicho
 typedef struct
 {
     void *vindice;
@@ -26,9 +23,8 @@ typedef struct
     unsigned cantidad_elementos_maxima;
 }t_indice;
 
-///Funciones de índices
 void indice_crear(t_indice *indice, size_t nmemb, size_t tamanyo);
-void indice_redimensionar(t_indice *indice, size_t nmemb, size_t tamanyo); ///Desarrollado (a testear)
+void indice_redimensionar(t_indice *indice, size_t nmemb, size_t tamanyo);
 int indice_insertar(t_indice *indice, const void *registro, size_t tamanyo, int (*cmp)(const void *, const void *));
 int indice_eliminar(t_indice *indice, const void *registro, size_t tamanyo, int (*cmp)(const void *, const void *));
 int indice_buscar (const t_indice *indice, const void *registro, size_t nmemb, size_t tamanyo, int (*cmp)(const void *, const void *));

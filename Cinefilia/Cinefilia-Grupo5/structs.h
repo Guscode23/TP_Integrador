@@ -5,7 +5,7 @@
 #define TAM_CAT 10
 #define TAM_PLAN 10
 #define TAM_EMAIL_TUT 30
-#define TAM_CUIL 15 // TUVE QUE SUBIRLE PORQUE SI NO FALLABA LA VALIDACION EN EL ALTA DE USER
+#define TAM_CUIL 15
 #define TAM_TITULO 61
 #define TAM_GENERO 21
 #define TAM_FAIL 21
@@ -33,21 +33,18 @@ typedef struct{
     int stock;
 }titulo;
 
-// Estructura de auditoría de doble entrada
 typedef struct {
     char tipo_error[50];
     int cantidad_incidencias;
     long identificadores_rechazados[100];
 } t_auditoria;
 
-// Contenedor dinámico para Miembros
 typedef struct {
-    miembro *array;      // Puntero dinámico a la memoria (malloc/realloc)
-    int cantidad;        // Cuántos miembros válidos tenemos guardados
-    int capacidad;       // Cuántos entran actualmente en la memoria reservada
+    miembro *array;
+    int cantidad;
+    int capacidad;
 } t_lista_miembros;
 
-// Contenedor dinámico para Títulos
 typedef struct {
     titulo *array;
     int cantidad;
@@ -55,10 +52,10 @@ typedef struct {
 } t_lista_titulos;
 
 typedef struct {
-    long dni;           // DNI del miembro
-    int idPelicula;     // ID de la película
-    char estado;        // 'A' = alquilado, 'I' = inactivo
-    int cantAlquileres; // cuántas veces se alquiló esa relación miembro-pelicula
+    long dni;
+    int idPelicula;
+    char estado;
+    int cantAlquileres;
 } t_alquiler;
 
 typedef struct {
@@ -67,7 +64,6 @@ typedef struct {
     int capacidad;
 } t_lista_alquileres;
 
-//FUNCIONES COMPARADORAS PARA LOS INDICES (qsort y buscar)
 int cmp_miembros_dni(const void *a, const void *b);
 int cmp_titulos_id(const void *a, const void *b);
 

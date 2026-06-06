@@ -1,18 +1,15 @@
 #include "fecha.h"
 #include "string.h"
 
-/**************** Validación Fecha **************************/
-
 t_fecha parsearFecha(const char *cadena) {
     t_fecha fecha;
     fecha.dia = 0;
     fecha.mes = 0;
     fecha.anio = 0;
 
-    // Copiamos la cadena porque strtok la modifica
     char copia[11];
     strncpy(copia, cadena, sizeof(copia));
-    copia[10] = '\0'; // Nos aseguramos que termine en null
+    copia[10] = '\0';
 
     char *token = strtok(copia, "/");
     if (token == NULL) return fecha;
@@ -46,7 +43,6 @@ int cant_Dia_Mes (int mes, int anio){
     if(mes == 2 && es_Bisiesto(anio)){
         return 29;
     }
-
     return diaMes[mes];
 }
 
@@ -69,10 +65,7 @@ int validarFechaNacimiento(t_fecha *fechNac, t_fecha *fechProceso){
 }
 
 int compara_Fechas_MenorIgual(t_fecha *fechMenorIgual, t_fecha *fechMayor){
-    //Verifica que fechA <= fechB
-    ///detecta cuando A > B para devolver ERROR
 
-    ///Se agrega una validación extra respecto a la diferencia de años, aclarado en la consigna
     if (fechMenorIgual->anio > fechMayor->anio)
         return ERROR;
       if (fechMenorIgual->anio == fechMayor->anio){
@@ -83,7 +76,7 @@ int compara_Fechas_MenorIgual(t_fecha *fechMenorIgual, t_fecha *fechMayor){
                            return ERROR;
                        }
                   }
-    return TODO_OK; /// fechA <= fechB
+    return TODO_OK;
 }
 
 int validarFechaAfiliacion(t_fecha* fechAfil,t_fecha* fechNac,t_fecha* fechProceso){
@@ -96,19 +89,13 @@ int validarFechaAfiliacion(t_fecha* fechAfil,t_fecha* fechNac,t_fecha* fechProce
     return ERROR;
 }
 
-//FECHA ULTIMA CUOTA PAGA
-///usa ese ERROR para saber si el orden lógico de las fechas se rompió.
-// fechAfi  <=  fechUltCuot  <=  fProceso
-
 int validar_UltimaCuota_Paga(t_fecha* fechAfi,t_fecha* fechUltCuot, t_fecha* fProceso){
-     ///Verifica que fechAfi <= fechUltCuot
 
     if(compara_Fechas_MenorIgual(fechAfi, fechUltCuot) == ERROR)
-        return ERROR; //La afiliación es POSTERIOR a la última cuota , no tiene sentido
+        return ERROR;
 
-      //Verifica que fechUltCuot <= fProceso
     if(compara_Fechas_MenorIgual(fechUltCuot, fProceso) == ERROR)
-        return ERROR; ///La última cuota es POSTERIOR a hoy , no tiene sentido
+        return ERROR;
 
     return TODO_OK;
 }
@@ -135,13 +122,11 @@ void solicitar_Fecha_Proceso(t_fecha *fecha_proceso) {
 
         if(fgets(entrada, sizeof(entrada), stdin) != NULL)
         {
-            // CASO 1 : EL USUARIO PRESIONA ENTER
             if (entrada[0] == '\n')
             {
                 time_t t = time(NULL);
                 struct tm *tm_info = localtime(&t);
 
-                // Usamos -> porque fecha_proceso es un puntero
                 fecha_proceso->dia = tm_info->tm_mday;
                 fecha_proceso->mes = tm_info->tm_mon + 1;
                 fecha_proceso->anio = tm_info->tm_year + 1900;
@@ -150,15 +135,12 @@ void solicitar_Fecha_Proceso(t_fecha *fecha_proceso) {
                        fecha_proceso->dia, fecha_proceso->mes, fecha_proceso->anio);
                 fechaValida = true;
             }
-            // CASO 2: EL USUARIO INGRESA TEXTO
             else
             {
-                // Extraemos a las direcciones de memoria de los campos (nota el & antes)
                 if (sscanf(entrada, "%d %d %d", &fecha_proceso->dia, &fecha_proceso->mes, &fecha_proceso->anio) == 3)
                 {
-                    // fecha_proceso YA es un puntero, así que lo pasamos directamente sin el &
                     if (es_Fecha_Valida(fecha_proceso) == TODO_OK) {
-                        printf("Fecha de proceso establecida: %02d/%02d/%04d\n",
+                        printf("\nFecha de proceso establecida: %02d/%02d/%04d\n\n",
                                fecha_proceso->dia, fecha_proceso->mes, fecha_proceso->anio);
 
                         fechaValida = true;

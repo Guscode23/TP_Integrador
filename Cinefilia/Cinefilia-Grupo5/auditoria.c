@@ -17,8 +17,6 @@ void generar_reporte_auditoria(const char *ruta_txt, t_auditoria *arreglo_audito
         for (int i = 0; i < cant_tipos_error; i++) {
             fprintf(archivo_salida, "Motivo de rechazo: %s\n", arreglo_auditorias[i].tipo_error);
             fprintf(archivo_salida, "Cantidad de incidencias: %d\n", arreglo_auditorias[i].cantidad_incidencias);
-
-            // Usamos la etiqueta dinámica aquí ("DNI" o "ID")
             fprintf(archivo_salida, "Registros afectados (%s):\n", etiqueta_id);
 
             for (int j = 0; j < arreglo_auditorias[i].cantidad_incidencias; j++) {
@@ -29,5 +27,4 @@ void generar_reporte_auditoria(const char *ruta_txt, t_auditoria *arreglo_audito
     }
 
     fclose(archivo_salida);
-    printf("-> Reporte generado: %s\n", ruta_txt);
 }

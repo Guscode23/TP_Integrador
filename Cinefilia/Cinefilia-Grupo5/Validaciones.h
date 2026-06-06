@@ -7,11 +7,8 @@
 #define INSERCION_INVALIDA -9
 #define INSERCION_DUPLICADA -10
 
-
-///Macros a incluir
 #define validarIgualdadDNI(dniMiembro,dniCuil) (dniMiembro != dniCuil)
 
-///Prototipos
 int validar_campo(void *dato, int (*funcion_validadora)(void *));
 int validarDNI(void *dato);
 int validarGenero(void *dato);
