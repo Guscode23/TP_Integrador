@@ -1,14 +1,15 @@
 # depslib dependency file v1.0
-1779757480 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\fecha.c
+1780712408 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\fecha.c
 	"fecha.h"
+	"string.h"
 
-1779758857 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\fecha.h
+1780712408 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\fecha.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	<time.h>
 
-1780547424 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\main.c
+1780712408 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -20,24 +21,24 @@
 	"auditoria.h"
 	"menu.h"
 
-1780096617 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\structs.h
+1780712408 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\structs.h
 	"fecha.h"
 
-1780540792 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\archivos.h
+1780712408 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\archivos.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<stdbool.h>
 	"structs.h"
 
-1780095616 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.h
+1780712394 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.h
 	"archivos.h"
 	"structs.h"
 
-1780540792 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.c
+1780712408 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\auditoria.c
 	"auditoria.h"
 
-1780546532 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\archivos.c
+1780712408 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\archivos.c
 	"archivos.h"
 	"Validaciones.h"
 
@@ -95,10 +96,12 @@
 	"archivos.h"
 	"Validaciones.h"
 
-1780008749 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\validaciones.h
+1780712408 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\validaciones.h
 
-1780008749 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\validaciones.c
+1780712408 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\validaciones.c
 	"Validaciones.h"
+	"structs.h"
+	"fecha.h"
 	<string.h>
 	<stdlib.h>
 	<stdio.h>
@@ -196,11 +199,11 @@
 	<stdio.h>
 	"structs.h"
 
-1780545992 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\menu.h
+1780712408 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\menu.h
 	"structs.h"
 	"indice.h"
 
-1780547290 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\menu.c
+1780712408 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\menu.c
 	<stdio.h>
 	<string.h>
 	"menu.h"
@@ -237,6 +240,16 @@
 	"structs.h"
 
 1780702044 source:c:\users\user\documents\facultad\tópicos de programación\tp topicos\tp_integrador\cinefilia\cinefilia-grupo5\indice.c
+	"indice.h"
+	<stdlib.h>
+	<string.h>
+	"structs.h"
+
+1780712408 c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\indice.h
+	<stdio.h>
+	"structs.h"
+
+1780712408 source:c:\users\facundo\desktop\tp_integrador\cinefilia\cinefilia-grupo5\indice.c
 	"indice.h"
 	<stdlib.h>
 	<string.h>
